@@ -8,27 +8,27 @@ import {
 
 export const SOCIAL_MEDIA = [
   {
-    title: 'Instagram',
+    title: 'Abrir Instagram da LGX',
     href: 'https://instagram.com/lgxlan/',
     icon: RiInstagramLine,
   },
   {
-    title: 'WhatsApp',
+    title: 'Abrir WhatsApp da LGX',
     href: 'https://wa.me/551156234874',
     icon: RiWhatsappLine,
   },
   {
-    title: 'Twitch',
+    title: 'Abrir Twitch da LGX',
     href: 'https://twitch.tv/lgxlan',
     icon: RiTwitchLine,
   },
   {
-    title: 'Youtube',
+    title: 'Abrir YouTube da LGX',
     href: 'https://youtube.com/@lgxarena',
     icon: RiYoutubeLine,
   },
   {
-    title: 'Facebook',
+    title: 'Abrir Facebook da LGX',
     href: 'https://www.facebook.com/lgxlan',
     icon: RiFacebookCircleLine,
   },

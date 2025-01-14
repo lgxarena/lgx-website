@@ -41,6 +41,12 @@ export default {
         950: '#490606',
       },
     },
+    extend: {
+      backgroundImage: {
+        'hero-mobile': 'url("/images/bg-mobile.png")',
+        'hero-desktop': 'url("/images/bg-desktop.png")',
+      },
+    },
   },
   plugins: [
     twAnimate,
