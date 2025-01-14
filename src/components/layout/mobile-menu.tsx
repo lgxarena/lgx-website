@@ -11,6 +11,7 @@ import { SOCIAL_MEDIA } from '@/data/social-media'
 import { useBackButton } from '@/hooks/use-back-button'
 import { useKeyPress } from '@/hooks/use-key-press'
 import { useScrollLock } from '@/hooks/use-scroll-lock'
+import { generateWhatsAppLink } from '@/utils/generate-whatsapp-link'
 
 export function MobileMenu() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -21,6 +22,10 @@ export function MobileMenu() {
   useScrollLock({ autoLock: isMenuOpen })
   useBackButton(closeMenu)
   useKeyPress(['Escape'], closeMenu)
+
+  const bookText = generateWhatsAppLink(
+    'Olá, gostaria de fazer uma reserva para [inserir data e horário].'
+  )
 
   return (
     <>
@@ -108,7 +113,11 @@ export function MobileMenu() {
                   </li>
                 ))}
               </motion.ul>
-              <Button className="w-full">Faça sua reserva</Button>
+              <Button className="w-full" asChild>
+                <a href={bookText} rel="noreferrer" target="_blank">
+                  Faça sua reserva
+                </a>
+              </Button>
             </footer>
           </motion.div>
         )}

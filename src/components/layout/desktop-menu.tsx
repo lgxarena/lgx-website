@@ -14,10 +14,13 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { DESKTOP_MENU } from '@/data/menu'
 import { useAnimatedHover } from '@/hooks/use-animated-hover'
+import { useScrollLock } from '@/hooks/use-scroll-lock'
 
 export function DesktopMenu() {
   const [isOpen, setIsOpen] = useState(false)
   const { rect, setHoveredIndex, setRef } = useAnimatedHover()
+
+  useScrollLock({ autoLock: isOpen })
 
   return (
     <div className="hidden gap-2 lg:flex">
@@ -29,7 +32,7 @@ export function DesktopMenu() {
           if (props.children) {
             return (
               <li key={props.title} ref={(el) => setRef(el, index)} className="z-10">
-                <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+                <DropdownMenu modal={false} open={isOpen} onOpenChange={setIsOpen}>
                   <DropdownMenuTrigger
                     className="inline-flex h-10 items-center rounded-md px-3 transition-colors focus-visible:outline-none
                       focus-visible:ring-2 focus-visible:ring-neutral-50"
