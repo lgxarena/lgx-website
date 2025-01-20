@@ -9,15 +9,15 @@ export const MOBILE_MENU = [
   },
   {
     title: 'Horários',
-    href: '/horarios',
+    href: '/#horarios',
   },
   {
     title: 'Preços',
-    href: '/precos',
+    href: '/#precos',
   },
   {
     title: 'Setup',
-    href: '/setup',
+    href: '/#setup',
   },
   {
     title: 'Jogos',
@@ -65,15 +65,15 @@ export const DESKTOP_MENU: DesktopMenuItem[] = [
     children: [
       {
         title: 'Horários',
-        href: '/horarios',
+        href: '/#horarios',
       },
       {
         title: 'Preços',
-        href: '/precos',
+        href: '/#precos',
       },
       {
         title: 'Setup',
-        href: '/setup',
+        href: '/#setup',
       },
       {
         title: 'Jogos',

@@ -2,7 +2,8 @@
 
 import { AnimatePresence, motion } from 'motion/react'
 import Link from 'next/link'
-import { useState } from 'react'
+import { usePathname } from 'next/navigation'
+import { useEffect, useState } from 'react'
 import { RiCloseLine, RiMenuLine } from 'react-icons/ri'
 
 import { Button } from '@/components/ui/button'
@@ -15,6 +16,7 @@ import { generateWhatsAppLink } from '@/utils/generate-whatsapp-link'
 
 export function MobileMenu() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const pathname = usePathname()
 
   const closeMenu = () => setIsMenuOpen(false)
   const handleToggleMenuState = () => setIsMenuOpen((prev) => !prev)
@@ -26,6 +28,10 @@ export function MobileMenu() {
   const bookText = generateWhatsAppLink(
     'Olá, gostaria de fazer uma reserva para [inserir data e horário].'
   )
+
+  useEffect(() => {
+    closeMenu()
+  }, [pathname])
 
   return (
     <>

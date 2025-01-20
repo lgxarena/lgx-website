@@ -1,3 +1,4 @@
+import { Metadata } from 'next'
 import Link from 'next/link'
 import { RiScrollToBottomLine } from 'react-icons/ri'
 
@@ -6,6 +7,10 @@ import { generateWhatsAppLink } from '@/utils/generate-whatsapp-link'
 
 import { DesktopPricing } from './_components/desktop-pricing'
 import { MobilePricing } from './_components/mobile-pricing'
+
+export const metadata: Metadata = {
+  title: 'Página inicial - LGX E-Sport Arena',
+}
 
 export default function Home() {
   const bookText = generateWhatsAppLink(
@@ -17,7 +22,7 @@ export default function Home() {
   )
 
   return (
-    <div>
+    <main>
       <section
         className="relative z-[5] flex h-[calc(100dvh-72px)] w-full flex-col items-center justify-center gap-10
           bg-hero-mobile bg-cover bg-center bg-no-repeat px-5 sm:bg-hero-desktop"
@@ -49,7 +54,10 @@ export default function Home() {
         </Button>
       </section>
 
-      <section className="relative z-[5] mx-auto flex flex-col items-center bg-neutral px-5 py-8 sm:py-10">
+      <section
+        className="relative z-[5] mx-auto flex flex-col items-center bg-neutral px-5 py-8 sm:py-10"
+        id="horarios"
+      >
         <strong className="text-center text-3xl sm:text-[32px]">Horário de funcionamento</strong>
         <ul className="my-4 flex w-full max-w-screen-xl flex-col gap-2 sm:justify-center sm:gap-3 md:flex-row">
           <li className="flex w-full flex-col items-center gap-2 rounded-md bg-neutral-900 py-5 sm:py-6">
@@ -84,7 +92,10 @@ export default function Home() {
         </p>
       </section>
 
-      <section className="relative z-[5] mx-auto flex flex-col items-center bg-neutral px-5 py-8 sm:py-10">
+      <section
+        className="relative z-[5] mx-auto flex flex-col items-center bg-neutral px-5 py-8 sm:py-10"
+        id="precos"
+      >
         <strong className="text-3xl sm:text-[32px]">Preços</strong>
 
         <MobilePricing />
@@ -96,6 +107,6 @@ export default function Home() {
           específico do pacote.
         </p>
       </section>
-    </div>
+    </main>
   )
 }

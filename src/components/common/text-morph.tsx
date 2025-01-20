@@ -29,7 +29,7 @@ export function TextMorph({ children, as: Component = 'p', className, style }: T
 
   return (
     <Component aria-label={children} className={cn(className)} style={style}>
-      <AnimatePresence initial={false} mode="popLayout">
+      <AnimatePresence mode="popLayout">
         {characters.map((character) => (
           <motion.span
             key={character.id}
