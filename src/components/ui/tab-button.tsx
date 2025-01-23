@@ -2,22 +2,14 @@ import { ComponentProps } from 'react'
 
 import { cn } from '@/utils/cn'
 
-type TabButtonProps<T extends string> = ComponentProps<'button'> & {
-  id: T
+type TabButtonProps = ComponentProps<'button'> & {
+  id: string
   isSelected: boolean
-  tabPanelId: `tabpanel-${T}`
 }
 
-export function TabButton<T extends string>({
-  children,
-  className,
-  isSelected,
-  tabPanelId,
-  ...props
-}: TabButtonProps<T>) {
+export function TabButton({ children, className, isSelected, ...props }: TabButtonProps) {
   return (
     <button
-      aria-controls={tabPanelId}
       aria-selected={isSelected}
       role="tab"
       type="button"

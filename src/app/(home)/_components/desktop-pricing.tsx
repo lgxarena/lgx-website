@@ -11,7 +11,7 @@ export function DesktopPricing() {
       {Object.entries(PRICES).map(([key, room]) => (
         <dl
           key={key}
-          className="grid w-full grid-cols-2 gap-3 rounded-md bg-neutral-900 p-5 font-medium"
+          className="grid w-full grid-cols-2 gap-3 rounded-md bg-neutral-900 p-6 font-medium"
         >
           <span className="col-span-full font-medium text-neutral-300">
             {key === 'vip' ? 'Sala VIP' : 'Sala Comum'}
