@@ -3,10 +3,12 @@ import Link from 'next/link'
 import { RiScrollToBottomLine } from 'react-icons/ri'
 
 import { Button } from '@/components/ui/button'
+import { OPENING_HOURS } from '@/data/opening-hours'
 import { generateWhatsAppLink } from '@/utils/generate-whatsapp-link'
 
 import { DesktopPricing } from './_components/desktop-pricing'
 import { MobilePricing } from './_components/mobile-pricing'
+import { Setup } from './_components/setup'
 
 export const metadata: Metadata = {
   title: 'Página inicial - LGX E-Sport Arena',
@@ -60,22 +62,15 @@ export default function Home() {
       >
         <strong className="text-center text-3xl sm:text-[32px]">Horário de funcionamento</strong>
         <ul className="my-4 flex w-full max-w-screen-xl flex-col gap-2 sm:justify-center sm:gap-3 md:flex-row">
-          <li className="flex w-full flex-col items-center gap-2 rounded-md bg-neutral-900 py-5 sm:py-6">
-            <p className="text-sm font-medium sm:text-base">Segunda - Quinta</p>
-            <b className="font-semibold sm:text-xl">11:00 - 22:00</b>
-          </li>
-          <li className="flex w-full flex-col items-center gap-2 rounded-md bg-neutral-900 py-5 sm:py-6">
-            <p className="text-sm font-medium sm:text-base">Sexta e Sábado</p>
-            <b className="font-semibold sm:text-xl">11:00 - 21:30</b>
-          </li>
-          <li className="flex w-full flex-col items-center gap-2 rounded-md bg-neutral-900 py-5 sm:py-6">
-            <p className="text-sm font-medium sm:text-base">Domingo e feriado</p>
-            <b className="font-semibold sm:text-xl">14:00 - 20:00</b>
-          </li>
-          <li className="flex w-full flex-col items-center gap-2 rounded-md bg-neutral-900 py-5 sm:py-6">
-            <p className="text-sm font-medium sm:text-base">Corujão</p>
-            <b className="font-semibold sm:text-xl">22:00 - 06:00</b>
-          </li>
+          {OPENING_HOURS.map(({ period, time }) => (
+            <li
+              key={period}
+              className="flex w-full flex-col items-center gap-2 rounded-md bg-neutral-900 py-5 sm:py-6"
+            >
+              <p className="text-sm font-medium sm:text-base">{period}</p>
+              <b className="font-semibold sm:text-xl">{time}</b>
+            </li>
+          ))}
         </ul>
         <p className="max-w-3xl text-center text-xs leading-[1.4] text-neutral-300 sm:text-sm">
           Observação: O funcionamento durante o Corujão e feriados pode variar. Confirme se
@@ -106,6 +101,15 @@ export default function Home() {
           VIP). Os pacotes Corujinha e Corujão não acumulam tempo e só são válidos durante o período
           específico do pacote.
         </p>
+      </section>
+
+      <section
+        className="relative z-[5] mx-auto flex flex-col items-center bg-neutral px-5 py-8 sm:py-10"
+        id="setup"
+      >
+        <strong className="text-3xl sm:text-[32px]">Setup</strong>
+
+        <Setup />
       </section>
     </main>
   )

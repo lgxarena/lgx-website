@@ -15,12 +15,17 @@ import {
 import { DESKTOP_MENU } from '@/data/menu'
 import { useAnimatedHover } from '@/hooks/use-animated-hover'
 import { useScrollLock } from '@/hooks/use-scroll-lock'
+import { generateWhatsAppLink } from '@/utils/generate-whatsapp-link'
 
 export function DesktopMenu() {
   const [isOpen, setIsOpen] = useState(false)
   const { rect, setHoveredIndex, setRef } = useAnimatedHover()
 
   useScrollLock({ autoLock: isOpen })
+
+  const bookText = generateWhatsAppLink(
+    'Olá, gostaria de fazer uma reserva para [inserir data e horário].'
+  )
 
   return (
     <div className="hidden gap-2 lg:flex">
@@ -77,7 +82,11 @@ export function DesktopMenu() {
         <AnimatedIndicator rect={rect} />
       </ul>
 
-      <Button size="sm">Faça sua reserva</Button>
+      <Button size="sm" asChild>
+        <a href={bookText} rel="noreferrer" target="_blank">
+          Faça sua reserva
+        </a>
+      </Button>
     </div>
   )
 }
