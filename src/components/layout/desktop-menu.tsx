@@ -52,7 +52,11 @@ export function DesktopMenu() {
                   >
                     {props.children.map((child) => (
                       <DropdownMenuItem key={child.title} asChild>
-                        <Link className="cursor-pointer" href={child.href}>
+                        <Link
+                          className="cursor-pointer"
+                          href={child.href}
+                          target={child.href.includes('pdf') ? '_blank' : '_self'}
+                        >
                           {child.title}
                         </Link>
                       </DropdownMenuItem>

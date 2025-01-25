@@ -1,6 +1,5 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { RiScrollToBottomLine } from 'react-icons/ri'
 
 import { Button } from '@/components/ui/button'
 import { OPENING_HOURS } from '@/data/opening-hours'
@@ -40,8 +39,6 @@ export default function Home() {
             Faça sua reserva
           </a>
         </Button>
-
-        <RiScrollToBottomLine className="absolute bottom-6 size-6 text-neutral-300 md:bottom-12 md:size-8" />
       </section>
 
       <section className="relative z-[5] flex flex-col items-center bg-neutral px-5 py-8 sm:py-10">

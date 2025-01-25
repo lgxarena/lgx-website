@@ -25,7 +25,7 @@ export const MOBILE_MENU = [
   },
   {
     title: 'Regras',
-    href: '/regras',
+    href: '/regras.pdf',
   },
   {
     title: 'Corujão',
@@ -81,7 +81,7 @@ export const DESKTOP_MENU: DesktopMenuItem[] = [
       },
       {
         title: 'Regras',
-        href: '/regras',
+        href: '/regras.pdf',
       },
     ],
   },

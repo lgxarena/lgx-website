@@ -1,8 +1,7 @@
 'use client'
 
 import { AnimatePresence, motion } from 'motion/react'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { RiCloseLine, RiMenuLine } from 'react-icons/ri'
 
@@ -17,6 +16,7 @@ import { generateWhatsAppLink } from '@/utils/generate-whatsapp-link'
 export function MobileMenu() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const pathname = usePathname()
+  const router = useRouter()
 
   const closeMenu = () => setIsMenuOpen(false)
   const handleToggleMenuState = () => setIsMenuOpen((prev) => !prev)
@@ -32,6 +32,19 @@ export function MobileMenu() {
   useEffect(() => {
     closeMenu()
   }, [pathname])
+
+  const handleGoPage = (href: string) => {
+    closeMenu()
+
+    if (href.includes('pdf')) {
+      window.open(href, '_blank')
+      return
+    }
+
+    setTimeout(() => {
+      router.push(href)
+    }, 50)
+  }
 
   return (
     <>
@@ -85,12 +98,13 @@ export function MobileMenu() {
             <ul className="flex flex-1 flex-col gap-4">
               {MOBILE_MENU.map(({ title, href }) => (
                 <li key={title}>
-                  <Link
+                  <button
                     className="rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-50"
-                    href={href}
+                    type="button"
+                    onClick={() => handleGoPage(href)}
                   >
                     {title}
-                  </Link>
+                  </button>
                 </li>
               ))}
             </ul>
