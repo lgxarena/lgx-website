@@ -4,7 +4,7 @@ export const metadata: Metadata = {
   title: 'Sobre - LGX E-Sport Arena',
 }
 
-export default function Sobre() {
+export default function About() {
   return (
     <main className="relative z-[5] flex flex-1 flex-col bg-neutral px-5 py-8 md:py-10">
       <h1 className="mb-4 text-center text-3xl font-bold sm:text-[32px]">Nossa história</h1>
