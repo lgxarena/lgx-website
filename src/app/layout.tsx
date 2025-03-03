@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { ReactNode } from 'react'
+import { Toaster } from 'sonner'
 
 import { Footer } from '@/components/layout/footer'
 import { Header } from '@/components/layout/header'
@@ -26,6 +27,7 @@ export default function RootLayout({
         <Header />
         {children}
         <Footer />
+        <Toaster theme="dark" />
       </body>
     </html>
   )
