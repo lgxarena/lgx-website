@@ -11,7 +11,7 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-primary text-neutral-50 enabled:hover:bg-primary/90',
+        default: 'bg-primary text-neutral-50 not-disabled:hover:bg-primary/90',
         secondary: 'bg-neutral-900 text-neutral-50 hover:bg-neutral-900/90',
         ghost: 'bg-transparent hover:bg-neutral-900',
       },
