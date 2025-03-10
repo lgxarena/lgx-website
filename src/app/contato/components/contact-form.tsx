@@ -49,6 +49,9 @@ export function ContactForm() {
             type="text"
             {...form.register('name')}
           />
+          {form.formState.errors.name?.message && (
+            <span className="text-sm text-primary-400">{form.formState.errors.name.message}</span>
+          )}
         </Field>
         <Field>
           <Label htmlFor="email">E-mail</Label>
@@ -60,6 +63,9 @@ export function ContactForm() {
             type="email"
             {...form.register('email')}
           />
+          {form.formState.errors.email?.message && (
+            <span className="text-sm text-primary-400">{form.formState.errors.email.message}</span>
+          )}
         </Field>
         <Field>
           <Label htmlFor="message">Mensagem</Label>
@@ -70,6 +76,11 @@ export function ContactForm() {
             rows={5}
             {...form.register('message')}
           />
+          {form.formState.errors.message?.message && (
+            <span className="text-sm text-primary-400">
+              {form.formState.errors.message.message}
+            </span>
+          )}
         </Field>
         <Honeypot value={honeypot} onChange={setHoneypot} />
       </div>
