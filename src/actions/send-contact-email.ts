@@ -5,7 +5,6 @@ import { render } from '@react-email/components'
 import { EmailTemplate } from '@/emails/contact-email'
 import { transporter } from '@/lib/transporter'
 import { ContactFormData } from '@/schemas/contact-schema'
-import { env } from '@/utils/env'
 
 type State = {
   status: 'error' | 'success'
@@ -17,9 +16,9 @@ export async function sendContactEmail({ name, email, message }: ContactFormData
     const emailHTML = await render(EmailTemplate({ name, email, message }))
 
     const options = {
-      from: `${name} <${env.SMTP_USER}>`,
+      from: `${name} <${process.env.SMTP_USER}>`,
       replyTo: `${name} <${email}>`,
-      to: env.SMTP_USER,
+      to: process.env.SMTP_USER,
       subject: `Novo Contato de ${name}`,
       html: emailHTML,
       text: `Nome: ${name}\nEmail: ${email}\nMensagem:\n${message}`,

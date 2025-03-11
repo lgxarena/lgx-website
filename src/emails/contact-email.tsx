@@ -11,8 +11,6 @@ import {
 } from '@react-email/components'
 import DOMPurify from 'isomorphic-dompurify'
 
-import { env } from '@/utils/env'
-
 interface ContactEmailProps {
   name: string
   email: string
@@ -37,7 +35,11 @@ export function EmailTemplate({ name, email, message }: ContactEmailProps) {
             }}
           >
             <Heading>
-              <Img alt="Logo LGX" height={32} src={`${env.NEXT_PUBLIC_APP_URL}/images/brand.png`} />
+              <Img
+                alt="Logo LGX"
+                height={32}
+                src={`${process.env.NEXT_PUBLIC_APP_URL}/images/brand.png`}
+              />
             </Heading>
 
             <Text
