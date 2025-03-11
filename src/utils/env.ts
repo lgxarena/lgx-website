@@ -10,6 +10,7 @@ const envSchema = z.object({
   SMTP_SECURE: z.union([z.literal('true'), z.literal('false')]).default('true'),
   SMTP_USER: z.string().min(1).email(),
   SMTP_PASSWORD: z.string().min(1),
+  NEXT_PUBLIC_APP_URL: z.string().min(1),
 })
 
 export const env = envSchema.parse(process.env)
