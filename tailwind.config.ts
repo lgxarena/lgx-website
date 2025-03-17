@@ -59,6 +59,22 @@ export default {
           placeholder: ':placeholder-shown',
         },
       })
+
+      matchVariant('peer-not', (value) => `.peer:not(${value}) ~ &`, {
+        values: {
+          disabled: ':disabled',
+          checked: ':checked',
+          placeholder: ':placeholder-shown',
+        },
+      })
+
+      matchVariant('group-not', (value) => `.group:not(${value}) ~ &`, {
+        values: {
+          disabled: ':disabled',
+          checked: ':checked',
+          placeholder: ':placeholder-shown',
+        },
+      })
     }),
   ],
 } satisfies Config
