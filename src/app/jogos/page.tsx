@@ -165,8 +165,8 @@ export default function Games() {
               <InfoIcon className="size-5" />
               <AlertTitle>Não encontrou o jogo que procura?</AlertTitle>
               <AlertDescription>
-                Entre em contato para verificar a disponibilidade. Se o jogo não estiver na lista,
-                podemos baixá-lo para sua próxima visita. Ou clique abaixo para limpar os filtros.
+                Entre em contato conosco para verificar a disponibilidade. Se o jogo não estiver em
+                nossa lista, podemos baixá-lo e instalá-lo para você jogar em sua próxima visita.
               </AlertDescription>
             </Alert>
           </>
