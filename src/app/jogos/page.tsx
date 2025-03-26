@@ -25,7 +25,7 @@ export default function Games() {
     'q',
     parseAsString.withDefault('').withOptions({
       shallow: false,
-      throttleMs: 1000,
+      throttleMs: 600,
     })
   )
   const [selectedCategory, setSelectedCategory] = useQueryState(
@@ -34,13 +34,13 @@ export default function Games() {
   )
 
   const clearFilters = () => {
-    setQuery('')
-    setSelectedCategory('allCategories')
+    setQuery(null)
+    setSelectedCategory(null)
   }
 
   const fuse = new Fuse(games, {
     includeScore: true,
-    threshold: 0.3,
+    threshold: 0.35,
     keys: ['name'],
   })
 

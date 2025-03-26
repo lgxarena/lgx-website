@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
-import { PropsWithChildren } from 'react'
+import { PropsWithChildren, Suspense } from 'react'
 
 export const metadata: Metadata = {
   title: 'Jogos - LGX E-Sport Arena',
@@ -19,7 +19,9 @@ export default function GamesLayout({ children }: PropsWithChildren) {
         competitivo. Entre na arena, mostre suas habilidades e alcance o topo!
       </p>
 
-      <NuqsAdapter>{children}</NuqsAdapter>
+      <NuqsAdapter>
+        <Suspense>{children}</Suspense>
+      </NuqsAdapter>
     </main>
   )
 }
