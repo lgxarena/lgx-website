@@ -2,6 +2,9 @@ import { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Sobre - LGX Arena',
+  alternates: {
+    canonical: 'https://lgxarena.com.br/sobre',
+  },
 }
 
 export default function About() {

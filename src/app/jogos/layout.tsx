@@ -6,6 +6,9 @@ export const metadata: Metadata = {
   title: 'Jogos - LGX Arena',
   description:
     'Dos FPS eletrizantes aos MOBAs estratégicos, temos os jogos que dominam o cenário competitivo. Entre na arena, mostre suas habilidades e alcance o topo!',
+  alternates: {
+    canonical: 'https://lgxarena.com.br/jogos',
+  },
 }
 
 export default function GamesLayout({ children }: PropsWithChildren) {

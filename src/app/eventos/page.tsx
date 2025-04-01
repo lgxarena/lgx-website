@@ -5,6 +5,9 @@ import { generateWhatsAppLink } from '@/utils/generate-whatsapp-link'
 
 export const metadata: Metadata = {
   title: 'Eventos - LGX Arena',
+  alternates: {
+    canonical: 'https://lgxarena.com.br/eventos',
+  },
 }
 
 export default function Events() {

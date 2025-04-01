@@ -5,6 +5,9 @@ import { generateWhatsAppLink } from '@/utils/generate-whatsapp-link'
 
 export const metadata: Metadata = {
   title: 'Corujão - LGX Arena',
+  alternates: {
+    canonical: 'https://lgxarena.com.br/corujao',
+  },
 }
 
 export default function LANParty() {

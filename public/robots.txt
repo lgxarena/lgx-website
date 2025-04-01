@@ -1,0 +1,7 @@
+# *
+User-agent: *
+Allow: /
+Disallow: /_next/*
+Disallow: /images/*
+
+Sitemap: https://lgxarena.com.br/sitemap.xml

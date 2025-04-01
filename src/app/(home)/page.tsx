@@ -11,6 +11,9 @@ import { Setup } from './_components/setup'
 
 export const metadata: Metadata = {
   title: 'Página inicial - LGX Arena',
+  alternates: {
+    canonical: 'https://lgxarena.com.br/',
+  },
 }
 
 export default function Home() {
