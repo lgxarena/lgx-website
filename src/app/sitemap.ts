@@ -17,7 +17,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ] satisfies Route[]
 
   const staticPages = routes.map((route) => {
-    const path = route.path === '/' ? '' : `/${route.path}`
+    const path = route.path === '/' ? '' : `${route.path}`
 
     return {
       url: `https://lgxarena.com.br${path}`,
