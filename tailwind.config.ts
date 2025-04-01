@@ -43,8 +43,8 @@ export default {
     },
     extend: {
       backgroundImage: {
-        'hero-mobile': 'url("/images/bg-mobile.png")',
-        'hero-desktop': 'url("/images/bg-desktop.png")',
+        'hero-mobile': 'url("/images/bg-mobile.webp")',
+        'hero-desktop': 'url("/images/bg-desktop.webp")',
       },
     },
   },

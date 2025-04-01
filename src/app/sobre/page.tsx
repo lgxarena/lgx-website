@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Sobre - LGX E-Sport Arena',
+  title: 'Sobre - LGX Arena',
 }
 
 export default function About() {

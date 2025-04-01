@@ -29,7 +29,7 @@ export function Footer() {
         Av. Cupecê, 6062 - Bloco 1, Loja 16, Jardim Prudência, São Paulo - SP
       </p>
       <p className="text-center text-xs text-neutral-300 md:text-sm">
-        LGX E-Sport Arena. Todos os direitos reservados.
+        LGX Arena. Todos os direitos reservados.
       </p>
     </footer>
   )

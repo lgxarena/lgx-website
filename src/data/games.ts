@@ -85,12 +85,6 @@ export const games = [
     isPopular: false,
   },
   {
-    name: 'DayZ',
-    categories: ['Sobrevivência', 'Tiro', 'Aventura'],
-    image: '/images/games/dayz.jpg',
-    isPopular: false,
-  },
-  {
     name: 'Destiny 2',
     categories: ['FPS', 'MMO', 'Aventura', 'RPG', 'Sci-Fi'],
     image: '/images/games/destiny-2.jpg',

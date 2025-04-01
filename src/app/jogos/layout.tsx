@@ -3,7 +3,7 @@ import { NuqsAdapter } from 'nuqs/adapters/next/app'
 import { PropsWithChildren, Suspense } from 'react'
 
 export const metadata: Metadata = {
-  title: 'Jogos - LGX E-Sport Arena',
+  title: 'Jogos - LGX Arena',
   description:
     'Dos FPS eletrizantes aos MOBAs estratégicos, temos os jogos que dominam o cenário competitivo. Entre na arena, mostre suas habilidades e alcance o topo!',
 }

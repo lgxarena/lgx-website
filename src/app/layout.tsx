@@ -11,9 +11,9 @@ import '@/styles/global.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'LGX E-Sport Arena',
+  title: 'LGX Arena',
   description:
-    'A LGX E-Sport Arena tem 144 m² com uma estrutura totalmente dedicada ao público gamer. Espaço esse para realização de competições, treino de times, confraternizações e eventos fechados.',
+    'A LGX Arena tem 144 m² com uma estrutura totalmente dedicada ao público gamer. Espaço esse para realização de competições, treino de times, confraternizações e eventos fechados.',
 }
 
 export default function RootLayout({

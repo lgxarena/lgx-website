@@ -1,4 +1,10 @@
+import { Metadata } from 'next'
+
 import { ContactForm } from './components/contact-form'
+
+export const metadata: Metadata = {
+  title: 'Contato - LGX Arena',
+}
 
 export default function Contact() {
   return (

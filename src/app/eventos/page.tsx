@@ -1,5 +1,11 @@
+import { Metadata } from 'next'
+
 import { Button } from '@/components/ui/button'
 import { generateWhatsAppLink } from '@/utils/generate-whatsapp-link'
+
+export const metadata: Metadata = {
+  title: 'Eventos - LGX Arena',
+}
 
 export default function Events() {
   const requestQuoteLink = generateWhatsAppLink(

@@ -1,5 +1,11 @@
+import { Metadata } from 'next'
+
 import { Button } from '@/components/ui/button'
 import { generateWhatsAppLink } from '@/utils/generate-whatsapp-link'
+
+export const metadata: Metadata = {
+  title: 'Corujão - LGX Arena',
+}
 
 export default function LANParty() {
   // TODO: Mudar para Accordion

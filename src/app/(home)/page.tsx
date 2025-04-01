@@ -10,7 +10,7 @@ import { MobilePricing } from './_components/mobile-pricing'
 import { Setup } from './_components/setup'
 
 export const metadata: Metadata = {
-  title: 'Página inicial - LGX E-Sport Arena',
+  title: 'Página inicial - LGX Arena',
 }
 
 export default function Home() {
