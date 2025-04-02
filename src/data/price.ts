@@ -1,5 +1,12 @@
+import { Room } from '@/hooks/use-room-tabs'
+
+type Price = {
+  title: string
+  price: number
+}
+
 export const PRICES = {
-  vip: [
+  pro: [
     { title: '1 Hora', price: 7 },
     { title: '3 Horas', price: 18 },
     { title: '5 Horas', price: 30 },
@@ -8,7 +15,7 @@ export const PRICES = {
     { title: 'Corujinha', price: 22 },
     { title: 'Corujão', price: 50 },
   ],
-  common: [
+  vip: [
     { title: '1 Hora', price: 5 },
     { title: '3 Horas', price: 12 },
     { title: '5 Horas', price: 20 },
@@ -17,4 +24,4 @@ export const PRICES = {
     { title: 'Corujinha', price: 15 },
     { title: 'Corujão', price: 32 },
   ],
-}
+} satisfies Record<Room, Price[]>

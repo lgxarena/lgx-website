@@ -3,6 +3,7 @@
 import { Fragment } from 'react'
 
 import { PRICES } from '@/data/price'
+import { Room } from '@/hooks/use-room-tabs'
 import { formatCurrency } from '@/utils/format-currency'
 
 export function DesktopPricing() {
@@ -14,7 +15,7 @@ export function DesktopPricing() {
           className="grid w-full grid-cols-2 gap-3 rounded-md bg-neutral-900 p-6 font-medium"
         >
           <span className="col-span-full font-medium text-neutral-300">
-            {key === 'vip' ? 'Sala VIP' : 'Sala Comum'}
+            {(key as Room) === 'pro' ? 'Sala Pro' : 'Sala VIP'}
           </span>
           {room.map(({ title, price }) => (
             <Fragment key={title}>

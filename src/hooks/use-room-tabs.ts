@@ -2,10 +2,10 @@
 
 import { MouseEvent, useState } from 'react'
 
-export type Room = 'common' | 'vip'
+export type Room = 'pro' | 'vip'
 
 export function useRoomTabs() {
-  const [room, setRoom] = useState<Room>('vip')
+  const [room, setRoom] = useState<Room>('pro')
 
   const changeRoom = (event: MouseEvent<HTMLButtonElement>) => {
     const tab = event.currentTarget.id as Room

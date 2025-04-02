@@ -5,9 +5,9 @@ import { Button } from '@/components/ui/button'
 import { OPENING_HOURS } from '@/data/opening-hours'
 import { generateWhatsAppLink } from '@/utils/generate-whatsapp-link'
 
-import { DesktopPricing } from './_components/desktop-pricing'
-import { MobilePricing } from './_components/mobile-pricing'
-import { Setup } from './_components/setup'
+import { DesktopPricing } from './components/desktop-pricing'
+import { MobilePricing } from './components/mobile-pricing'
+import { Setup } from './components/setup'
 
 export const metadata: Metadata = {
   title: 'Página inicial - LGX Arena',
@@ -97,7 +97,7 @@ export default function Home() {
         <DesktopPricing />
 
         <p className="max-w-3xl text-center text-xs leading-[1.4] text-neutral-300 sm:text-sm">
-          Observação: O tempo adquirido fica salvo em sua conta, mas é separado por sala (comum ou
+          Observação: O tempo adquirido fica salvo em sua conta, mas é separado por sala (pro ou
           VIP). Os pacotes Corujinha e Corujão não acumulam tempo e só são válidos durante o período
           específico do pacote.
         </p>

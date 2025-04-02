@@ -12,20 +12,21 @@ type RoomTabsProps = {
 }
 
 export function RoomTabs({ className, room, onChangeRoom }: RoomTabsProps) {
+  const isPro = room === 'pro'
   return (
     <div
       className={cn('relative mt-4 flex w-full max-w-screen-xl gap-2', className)}
       role="tablist"
     >
-      <TabButton id="vip" isSelected={room === 'vip'} onClick={onChangeRoom}>
-        Sala VIP
+      <TabButton id="pro" isSelected={isPro} onClick={onChangeRoom}>
+        Sala Pro
       </TabButton>
-      <TabButton id="common" isSelected={room === 'common'} onClick={onChangeRoom}>
-        Sala Comum
+      <TabButton id="vip" isSelected={!isPro} onClick={onChangeRoom}>
+        Sala VIP
       </TabButton>
 
       <motion.span
-        animate={{ x: room === 'vip' ? '0%' : '100%' }}
+        animate={{ x: isPro ? '0%' : '100%' }}
         className="absolute bottom-0 left-0 h-full w-1/2 rounded-md bg-neutral-900"
         initial={false}
         transition={{ duration: 0.15 }}
