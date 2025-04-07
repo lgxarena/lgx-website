@@ -14,7 +14,7 @@ export function Footer() {
               <a
                 className="flex size-8 items-center justify-center hover:text-neutral-50/90"
                 href={href}
-                rel="noreferrer"
+                rel="noopener"
                 target="_blank"
               >
                 <Icon size={24} />

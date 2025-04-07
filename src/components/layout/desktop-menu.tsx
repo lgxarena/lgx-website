@@ -55,6 +55,7 @@ export function DesktopMenu() {
                         <Link
                           className="cursor-pointer"
                           href={child.href}
+                          rel={child.href.includes('pdf') ? 'noopener' : undefined}
                           target={child.href.includes('pdf') ? '_blank' : '_self'}
                         >
                           {child.title}
@@ -87,7 +88,7 @@ export function DesktopMenu() {
       </ul>
 
       <Button size="sm" asChild>
-        <a href={bookText} rel="noreferrer" target="_blank">
+        <a href={bookText} rel="noopener" target="_blank">
           Faça sua reserva
         </a>
       </Button>

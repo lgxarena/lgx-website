@@ -38,7 +38,7 @@ export default function Home() {
           ONDE OS GAMERS SE TORNAM LENDAS
         </h1>
         <Button className="w-full max-w-96" asChild>
-          <a href={bookText} rel="noreferrer" target="_blank">
+          <a href={bookText} rel="noopener" target="_blank">
             Faça sua reserva
           </a>
         </Button>
@@ -78,7 +78,7 @@ export default function Home() {
           <a
             className="text-neutral-50 underline underline-offset-2"
             href={checkOpeningText}
-            rel="noreferrer"
+            rel="noopener"
             target="_blank"
           >
             entre em contato

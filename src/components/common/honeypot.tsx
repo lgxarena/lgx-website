@@ -8,6 +8,7 @@ type HoneypotProps = {
 export function Honeypot({ value, onChange }: HoneypotProps) {
   return (
     <input
+      aria-hidden="true"
       autoComplete="off"
       className="sr-only"
       name="honeypot"

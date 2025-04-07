@@ -26,7 +26,8 @@ export function TextMorph({ children, as: Component = 'p', className, style }: T
   }, [children, uniqueId])
 
   return (
-    <Component key={children} aria-label={children} className={className} style={style}>
+    <Component key={children} className={className} style={style}>
+      <span className="sr-only">{children}</span>
       <AnimatePresence mode="popLayout">
         {characters.map((character) => (
           <motion.span

@@ -10,7 +10,7 @@ export function DesktopPricing() {
   return (
     <div className="my-4 hidden w-full max-w-screen-xl gap-3 md:flex">
       {Object.entries(PRICES).map(([key, room]) => (
-        <dl
+        <div
           key={key}
           className="grid w-full grid-cols-2 gap-3 rounded-md bg-neutral-900 p-6 font-medium"
         >
@@ -19,11 +19,11 @@ export function DesktopPricing() {
           </span>
           {room.map(({ title, price }) => (
             <Fragment key={title}>
-              <dt className="font-semibold">{title}</dt>
-              <dd className="text-right font-semibold">{formatCurrency(price)}</dd>
+              <b className="font-semibold">{title}</b>
+              <span className="text-right font-semibold">{formatCurrency(price)}</span>
             </Fragment>
           ))}
-        </dl>
+        </div>
       ))}
     </div>
   )
