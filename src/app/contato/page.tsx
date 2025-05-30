@@ -1,5 +1,7 @@
 import { Metadata } from 'next'
 
+import { Socials } from '@/enums/socials'
+
 import { ContactForm } from './components/contact-form'
 
 export const metadata: Metadata = {
@@ -37,7 +39,7 @@ export default function Contact() {
             <b className="mb-3 text-lg font-medium">Converse com a gente</b>
             <a
               className="underline underline-offset-2"
-              href="https://wa.me/551156234874"
+              href={Socials.WHATSAPP}
               rel="noopener"
               target="_blank"
             >
@@ -45,7 +47,7 @@ export default function Contact() {
             </a>
             <a
               className="mt-4 underline underline-offset-2"
-              href="https://instagram.com/lgxlan"
+              href={Socials.INSTAGRAM}
               rel="noopener"
               target="_blank"
             >

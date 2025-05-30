@@ -99,7 +99,8 @@ export default function Home() {
         <p className="max-w-3xl text-center text-xs leading-[1.4] text-neutral-300 sm:text-sm">
           Observação: O tempo adquirido fica salvo em sua conta, mas é separado por sala (pro ou
           VIP). Os pacotes Corujinha e Corujão não acumulam tempo e só são válidos durante o período
-          específico do pacote.
+          específico do pacote. Solicite um orçamento para eventos, mix, bootcamps,
+          confraternizações e aniversários!
         </p>
       </section>
 
