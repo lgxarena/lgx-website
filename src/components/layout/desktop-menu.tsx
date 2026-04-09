@@ -77,6 +77,7 @@ export function DesktopMenu() {
                 className="inline-flex h-10 items-center rounded-md px-3 transition-colors focus-visible:outline-none
                   focus-visible:ring-2 focus-visible:ring-neutral-50"
                 onPointerEnter={() => setHoveredIndex(index)}
+                {...(props.href.startsWith('http') ? { target: '_blank', rel: 'noopener' } : {})}
               >
                 {props.title}
               </Link>

@@ -36,7 +36,7 @@ export function MobileMenu() {
   const handleGoPage = (href: string) => {
     closeMenu()
 
-    if (href.includes('pdf')) {
+    if (href.includes('pdf')) || href.startsWith('http')) {
       window.open(href, '_blank')
       return
     }

@@ -32,6 +32,7 @@ export const MOBILE_MENU = [
     href: '/corujao',
   },
   { title: 'Eventos', href: '/eventos' },
+  { title: 'Rank/Stats', href: 'https://rank.lgxarena.com.br' },
   { title: 'Contato', href: '/contato' },
 ] as const
 
