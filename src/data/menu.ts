@@ -91,5 +91,6 @@ export const DESKTOP_MENU: DesktopMenuItem[] = [
     href: '/corujao',
   },
   { title: 'Eventos', href: '/eventos' },
+  { title: 'Rank/Stats', href: 'https://rank.lgxarena.com.br' },
   { title: 'Contato', href: '/contato' },
 ] as const
