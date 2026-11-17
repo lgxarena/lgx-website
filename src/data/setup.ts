@@ -25,12 +25,12 @@ export const PERIPHERALS = {
     { part: 'Teclado', name: 'Redragon Kumara' },
     { part: 'Mouse', name: 'Redragon Cobra' },
     { part: 'Headphone', name: 'Redragon Zeus' },
-    { part: 'Mousepad', name: 'Redragon Flick L' },
+    { part: 'Mousepad', name: 'Redragon Flick S' },
   ],
   vip: [
     { part: 'Teclado', name: 'Redragon Kumara' },
     { part: 'Mouse', name: 'Redragon Cobra' },
-    { part: 'Headphone', name: 'Redragon Zeus' },
-    { part: 'Mousepad', name: 'Redragon Flick L' },
+    { part: 'Headphone', name: 'Redragon Minos' },
+    { part: 'Mousepad', name: 'Redragon Flick S' },
   ],
 } satisfies Record<Room, SetupItem[]>

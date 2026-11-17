@@ -19,9 +19,14 @@ export function MobilePricing() {
         className="mb-4 mt-2 grid w-full max-w-screen-xl grid-cols-2 gap-3 rounded-md bg-neutral-900 p-5 font-medium
           md:hidden"
       >
-        {PRICES[room].map(({ title, price }) => (
+        {PRICES[room].map(({ title, price, description }) => (
           <Fragment key={title}>
-            <dt>{title}</dt>
+            <dt>
+              {title}
+              {description && (
+                <span className="block text-xs font-normal text-neutral-300">{description}</span>
+              )}
+            </dt>
             <TextMorph as="dd" className="text-right">
               {formatCurrency(price)}
             </TextMorph>

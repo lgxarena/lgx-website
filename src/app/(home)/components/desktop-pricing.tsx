@@ -17,9 +17,14 @@ export function DesktopPricing() {
           <span className="col-span-full font-medium text-neutral-300">
             {(key as Room) === 'pro' ? 'Sala Pro' : 'Sala VIP'}
           </span>
-          {room.map(({ title, price }) => (
+          {room.map(({ title, price, description }) => (
             <Fragment key={title}>
-              <b className="font-semibold">{title}</b>
+              <div>
+                <b className="font-semibold">{title}</b>
+                {description && (
+                  <span className="block text-sm font-normal text-neutral-300">{description}</span>
+                )}
+              </div>
               <span className="text-right font-semibold">{formatCurrency(price)}</span>
             </Fragment>
           ))}
