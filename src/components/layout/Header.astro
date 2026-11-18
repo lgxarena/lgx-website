@@ -183,6 +183,7 @@ const naInicio = normalizarCaminho(caminho) === '/'
   if (abrir && menu instanceof HTMLDialogElement) {
     abrir.addEventListener('click', () => {
       menu.showModal()
+      menu.querySelector<HTMLElement>('[data-fechar-menu]')?.focus()
       abrir.setAttribute('aria-expanded', 'true')
     })
 
