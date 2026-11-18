@@ -1,0 +1,7 @@
+nome: 'Roblox'
+capa: ./roblox.jpg
+categorias:
+  - Sandbox
+  - Aventura
+  - MMO
+popular: false

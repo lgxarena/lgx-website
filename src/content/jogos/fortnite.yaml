@@ -1,0 +1,7 @@
+nome: 'Fortnite'
+capa: ./fortnite.jpg
+categorias:
+  - Battle Royale
+  - Tiro
+  - Construção
+popular: true

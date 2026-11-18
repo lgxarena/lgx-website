@@ -1,0 +1,8 @@
+nome: 'World of Warcraft'
+capa: ./world-of-warcraft.jpg
+categorias:
+  - MMORPG
+  - RPG
+  - Aventura
+  - Fantasia
+popular: false

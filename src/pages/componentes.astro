@@ -12,6 +12,19 @@ import SectionHeading from '@/components/ui/SectionHeading.astro'
 import Stars from '@/components/ui/Stars.astro'
 import Tag from '@/components/ui/Tag.astro'
 import Base from '@/layouts/Base.astro'
+import { getHorarios, getJogos, getMenorPrecoPorHora, getPlanos, getSalas } from '@/lib/conteudo'
+import { formatarHora, formatarPreco } from '@/lib/formatar'
+
+const [salas, planos, horarios, jogos] = await Promise.all([
+  getSalas(),
+  getPlanos(),
+  getHorarios(),
+  getJogos(),
+])
+const aPartirDe = {
+  pro: await getMenorPrecoPorHora('pro'),
+  vip: await getMenorPrecoPorHora('vip'),
+}
 
 const cores = [
   { grupo: 'Fundos', itens: ['bg', 'bg-alt', 'surface', 'surface-2', 'surface-3'] },
@@ -162,6 +175,57 @@ const icones: IconName[] = [
           </li>
         ))}
       </ul>
+    </Section>
+
+    <Section aria-labelledby="conteudo">
+      <SectionHeading
+        id="conteudo"
+        title="Conteúdo"
+        description="Lido de src/content (issue #8): é isso que o painel vai editar."
+      />
+      <div class="overflow-x-auto rounded-lg border border-line">
+        <table class="w-full min-w-[560px] border-collapse text-left">
+          <thead class="text-sm text-fg-muted">
+            <tr>
+              <th scope="col" class="p-4 font-semibold">
+                Plano
+              </th>
+              <th scope="col" class="p-4 font-semibold">
+                Quando vale
+              </th>
+              {salas.map((s) => (
+                <th scope="col" class="p-4 text-right font-semibold">
+                  {s.data.nome}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {planos.map(({ id, data }) => (
+              <tr class="border-t border-line">
+                <th scope="row" class="p-4 font-semibold">
+                  {data.nome}
+                </th>
+                <td class="p-4 text-fg-soft">
+                  {data.janela
+                    ? `${formatarHora(data.janela.inicio)} – ${formatarHora(data.janela.fim)}`
+                    : 'Qualquer horário'}
+                </td>
+                {salas.map((s) => (
+                  <td class="p-4 text-right font-bold" data-plano={id}>
+                    {formatarPreco(data.precos[s.id as 'pro' | 'vip'], { inteiro: true })}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="text-fg-soft">
+        A partir de {formatarPreco(aPartirDe.pro)}/h na Pro e {formatarPreco(aPartirDe.vip)}/h na
+        VIP · {horarios.length} faixas de horário · {jogos.length} jogos (
+        {jogos.filter((j) => j.data.popular).length} populares).
+      </p>
     </Section>
   </main>
 </Base>

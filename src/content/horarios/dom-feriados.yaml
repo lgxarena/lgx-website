@@ -1,0 +1,5 @@
+rotulo: Dom e feriados
+dias: [domingo, feriado]
+abre: '14:00'
+fecha: '20:00'
+ordem: 3

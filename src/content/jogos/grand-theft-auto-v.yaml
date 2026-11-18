@@ -1,0 +1,7 @@
+nome: 'Grand Theft Auto V'
+capa: ./grand-theft-auto-v.jpg
+categorias:
+  - Ação
+  - Aventura
+  - Mundo Aberto
+popular: false
