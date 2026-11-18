@@ -21,7 +21,7 @@ const numeros = [
 ]
 ---
 
-<dl data-numeros class="mt-16 grid grid-cols-2 border-t border-fg/15 md:mt-28 lg:grid-cols-4">
+<dl data-numeros class="grid grid-cols-2 lg:grid-cols-4">
   {numeros.map((n, i) => (
     <div
       class:list={[
@@ -32,7 +32,7 @@ const numeros = [
       ]}
     >
       <dt class="text-[15px] text-fg-muted">{n.rotulo}</dt>
-      <dd class="flex items-center gap-3">
+      <dd class="flex items-center gap-3 overflow-hidden">
         <span class="sr-only">
           {n.valor}
           {n.sufixo}
@@ -65,6 +65,34 @@ const numeros = [
     const DURACAO = 1600
     const suave = (t: number) => 1 - Math.pow(1 - t, 3)
 
+    /**
+     * "1000 Mbps" rola para cima e sai; "1 Gbps" entra por baixo, como num placar.
+     * O bloco do número tem `overflow-hidden`, então a troca acontece dentro da linha.
+     */
+    const virarGbps = (el: HTMLElement, unidade: HTMLElement, alvo: number) => {
+      const bloco = el.parentElement
+      if (!bloco) return
+      const saida = bloco.animate(
+        [
+          { transform: 'translateY(0)', opacity: 1 },
+          { transform: 'translateY(-70%)', opacity: 0 },
+        ],
+        { duration: 220, delay: 350, easing: 'cubic-bezier(0.55, 0, 1, 0.45)', fill: 'forwards' }
+      )
+      saida.onfinish = () => {
+        el.textContent = String(alvo)
+        unidade.textContent = 'Gbps'
+        bloco.animate(
+          [
+            { transform: 'translateY(70%)', opacity: 0 },
+            { transform: 'translateY(0)', opacity: 1 },
+          ],
+          { duration: 320, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' }
+        )
+        saida.cancel()
+      }
+    }
+
     const animar = (el: HTMLElement) => {
       const alvo = Number(el.dataset.contar)
       const sufixo = el.dataset.sufixo ?? ''
@@ -79,10 +107,7 @@ const numeros = [
         const t = Math.min(1, (agora - inicio) / DURACAO)
         el.textContent = `${Math.round(final * suave(t))}${t === 1 ? sufixo : ''}`
         if (t < 1) return requestAnimationFrame(passo)
-        if (mbps && unidade) {
-          el.textContent = String(alvo)
-          unidade.textContent = 'Gbps'
-        }
+        if (mbps && unidade) virarGbps(el, unidade, alvo)
       }
       requestAnimationFrame(passo)
     }
@@ -101,7 +126,11 @@ const numeros = [
     // Só zera os números se a faixa ainda não estiver à vista (evita piscar o valor final).
     const caixa = numeros.getBoundingClientRect()
     if (caixa.top > window.innerHeight - caixa.height / 2) {
-      contadores.forEach((el) => (el.textContent = '0'))
+      contadores.forEach((el) => {
+        el.textContent = '0'
+        const unidade = el.parentElement?.querySelector<HTMLElement>('[data-unidade]')
+        if (el.hasAttribute('data-mbps') && unidade) unidade.textContent = 'Mbps'
+      })
     }
     observador.observe(numeros)
   }
