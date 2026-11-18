@@ -1,0 +1,115 @@
+---
+/**
+ * Cartão de preços de uma sala: horas avulsas e pacotes, lidos das coleções `salas` e `planos`.
+ * Usado no Início e na página de Preços (issue #11).
+ */
+import Button from '@/components/ui/Button.astro'
+import Placeholder from '@/components/ui/Placeholder.astro'
+import { getMenorPrecoPorHora, getPlanos, type Sala, type SalaId } from '@/lib/conteudo'
+import { formatarHora, formatarPreco } from '@/lib/formatar'
+import { Image } from 'astro:assets'
+
+interface Props {
+  sala: Sala
+  /** Nível do título do cartão (h2 na página de Preços, h3 dentro de uma seção). */
+  as?: 'h2' | 'h3'
+  /** A sala principal leva o botão vermelho; as outras, o botão neutro. */
+  principal?: boolean
+}
+
+const { sala, as: Titulo = 'h3', principal = false } = Astro.props
+const id = sala.id as SalaId
+const SubTitulo = Titulo === 'h2' ? 'h3' : 'h4'
+
+const [avulsos, pacotes, menorPreco] = await Promise.all([
+  getPlanos('avulso'),
+  getPlanos('pacote'),
+  getMenorPrecoPorHora(id),
+])
+
+// Ficha resumida na ordem em que o jogador compara: monitor, placa, processador, memória.
+const ordemDaFicha = ['Monitor', 'Placa de vídeo', 'Processador', 'Memória']
+const ficha = ordemDaFicha
+  .map((item) => sala.data.hardware.find((h) => h.item === item)?.modelo)
+  .filter(Boolean)
+  .join(' · ')
+
+const linha = 'flex items-center justify-between gap-3 border-t border-line py-3.5 text-[17px]'
+const subtitulo = 'mb-2 text-xs font-bold tracking-[0.12em] text-link uppercase'
+---
+
+<article class="flex flex-col overflow-hidden rounded-xl border border-line bg-surface">
+  {sala.data.foto ? (
+    <Image
+      src={sala.data.foto}
+      alt={`${sala.data.nome} da LGX Arena`}
+      widths={[400, 640, 800]}
+      sizes="(min-width: 64rem) 620px, 100vw"
+      class="h-56 w-full object-cover"
+    />
+  ) : (
+    <Placeholder
+      label={`Foto da ${sala.data.nome}`}
+      class="h-56 rounded-none border-0 border-b bg-surface-2"
+    />
+  )}
+
+  <div class="flex flex-1 flex-col gap-8 p-6 sm:p-9">
+    <div class="flex flex-col gap-2.5">
+      <div class="flex flex-wrap items-baseline justify-between gap-3">
+        <Titulo class="text-3xl font-extrabold tracking-tight md:text-[34px]">
+          {sala.data.nome}
+        </Titulo>
+        <p class="text-[15px] text-fg-muted">
+          a partir de <strong class="text-fg">{formatarPreco(menorPreco)}/h</strong>
+        </p>
+      </div>
+      <p class="text-[15px] leading-relaxed text-fg-muted">{ficha}</p>
+    </div>
+
+    <div>
+      <SubTitulo class={subtitulo}>Horas avulsas</SubTitulo>
+      <dl>
+        {avulsos.map((p) => (
+          <div class={linha}>
+            <dt>{p.data.nome}</dt>
+            <dd class="font-bold tabular-nums">
+              {formatarPreco(p.data.precos[id], { inteiro: true })}
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+
+    <div>
+      <SubTitulo class={subtitulo}>Pacotes</SubTitulo>
+      <dl>
+        {pacotes.map((p) => (
+          <div class={linha}>
+            <dt>
+              {p.data.nome.replace(/^Pacote /, '')}
+              {p.data.janela && (
+                <span class="text-sm text-fg-muted">
+                  {` · ${p.data.horas}h, ${formatarHora(p.data.janela.inicio)}–${formatarHora(p.data.janela.fim)}`}
+                </span>
+              )}
+            </dt>
+            <dd class:list={['font-bold tabular-nums', p.data.destaque && 'text-accent']}>
+              {formatarPreco(p.data.precos[id], { inteiro: true })}
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+
+    <Button
+      href={`/reservar?sala=${id}`}
+      variant={principal ? 'primary' : 'secondary'}
+      size="lg"
+      block
+      class="mt-auto"
+    >
+      Reservar na {sala.data.nome}
+    </Button>
+  </div>
+</article>
