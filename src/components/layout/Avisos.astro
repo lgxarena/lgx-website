@@ -1,0 +1,39 @@
+---
+/**
+ * Avisos temporários (coleção `avisos`), exibidos acima do cabeçalho enquanto estiverem
+ * dentro do período. Como o site é estático, a data é avaliada no build: o painel publica
+ * de novo ao salvar, e um build diário garante que o aviso some no dia certo (issue #28).
+ */
+import { getAvisosAtivos } from '@/lib/conteudo'
+
+const avisos = await getAvisosAtivos()
+---
+
+{avisos.length > 0 && (
+  <div role="region" aria-label="Avisos">
+    {avisos.map(({ data }) => (
+      <p
+        class:list={[
+          'px-6 py-2.5 text-center text-sm font-medium',
+          data.tom === 'alerta' ? 'bg-accent-deep text-white' : 'bg-surface-2 text-fg',
+        ]}
+      >
+        {data.texto}
+        {data.link && (
+          <>
+            {' '}
+            <a
+              href={data.link.href}
+              class:list={[
+                'font-semibold underline',
+                data.tom === 'alerta' && 'text-white hover:text-accent-tint',
+              ]}
+            >
+              {data.link.rotulo}
+            </a>
+          </>
+        )}
+      </p>
+    ))}
+  </div>
+)}

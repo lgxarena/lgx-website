@@ -1,0 +1,40 @@
+---
+import { NOME_DO_SITE, PREVIEW_NOINDEX } from '@/lib/config'
+import { normalizarCaminho } from '@/lib/navegacao'
+
+export interface SeoProps {
+  /** Título da página, sem o nome do site (ele é adicionado aqui). Na página inicial, use o nome do site. */
+  title: string
+  description: string
+  /** Imagem de compartilhamento (URL absoluta ou caminho a partir da raiz). Ver issue #19. */
+  image?: string
+  imageAlt?: string
+  noindex?: boolean
+}
+
+const { title, description, image, imageAlt, noindex = false } = Astro.props as SeoProps
+
+const tituloCompleto = title === NOME_DO_SITE ? title : `${title} · ${NOME_DO_SITE}`
+const canonica = new URL(normalizarCaminho(Astro.url.pathname), Astro.site)
+const imagem = image ? new URL(image, Astro.site).toString() : undefined
+const robots = PREVIEW_NOINDEX || noindex ? 'noindex, nofollow' : 'index, follow'
+---
+
+<title>{tituloCompleto}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonica} />
+<meta name="robots" content={robots} />
+
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="pt_BR" />
+<meta property="og:site_name" content={NOME_DO_SITE} />
+<meta property="og:url" content={canonica} />
+<meta property="og:title" content={tituloCompleto} />
+<meta property="og:description" content={description} />
+{imagem && <meta property="og:image" content={imagem} />}
+{imagem && imageAlt && <meta property="og:image:alt" content={imageAlt} />}
+
+<meta name="twitter:card" content={imagem ? 'summary_large_image' : 'summary'} />
+<meta name="twitter:title" content={tituloCompleto} />
+<meta name="twitter:description" content={description} />
+{imagem && <meta name="twitter:image" content={imagem} />}
