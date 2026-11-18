@@ -1,7 +1,7 @@
 ---
 /**
  * Números da casa no rodapé do hero. Quando a faixa entra na tela, os números sobem de zero,
- * todos com a mesma animação.
+ * todos com a mesma animação; o da internet conta em Mbps até virar 1 Gbps.
  *
  * O valor final já vem no HTML: sem JavaScript, ou com "reduzir movimento", nada anima.
  * Leitores de tela leem só o valor final (a contagem fica em `aria-hidden`).
@@ -16,7 +16,7 @@ const { anos, fundacao } = Astro.props
 const numeros = [
   { valor: 40, sufixo: '+', rotulo: 'PCs em duas salas' },
   { valor: 360, unidade: 'Hz', rotulo: 'monitores na Sala Pro' },
-  { valor: 1, unidade: 'Gbps', rotulo: 'de internet dedicada' },
+  { valor: 1, unidade: 'Gbps', rotulo: 'de internet dedicada', mbps: true },
   { valor: anos, unidade: 'anos', rotulo: `de LGX, desde ${fundacao}` },
 ]
 ---
@@ -42,7 +42,7 @@ const numeros = [
           aria-hidden="true"
           class="flex items-baseline gap-1.5 text-4xl font-extrabold tracking-tight tabular-nums md:text-5xl"
         >
-          <span data-contar={n.valor} data-sufixo={n.sufixo}>
+          <span data-contar={n.valor} data-sufixo={n.sufixo} data-mbps={n.mbps ? '' : undefined}>
             {n.valor}
             {n.sufixo}
           </span>
@@ -68,11 +68,21 @@ const numeros = [
     const animar = (el: HTMLElement) => {
       const alvo = Number(el.dataset.contar)
       const sufixo = el.dataset.sufixo ?? ''
+      // A internet conta em Mbps (0 → 1000) e, no fim, vira "1 Gbps", como num teste de velocidade.
+      const mbps = el.hasAttribute('data-mbps')
+      const unidade = el.parentElement?.querySelector<HTMLElement>('[data-unidade]')
+      const final = mbps ? alvo * 1000 : alvo
+      if (mbps && unidade) unidade.textContent = 'Mbps'
+
       const inicio = performance.now()
       const passo = (agora: number) => {
         const t = Math.min(1, (agora - inicio) / DURACAO)
-        el.textContent = `${Math.round(alvo * suave(t))}${t === 1 ? sufixo : ''}`
-        if (t < 1) requestAnimationFrame(passo)
+        el.textContent = `${Math.round(final * suave(t))}${t === 1 ? sufixo : ''}`
+        if (t < 1) return requestAnimationFrame(passo)
+        if (mbps && unidade) {
+          el.textContent = String(alvo)
+          unidade.textContent = 'Gbps'
+        }
       }
       requestAnimationFrame(passo)
     }

@@ -1,22 +1,25 @@
 ---
 /**
- * Selo "Aberto agora · fecha às 22h" que nasce no hero e desce junto com a rolagem até
- * parar ao lado do título "Horários".
+ * Selo "Aberto agora · fecha às 22h". Fica parado no hero e, quando a faixa de horários
+ * aparece na tela, desce até o lado do título "Horários". Ao voltar para o topo, sobe de novo.
  *
- * Funciona com `position: sticky`: o selo fica dentro de um trilho invisível que vai do ponto
- * de origem (`[data-status-origem]`, no hero) ao de destino (`[data-status-destino]`, nos
- * horários). O script só mede essas posições; o movimento é do próprio navegador.
- * O texto do status é preenchido pelo script de `FaixaHorarios`.
+ * O selo vive num trilho invisível que vai do ponto de origem (`[data-status-origem]`, no hero)
+ * ao de destino (`[data-status-destino]`, nos horários); o script mede os dois pontos e só
+ * troca o `translate` — a transição é CSS. O texto do status vem do script de `FaixaHorarios`.
  *
  * Precisa estar dentro de um elemento com `data-percurso-status` que contenha os dois pontos.
  */
 ---
 
-<div data-status-trilho class="pointer-events-none absolute z-30" hidden>
+<div
+  data-status-trilho
+  class="pointer-events-none absolute z-30 transition-transform duration-700 ease-[cubic-bezier(0.65,0,0.35,1)] motion-reduce:transition-none data-desceu:translate-y-(--distancia)"
+  hidden
+>
   <p
     data-status
     hidden
-    class="pointer-events-auto sticky top-24 inline-flex h-8 items-center gap-2 rounded-full border border-line-strong bg-surface-2/90 px-3.5 text-sm font-semibold whitespace-nowrap shadow-float backdrop-blur-sm"
+    class="pointer-events-auto inline-flex h-8 items-center gap-2 rounded-full border border-line-strong bg-surface-2/90 px-3.5 text-sm font-semibold whitespace-nowrap shadow-float backdrop-blur-sm"
   >
     <span data-status-ponto class="size-2 rounded-full"></span>
     <span data-status-texto></span>
@@ -36,9 +39,20 @@
       const d = destino.getBoundingClientRect()
       trilho.style.top = `${o.top - base.top}px`
       trilho.style.left = `${o.left - base.left}px`
-      trilho.style.height = `${d.bottom - o.top}px`
+      trilho.style.setProperty('--distancia', `${d.top - o.top}px`)
       trilho.hidden = false
     }
+
+    // Desce quando os horários estão à vista; sobe quando a pessoa volta para o hero.
+    const secao = destino.closest('section') ?? destino
+    new IntersectionObserver(
+      ([entrada]) => {
+        if (!entrada) return
+        if (entrada.isIntersecting) trilho.dataset.desceu = ''
+        else if (entrada.boundingClientRect.top > 0) delete trilho.dataset.desceu
+      },
+      { threshold: 0.35 }
+    ).observe(secao)
 
     medir()
     new ResizeObserver(medir).observe(percurso)
