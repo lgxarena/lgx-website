@@ -25,8 +25,14 @@ const regulares = horarios
       <h2 id="horarios-titulo" class="text-2xl font-extrabold tracking-tight">
         Horários
       </h2>
-      {/* Onde o selo "Aberto agora" termina o percurso que começa no hero (StatusAberto). */}
-      <div data-status-destino class="h-8"></div>
+      <p
+        data-status
+        hidden
+        class="inline-flex items-center gap-2 self-start rounded-full bg-surface-2 px-3.5 py-1.5 text-sm font-semibold"
+      >
+        <span data-status-ponto class="size-2 rounded-full"></span>
+        <span data-status-texto></span>
+      </p>
     </div>
 
     <div class="flex flex-col gap-3">
