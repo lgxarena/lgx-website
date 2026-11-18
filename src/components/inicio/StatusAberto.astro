@@ -1,0 +1,47 @@
+---
+/**
+ * Selo "Aberto agora · fecha às 22h" que nasce no hero e desce junto com a rolagem até
+ * parar ao lado do título "Horários".
+ *
+ * Funciona com `position: sticky`: o selo fica dentro de um trilho invisível que vai do ponto
+ * de origem (`[data-status-origem]`, no hero) ao de destino (`[data-status-destino]`, nos
+ * horários). O script só mede essas posições; o movimento é do próprio navegador.
+ * O texto do status é preenchido pelo script de `FaixaHorarios`.
+ *
+ * Precisa estar dentro de um elemento com `data-percurso-status` que contenha os dois pontos.
+ */
+---
+
+<div data-status-trilho class="pointer-events-none absolute z-30" hidden>
+  <p
+    data-status
+    hidden
+    class="pointer-events-auto sticky top-24 inline-flex h-8 items-center gap-2 rounded-full border border-line-strong bg-surface-2/90 px-3.5 text-sm font-semibold whitespace-nowrap shadow-float backdrop-blur-sm"
+  >
+    <span data-status-ponto class="size-2 rounded-full"></span>
+    <span data-status-texto></span>
+  </p>
+</div>
+
+<script>
+  const percurso = document.querySelector<HTMLElement>('[data-percurso-status]')
+  const trilho = percurso?.querySelector<HTMLElement>('[data-status-trilho]')
+  const origem = percurso?.querySelector<HTMLElement>('[data-status-origem]')
+  const destino = percurso?.querySelector<HTMLElement>('[data-status-destino]')
+
+  if (percurso && trilho && origem && destino) {
+    const medir = () => {
+      const base = percurso.getBoundingClientRect()
+      const o = origem.getBoundingClientRect()
+      const d = destino.getBoundingClientRect()
+      trilho.style.top = `${o.top - base.top}px`
+      trilho.style.left = `${o.left - base.left}px`
+      trilho.style.height = `${d.bottom - o.top}px`
+      trilho.hidden = false
+    }
+
+    medir()
+    new ResizeObserver(medir).observe(percurso)
+    document.fonts?.ready.then(medir)
+  }
+</script>

@@ -4,6 +4,7 @@ import { Image } from 'astro:assets'
 import Avaliacoes from '@/components/inicio/Avaliacoes.astro'
 import FaixaHorarios from '@/components/inicio/FaixaHorarios.astro'
 import Hero from '@/components/inicio/Hero.astro'
+import StatusAberto from '@/components/inicio/StatusAberto.astro'
 import PrecosSala from '@/components/precos/PrecosSala.astro'
 import Icon from '@/components/ui/Icon.astro'
 import Placeholder from '@/components/ui/Placeholder.astro'
@@ -43,8 +44,11 @@ const eventos = [
   title={`${site.nome}: centro de games e e-sports em São Paulo`}
   description="Duas salas, Pro e VIP, com PCs de alta performance, internet de 1 Gbps e Corujão de madrugada. Na Av. Cupecê, Jardim Prudência, São Paulo."
 >
-  <Hero />
-  <FaixaHorarios />
+  <div class="relative" data-percurso-status>
+    <Hero />
+    <FaixaHorarios />
+    <StatusAberto />
+  </div>
 
   <Section aria-labelledby="precos-titulo">
     <SectionHeading

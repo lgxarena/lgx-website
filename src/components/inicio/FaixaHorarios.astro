@@ -12,6 +12,8 @@ import { getHorarios } from '@/lib/conteudo'
 
 const horarios = await getHorarios()
 
+const notaCorujao = horarios.find((h) => h.data.dias.length === 0)?.data.observacao
+
 const regulares = horarios
   .filter((h) => h.data.dias.length > 0)
   .map((h) => ({ dias: h.data.dias, abre: h.data.abre, fecha: h.data.fecha }))
@@ -23,50 +25,55 @@ const regulares = horarios
       <h2 id="horarios-titulo" class="text-2xl font-extrabold tracking-tight">
         Horários
       </h2>
-      <p
-        data-status
-        hidden
-        class="inline-flex items-center gap-2 self-start rounded-full bg-surface-2 px-3.5 py-1.5 text-sm font-semibold"
-      >
-        <span data-status-ponto class="size-2 rounded-full"></span>
-        <span data-status-texto></span>
-      </p>
+      {/* Onde o selo "Aberto agora" termina o percurso que começa no hero (StatusAberto). */}
+      <div data-status-destino class="h-8"></div>
     </div>
 
-    <dl class="grid grid-cols-2 gap-3 md:grid-cols-4">
-      {horarios.map((h) => {
-        const corujao = h.data.dias.length === 0
-        return (
-          <div
-            data-dias={h.data.dias.join(' ')}
-            class:list={[
-              'flex flex-col gap-1.5 rounded-lg border p-4 transition-colors md:p-5',
-              corujao
-                ? 'border-accent-deep/60 bg-[linear-gradient(135deg,rgb(195_18_18/0.18),transparent_70%)]'
-                : 'border-line bg-surface data-hoje:border-fg/40 data-hoje:bg-surface-2',
-            ]}
-          >
-            <dt class="flex items-center gap-2 text-sm text-fg-muted">
-              {corujao && <Icon name="moon" size={16} class="text-link" />}
-              {h.data.rotulo}
-              <span
-                data-selo-hoje
-                hidden
-                class="ml-auto rounded-sm bg-fg px-1.5 py-0.5 text-[11px] font-bold tracking-wide text-bg uppercase"
-              >
-                Hoje
-              </span>
-            </dt>
-            <dd class="text-lg font-bold tabular-nums md:text-xl">
-              {h.data.abre} – {h.data.fecha}
-            </dd>
-            {h.data.observacao && (
-              <dd class="text-[13px] leading-snug text-fg-muted">{h.data.observacao}</dd>
-            )}
-          </div>
-        )
-      })}
-    </dl>
+    <div class="flex flex-col gap-3">
+      <dl class="grid grid-cols-2 gap-3 md:grid-cols-4">
+        {horarios.map((h) => {
+          const corujao = h.data.dias.length === 0
+          return (
+            <div
+              data-dias={h.data.dias.join(' ')}
+              class:list={[
+                'relative flex flex-col gap-1.5 rounded-lg border p-4 transition-colors md:p-5',
+                corujao
+                  ? 'border-accent-deep/60 bg-[linear-gradient(135deg,rgb(195_18_18/0.18),transparent_70%)]'
+                  : 'border-line bg-surface data-hoje:border-fg/40 data-hoje:bg-surface-2',
+              ]}
+            >
+              <dt class="flex items-center gap-2 text-sm text-fg-muted">
+                {h.data.rotulo}
+                {corujao && (
+                  <Icon
+                    name="moon"
+                    size={18}
+                    class="absolute top-4 right-4 text-link md:top-5 md:right-5"
+                  />
+                )}
+                <span
+                  data-selo-hoje
+                  hidden
+                  class="ml-auto rounded-sm bg-fg px-1.5 py-0.5 text-[11px] font-bold tracking-wide text-bg uppercase"
+                >
+                  Hoje
+                </span>
+              </dt>
+              <dd class="text-lg font-bold tabular-nums md:text-xl">
+                {h.data.abre} – {h.data.fecha}
+              </dd>
+            </div>
+          )
+        })}
+      </dl>
+      {notaCorujao && (
+        <p class="flex items-center gap-2 text-[13px] text-fg-muted md:justify-end">
+          <Icon name="moon" size={14} class="text-link" />
+          Corujão: {notaCorujao.charAt(0).toLowerCase() + notaCorujao.slice(1)}.
+        </p>
+      )}
+    </div>
   </Container>
 </section>
 
