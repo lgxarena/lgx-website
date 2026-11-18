@@ -26,6 +26,10 @@ const site = defineCollection({
     nome: z.string(),
     descricao: z.string(),
     fundacao: z.number().int(),
+    razaoSocial: z.string(),
+    cnpj: z
+      .string()
+      .regex(/^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$/, 'Use o formato 00.000.000/0000-00'),
     telefone: z.string().regex(/^\+\d{12,13}$/, 'Use o formato +5511XXXXXXXX'),
     whatsapp: z.string().regex(/^\d{12,13}$/, 'Só números, com DDI e DDD: 5511XXXXXXXX'),
     endereco: z.object({
