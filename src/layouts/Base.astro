@@ -1,4 +1,6 @@
 ---
+import { Font } from 'astro:assets'
+
 import '@/styles/global.css'
 
 interface Props {
@@ -19,6 +21,7 @@ const { title, description } = Astro.props
     <!-- Preview da branch dev fora do Google. Remover na virada (#25). -->
     <meta name="robots" content="noindex, nofollow" />
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <Font cssVariable="--font-inter" preload />
     <meta name="generator" content={Astro.generator} />
   </head>
   <body>

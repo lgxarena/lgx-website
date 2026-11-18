@@ -1,0 +1,27 @@
+---
+import type { HTMLAttributes } from 'astro/types'
+
+import Container from './Container.astro'
+
+type Props = HTMLAttributes<'section'> & {
+  /** `alt` usa o fundo alternativo com bordas, para separar seções vizinhas. */
+  tone?: 'default' | 'alt'
+  /** Espaçamento vertical. */
+  spacing?: 'md' | 'lg'
+}
+
+const { tone = 'default', spacing = 'lg', class: className, ...rest } = Astro.props
+---
+
+<section
+  {...rest}
+  class:list={[
+    spacing === 'lg' ? 'py-20 md:py-24' : 'py-12 md:py-16',
+    tone === 'alt' && 'border-y border-line bg-bg-alt',
+    className,
+  ]}
+>
+  <Container class="flex flex-col gap-10">
+    <slot />
+  </Container>
+</section>

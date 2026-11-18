@@ -1,0 +1,23 @@
+---
+/**
+ * Espaço reservado para uma foto que ainda não existe (ver issue #4).
+ * Deve sumir do site antes da virada.
+ */
+interface Props {
+  label: string
+  class?: string
+}
+
+const { label, class: className } = Astro.props
+---
+
+<div
+  role="img"
+  aria-label={`Foto em breve: ${label}`}
+  class:list={[
+    'flex items-center justify-center rounded-lg border border-dashed border-placeholder bg-surface p-6 text-center text-sm tracking-wide text-fg-muted uppercase',
+    className,
+  ]}
+>
+  [{label}]
+</div>

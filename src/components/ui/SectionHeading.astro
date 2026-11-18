@@ -1,0 +1,36 @@
+---
+import Icon from './Icon.astro'
+
+interface Props {
+  title: string
+  description?: string
+  /** Link secundário à direita do título (ex.: "Ver todos"). */
+  link?: { href: string; label: string }
+  /** `id` do título, para usar em `aria-labelledby` na seção. */
+  id?: string
+  as?: 'h1' | 'h2'
+}
+
+const { title, description, link, id, as: Heading = 'h2' } = Astro.props
+---
+
+<div class="flex flex-wrap items-end justify-between gap-4">
+  <div class="flex max-w-xl flex-col gap-2.5">
+    <Heading
+      id={id}
+      class:list={[
+        'font-extrabold tracking-tight',
+        Heading === 'h1' ? 'text-4xl md:text-[56px] md:leading-tight' : 'text-3xl md:text-[40px]',
+      ]}
+    >
+      {title}
+    </Heading>
+    {description && <p class="text-[17px] leading-relaxed text-fg-muted">{description}</p>}
+  </div>
+  {link && (
+    <a href={link.href} class="inline-flex items-center gap-1.5 py-2 font-semibold no-underline">
+      {link.label}
+      <Icon name="arrow-right" size={18} />
+    </a>
+  )}
+</div>
