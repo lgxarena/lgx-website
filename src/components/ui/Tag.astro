@@ -1,0 +1,19 @@
+---
+interface Props {
+  /** `neutral` para rótulos, `accent` para destaque (ex.: "Popular"). */
+  tone?: 'neutral' | 'accent'
+  class?: string
+}
+
+const { tone = 'neutral', class: className } = Astro.props
+---
+
+<span
+  class:list={[
+    'inline-flex items-center rounded-full px-2.5 py-1 text-xs font-bold tracking-wide',
+    tone === 'accent' ? 'bg-accent text-bg' : 'bg-surface-3 text-fg-soft',
+    className,
+  ]}
+>
+  <slot />
+</span>
