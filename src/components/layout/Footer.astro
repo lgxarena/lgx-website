@@ -58,7 +58,7 @@ const linkColuna = 'flex min-h-10 items-center text-fg-muted no-underline hover:
       <dl class="flex flex-col gap-2.5 text-[15px]">
         {horarios.map((h) => (
           <div class="flex justify-between gap-4">
-            <dt class:list={[h.data.destaque ? 'text-link' : 'text-fg-muted']}>{h.data.rotulo}</dt>
+            <dt class="text-fg-muted">{h.data.rotulo}</dt>
             <dd class="tabular-nums">
               {h.data.abre} – {h.data.fecha}
             </dd>
