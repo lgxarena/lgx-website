@@ -1,0 +1,7 @@
+nome: 'Dota 2'
+capa: ./dota-2.png
+categorias:
+  - MOBA
+  - Estratégia
+  - Competitivo
+popular: true

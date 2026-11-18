@@ -1,0 +1,6 @@
+nome: 'Team Fortress 2'
+capa: ./team-fortress-2.jpg
+categorias:
+  - FPS
+  - Tiro
+popular: false

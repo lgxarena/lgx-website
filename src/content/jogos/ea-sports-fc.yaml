@@ -1,0 +1,7 @@
+nome: 'EA SPORTS FC'
+capa: ./ea-sports-fc.jpg
+categorias:
+  - Esportes
+  - Simulação
+  - Competitivo
+popular: false

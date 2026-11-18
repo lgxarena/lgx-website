@@ -1,0 +1,7 @@
+nome: 'Rocket League'
+capa: ./rocket-league.jpg
+categorias:
+  - Esportes
+  - Corrida
+  - Competitivo
+popular: false

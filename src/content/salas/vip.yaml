@@ -1,0 +1,21 @@
+nome: Sala VIP
+resumo: 144 Hz · GTX 1060 · i5 8400
+ordem: 2
+hardware:
+  - item: Processador
+    modelo: Intel Core i5 8400
+  - item: Memória
+    modelo: 16GB DDR4 2666 MHz
+  - item: Placa de vídeo
+    modelo: GTX 1060 6GB
+  - item: Monitor
+    modelo: 24.5” 144Hz 1ms
+perifericos:
+  - item: Teclado
+    modelo: Redragon Kumara
+  - item: Mouse
+    modelo: Redragon Cobra
+  - item: Headset
+    modelo: Redragon Minos
+  - item: Mousepad
+    modelo: Redragon Flick S

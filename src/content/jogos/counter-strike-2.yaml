@@ -1,0 +1,7 @@
+nome: 'Counter-Strike 2'
+capa: ./counter-strike-2.png
+categorias:
+  - FPS
+  - Tiro
+  - Competitivo
+popular: true

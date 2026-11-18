@@ -1,0 +1,6 @@
+nome: 'Rainbow Six Siege'
+capa: ./rainbow-six-siege.jpg
+categorias:
+  - FPS
+  - Competitivo
+popular: false

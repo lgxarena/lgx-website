@@ -1,0 +1,7 @@
+nome: 'Minecraft'
+capa: ./minecraft.jpg
+categorias:
+  - Sandbox
+  - Aventura
+  - Construção
+popular: false

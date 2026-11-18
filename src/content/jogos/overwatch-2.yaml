@@ -1,0 +1,7 @@
+nome: 'Overwatch 2'
+capa: ./overwatch-2.png
+categorias:
+  - FPS
+  - Tiro
+  - Competitivo
+popular: false

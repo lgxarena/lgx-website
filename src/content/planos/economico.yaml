@@ -1,0 +1,10 @@
+nome: Pacote Econômico
+tipo: pacote
+horas: 4
+janela:
+  inicio: '11:00'
+  fim: '18:00'
+precos:
+  pro: 40
+  vip: 22
+ordem: 5
