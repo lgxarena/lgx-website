@@ -23,9 +23,11 @@ export function formatarTelefone(e164: string) {
   return nacional.replace(/^(\d{2})(\d{4,5})(\d{4})$/, '$1 $2-$3')
 }
 
-/** Link do WhatsApp com mensagem pronta. */
+/**
+ * Link do WhatsApp com mensagem pronta. Usa `encodeURIComponent` (espaço vira `%20`): com
+ * `URLSearchParams` o espaço vira `+`, que nem todo app do WhatsApp converte de volta.
+ */
 export function linkWhatsApp(numero: string, mensagem?: string) {
-  const url = new URL(`https://wa.me/${numero}`)
-  if (mensagem) url.searchParams.set('text', mensagem)
-  return url.toString()
+  const base = `https://wa.me/${numero}`
+  return mensagem ? `${base}?text=${encodeURIComponent(mensagem)}` : base
 }
