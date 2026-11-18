@@ -1,0 +1,107 @@
+---
+import Icon, { type IconName } from '@/components/ui/Icon.astro'
+import { getHorarios, getSite } from '@/lib/conteudo'
+import { formatarTelefone, linkWhatsApp } from '@/lib/formatar'
+import { MENU_AJUDA } from '@/lib/navegacao'
+
+import Brand from './Brand.astro'
+
+const [site, horarios] = await Promise.all([getSite(), getHorarios()])
+const { endereco } = site
+
+const redes: { nome: string; icone: IconName; href: string }[] = [
+  { nome: 'WhatsApp', icone: 'whatsapp', href: linkWhatsApp(site.whatsapp) },
+  { nome: 'Instagram', icone: 'instagram', href: site.redes.instagram },
+  { nome: 'TikTok', icone: 'tiktok', href: site.redes.tiktok },
+  { nome: 'Twitch', icone: 'twitch', href: site.redes.twitch },
+  { nome: 'YouTube', icone: 'youtube', href: site.redes.youtube },
+  { nome: 'Facebook', icone: 'facebook', href: site.redes.facebook },
+]
+
+const ajuda = [...MENU_AJUDA, { rotulo: 'Empresas & times', href: '/empresas' }]
+const tituloColuna = 'mb-4 text-[13px] font-bold tracking-widest text-fg uppercase'
+const linkColuna = 'flex min-h-10 items-center text-fg-muted no-underline hover:text-fg'
+---
+
+<footer class="border-t border-line bg-bg-alt pt-16 pb-10">
+  <div class="container-page grid gap-12 sm:grid-cols-2 lg:grid-cols-[2fr_1.2fr_1fr_1fr]">
+    <div class="flex flex-col gap-5">
+      <Brand width={128} />
+      <address class="text-[15px] leading-relaxed text-fg-muted not-italic">
+        {endereco.logradouro}
+        <br />
+        {endereco.bairro}, {endereco.cidade} – {endereco.uf}
+      </address>
+      <a
+        href="/contato"
+        class="inline-flex items-center gap-1.5 self-start py-1 font-semibold no-underline"
+      >
+        Como chegar <Icon name="arrow-right" size={18} />
+      </a>
+      <ul class="flex flex-wrap gap-2" aria-label="WhatsApp e redes sociais">
+        {redes.map((rede) => (
+          <li>
+            <a
+              href={rede.href}
+              target="_blank"
+              rel="noopener"
+              class="inline-flex size-11 items-center justify-center rounded-md bg-surface-2 text-fg no-underline transition-colors hover:bg-surface-3 hover:text-fg"
+            >
+              <Icon name={rede.icone} label={`${rede.nome} da LGX Arena (abre em nova aba)`} />
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <div>
+      <h2 class={tituloColuna}>Horários</h2>
+      <dl class="flex flex-col gap-2.5 text-[15px]">
+        {horarios.map((h) => (
+          <div class="flex justify-between gap-4">
+            <dt class="text-fg-muted">{h.data.rotulo}</dt>
+            <dd class="tabular-nums">
+              {h.data.abre} – {h.data.fecha}
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+
+    <div>
+      <h2 class={tituloColuna}>Contato</h2>
+      <ul class="text-[15px]">
+        <li>
+          <a href={linkWhatsApp(site.whatsapp)} target="_blank" rel="noopener" class={linkColuna}>
+            WhatsApp
+          </a>
+        </li>
+        <li>
+          <a href={`tel:${site.telefone}`} class={linkColuna}>
+            {formatarTelefone(site.telefone)}
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <nav aria-label="Ajuda">
+      <h2 class={tituloColuna}>Ajuda</h2>
+      <ul class="text-[15px]">
+        {ajuda.map((item) => (
+          <li>
+            <a href={item.href} class={linkColuna}>
+              {item.rotulo}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+
+  <div class="container-page mt-12">
+    <p class="border-t border-line pt-6 text-[13px] text-fg-subtle">
+      © {new Date().getFullYear()} {site.razaoSocial} · CNPJ {site.cnpj}. Todos os direitos
+      reservados.
+    </p>
+  </div>
+</footer>

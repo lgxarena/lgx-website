@@ -1,0 +1,276 @@
+---
+import Button from '@/components/ui/Button.astro'
+import Icon from '@/components/ui/Icon.astro'
+import { getSite } from '@/lib/conteudo'
+import { linkWhatsApp } from '@/lib/formatar'
+import { MENU_AJUDA, MENU_PRINCIPAL, estaAtivo, normalizarCaminho } from '@/lib/navegacao'
+
+import Brand from './Brand.astro'
+
+const site = await getSite()
+const caminho = Astro.url.pathname
+const whatsapp = linkWhatsApp(site.whatsapp)
+const naInicio = normalizarCaminho(caminho) === '/'
+---
+
+<header class="sticky top-0 z-40 border-b border-line bg-bg/95 backdrop-blur-sm">
+  <div class="container-page flex min-h-20 items-center gap-6 lg:gap-10">
+    <a
+      href="/"
+      class="-my-2 flex py-2 no-underline"
+      aria-current={naInicio ? 'page' : undefined}
+      aria-label="LGX Arena, página inicial"
+    >
+      <Brand width={120} />
+    </a>
+
+    <nav aria-label="Menu principal" class="hidden flex-1 justify-center lg:flex">
+      <ul class="flex items-center gap-1">
+        {MENU_PRINCIPAL.map((item) => {
+          const ativo = estaAtivo(item, caminho)
+          return (
+            <li>
+              <a
+                href={item.href}
+                aria-current={ativo ? 'page' : undefined}
+                class:list={[
+                  'inline-flex min-h-11 items-center gap-1.5 rounded-md px-3.5 text-[15px] font-medium no-underline transition-colors',
+                  ativo
+                    ? 'bg-surface-2 text-fg hover:text-fg'
+                    : 'text-fg-muted hover:bg-surface hover:text-fg',
+                ]}
+                {...(item.externo ? { target: '_blank', rel: 'noopener' } : {})}
+              >
+                {item.rotulo}
+                {item.externo && (
+                  <>
+                    <Icon name="external-link" size={14} />
+                    <span class="sr-only">(abre em nova aba)</span>
+                  </>
+                )}
+              </a>
+            </li>
+          )
+        })}
+      </ul>
+    </nav>
+
+    <div class="ml-auto flex items-center gap-2.5 lg:ml-0">
+      <a
+        href={whatsapp}
+        target="_blank"
+        rel="noopener"
+        class="hidden size-12 items-center justify-center rounded-md border border-line-strong text-fg no-underline transition-colors hover:bg-surface hover:text-fg sm:inline-flex"
+      >
+        <Icon name="whatsapp" label="Falar no WhatsApp (abre em nova aba)" />
+      </a>
+      <Button href="/reservar" class="max-lg:hidden">
+        Reservar
+      </Button>
+      <button
+        type="button"
+        id="menu-abrir"
+        class="inline-flex size-11 items-center justify-center rounded-md text-fg transition-colors hover:bg-surface lg:hidden"
+        aria-haspopup="dialog"
+        aria-expanded="false"
+        aria-controls="menu-movel"
+      >
+        <Icon name="menu" size={24} label="Abrir menu" />
+      </button>
+    </div>
+  </div>
+</header>
+
+<dialog
+  id="menu-movel"
+  aria-label="Menu"
+  class="m-0 h-dvh max-h-none w-full max-w-none bg-bg p-0 text-fg backdrop:bg-transparent lg:hidden"
+>
+  <div class="flex h-full flex-col overflow-y-auto">
+    <!-- Mesma barra do cabeçalho: ao abrir, parece que o botão de menu vira um X. -->
+    <div
+      class="sticky top-0 z-10 border-b border-line bg-bg"
+      style="padding-top: var(--topo-menu, 0px)"
+    >
+      <div class="container-page flex min-h-20 items-center gap-6">
+        <a href="/" class="-my-2 flex py-2 no-underline" aria-label="LGX Arena, página inicial">
+          <Brand width={120} />
+        </a>
+        <div class="ml-auto flex items-center gap-2.5">
+          <a
+            href={whatsapp}
+            target="_blank"
+            rel="noopener"
+            class="hidden size-12 items-center justify-center rounded-md border border-line-strong text-fg no-underline transition-colors hover:bg-surface hover:text-fg sm:inline-flex"
+          >
+            <Icon name="whatsapp" label="Falar no WhatsApp (abre em nova aba)" />
+          </a>
+          <button
+            type="button"
+            data-fechar-menu
+            class="inline-flex size-11 items-center justify-center rounded-md text-fg transition-colors hover:bg-surface"
+          >
+            <Icon name="close" size={24} label="Fechar menu" />
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-painel flex flex-1 flex-col">
+      <nav aria-label="Menu principal" class="container-page flex-1 py-6">
+        <ul class="flex flex-col gap-1">
+          {MENU_PRINCIPAL.map((item) => {
+            const ativo = estaAtivo(item, caminho)
+            return (
+              <li>
+                <a
+                  href={item.href}
+                  aria-current={ativo && !item.filhos ? 'page' : undefined}
+                  class:list={[
+                    'flex min-h-12 items-center justify-between rounded-md px-3 text-lg font-semibold no-underline',
+                    ativo
+                      ? 'bg-surface-2 text-fg hover:text-fg'
+                      : 'text-fg hover:bg-surface hover:text-fg',
+                  ]}
+                  {...(item.externo ? { target: '_blank', rel: 'noopener' } : {})}
+                >
+                  {item.rotulo}
+                  {item.externo && (
+                    <>
+                      <Icon name="external-link" size={18} />
+                      <span class="sr-only">(abre em nova aba)</span>
+                    </>
+                  )}
+                </a>
+                {item.filhos && (
+                  <ul class="mt-1 mb-2 ml-3 flex flex-col border-l border-line pl-3">
+                    {item.filhos.map((filho) => {
+                      const filhoAtivo = normalizarCaminho(caminho) === filho.href
+                      return (
+                        <li>
+                          <a
+                            href={filho.href}
+                            aria-current={filhoAtivo ? 'page' : undefined}
+                            class:list={[
+                              'flex min-h-11 items-center rounded-md px-3 no-underline',
+                              filhoAtivo
+                                ? 'font-semibold text-fg hover:text-fg'
+                                : 'text-fg-muted hover:bg-surface hover:text-fg',
+                            ]}
+                          >
+                            {filho.rotulo}
+                          </a>
+                        </li>
+                      )
+                    })}
+                  </ul>
+                )}
+              </li>
+            )
+          })}
+        </ul>
+
+        <ul class="mt-6 flex flex-col gap-1 border-t border-line pt-6">
+          {MENU_AJUDA.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                class="flex min-h-11 items-center rounded-md px-3 text-fg-muted no-underline hover:bg-surface hover:text-fg"
+              >
+                {item.rotulo}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      <div class="container-page flex flex-col gap-3 border-t border-line py-6">
+        <Button href="/reservar" size="lg" block>
+          Reservar
+        </Button>
+        <Button href={whatsapp} variant="outline" size="lg" block target="_blank" rel="noopener">
+          <Icon name="whatsapp" /> Falar no WhatsApp
+        </Button>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  const abrir = document.getElementById('menu-abrir')
+  const menu = document.getElementById('menu-movel')
+
+  if (abrir && menu instanceof HTMLDialogElement) {
+    const cabecalho = abrir.closest('header')
+
+    abrir.addEventListener('click', () => {
+      const topo = Math.max(0, cabecalho?.getBoundingClientRect().top ?? 0)
+      menu.style.setProperty('--topo-menu', `${topo}px`)
+      menu.showModal()
+      menu.querySelector<HTMLElement>('[data-fechar-menu]')?.focus()
+      abrir.setAttribute('aria-expanded', 'true')
+    })
+
+    // Esc, botão de fechar, clique fora ou em um link: o diálogo fecha e o foco volta ao botão.
+    menu.addEventListener('close', () => {
+      abrir.setAttribute('aria-expanded', 'false')
+      abrir.focus()
+    })
+
+    menu.addEventListener('click', (evento) => {
+      const alvo = evento.target as Element
+      if (alvo === menu || alvo.closest('[data-fechar-menu]') || alvo.closest('a')) menu.close()
+    })
+
+    // Se a tela crescer até o layout de desktop com o menu aberto, fecha o menu.
+    window.matchMedia('(min-width: 64rem)').addEventListener('change', (mq) => {
+      if (mq.matches && menu.open) menu.close()
+    })
+  }
+</script>
+
+<style>
+  :global(html:has(#menu-movel[open])) {
+    overflow: hidden;
+  }
+
+  /* Abre e fecha com fade + leve deslize. `allow-discrete` mantém o diálogo visível durante a saída. */
+  #menu-movel {
+    opacity: 0;
+    transition:
+      opacity 200ms ease,
+      overlay 200ms allow-discrete,
+      display 200ms allow-discrete;
+  }
+
+  #menu-movel[open] {
+    opacity: 1;
+  }
+
+  .menu-painel {
+    translate: 0 -0.75rem;
+    transition: translate 250ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  #menu-movel[open] .menu-painel {
+    translate: 0 0;
+  }
+
+  @starting-style {
+    #menu-movel[open] {
+      opacity: 0;
+    }
+
+    #menu-movel[open] .menu-painel {
+      translate: 0 -0.75rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #menu-movel,
+    .menu-painel {
+      transition: none;
+      translate: none;
+    }
+  }
+</style>

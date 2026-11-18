@@ -1,14 +1,16 @@
 ---
 import { Font } from 'astro:assets'
 
+import Avisos from '@/components/layout/Avisos.astro'
+import Footer from '@/components/layout/Footer.astro'
+import Header from '@/components/layout/Header.astro'
+import Seo, { type SeoProps } from '@/components/layout/Seo.astro'
+
 import '@/styles/global.css'
 
-interface Props {
-  title: string
-  description?: string
-}
+type Props = SeoProps
 
-const { title, description } = Astro.props
+const props = Astro.props
 ---
 
 <!doctype html>
@@ -16,15 +18,24 @@ const { title, description } = Astro.props
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title}</title>
-    {description && <meta name="description" content={description} />}
-    <!-- Preview da branch dev fora do Google. Remover na virada (#25). -->
-    <meta name="robots" content="noindex, nofollow" />
+    <Seo {...props} />
+    <meta name="theme-color" content="#0e0e0e" />
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <Font cssVariable="--font-inter" preload />
     <meta name="generator" content={Astro.generator} />
   </head>
-  <body>
-    <slot />
+  <body class="flex min-h-dvh flex-col">
+    <a
+      href="#conteudo"
+      class="sr-only z-50 rounded-md bg-fg font-semibold text-bg no-underline focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:px-4 focus:py-3 hover:text-bg"
+    >
+      Pular para o conteúdo
+    </a>
+    <Avisos />
+    <Header />
+    <main id="conteudo" tabindex="-1" class="flex-1 focus:outline-none">
+      <slot />
+    </main>
+    <Footer />
   </body>
 </html>
