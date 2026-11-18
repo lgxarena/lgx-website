@@ -11,6 +11,8 @@ import { Setup } from './components/setup'
 
 export const metadata: Metadata = {
   title: 'Página inicial - LGX Arena',
+  description:
+    'Centro de games e e-sports em São Paulo desde 2006. Salas Pro e VIP, pacotes por horário, Corujão e eventos. Veja preços, horários e reserve pelo WhatsApp.',
   alternates: {
     canonical: 'https://lgxarena.com.br/',
   },

@@ -1,6 +1,7 @@
 import {
   RiFacebookCircleLine,
   RiInstagramLine,
+  RiTiktokLine,
   RiTwitchLine,
   RiWhatsappLine,
   RiYoutubeLine,
@@ -18,6 +19,11 @@ export const SOCIAL_MEDIA = [
     title: 'Abrir WhatsApp da LGX',
     href: Socials.WHATSAPP,
     icon: RiWhatsappLine,
+  },
+  {
+    title: 'Abrir TikTok da LGX',
+    href: Socials.TIKTOK,
+    icon: RiTiktokLine,
   },
   {
     title: 'Abrir Twitch da LGX',

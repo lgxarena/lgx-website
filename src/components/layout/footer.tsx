@@ -25,9 +25,15 @@ export function Footer() {
         ))}
       </ul>
 
-      <p className="mx-auto my-6 max-w-[17.75rem] text-center text-sm md:max-w-screen-xl md:text-base">
+      <a
+        href="https://maps.app.goo.gl/LJ4SzpHvXiL5AQ2ZA"
+        rel="noopener"
+        target="_blank"
+        className="mx-auto my-6 max-w-[17.75rem] text-center text-sm underline-offset-2 hover:underline
+          md:max-w-screen-xl md:text-base"
+      >
         Av. Cupecê, 6062 - Bloco 1, Loja 16, Jardim Prudência, São Paulo - SP
-      </p>
+      </a>
       <p className="text-center text-xs text-neutral-300 md:text-sm">
         LGX Arena. Todos os direitos reservados.
       </p>

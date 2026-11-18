@@ -73,7 +73,7 @@ export const games = [
     isPopular: false,
   },
   {
-    name: 'FIFA 24',
+    name: 'EA SPORTS FC',
     categories: ['Esportes', 'Simulação', 'Competitivo'],
     image: '/images/games/fc-24.jpg',
     isPopular: false,

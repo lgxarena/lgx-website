@@ -6,6 +6,8 @@ import { ContactForm } from './components/contact-form'
 
 export const metadata: Metadata = {
   title: 'Contato - LGX Arena',
+  description:
+    'Fale com a LGX Arena pelo WhatsApp, telefone ou Instagram. Av. Cupecê, 6062, Jardim Prudência, São Paulo - SP.',
   alternates: {
     canonical: 'https://lgxarena.com.br/contato',
   },

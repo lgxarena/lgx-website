@@ -5,6 +5,8 @@ import { generateWhatsAppLink } from '@/utils/generate-whatsapp-link'
 
 export const metadata: Metadata = {
   title: 'Eventos - LGX Arena',
+  description:
+    'Aniversários, campeonatos, bootcamps e confraternizações na LGX Arena, com PCs de alta performance e internet de 1 Gbps. Peça um orçamento.',
   alternates: {
     canonical: 'https://lgxarena.com.br/eventos',
   },
@@ -19,20 +21,20 @@ export default function Events() {
     <main className="relative z-[5] flex flex-1 flex-col bg-neutral px-5 py-8 md:py-10">
       <h1 className="mb-4 text-center text-3xl font-bold sm:text-[32px]">Eventos</h1>
 
-      <p className="mx-auto max-w-screen-xl text-justify font-normal">
+      <p className="mx-auto max-w-screen-xl text-left font-normal">
         Organizamos uma variedade de eventos, como MIX, BOOTCAMPS e campeonatos, para empresas,
         organizações e instituições, além de confraternizações particulares. Também realizamos
-        nossos próprios eventos, como LIGA SP CS:GO e LGX CUP, abrangendo diferentes modalidades de
+        nossos próprios eventos, como Liga SP de CS2 e LGX CUP, abrangendo diferentes modalidades de
         jogos. Todos os nossos eventos e campeonatos são divulgados nas nossas redes sociais.
         Oferecemos uma infraestrutura completa, com computadores de alta performance, monitores
         profissionais, cadeiras gamers, internet de 1 Gigabit, salas climatizadas e servidores
-        dedicados. Solicite um orçamento conosco por telefone ou e-mail.
+        dedicados. Solicite um orçamento pelo WhatsApp.
       </p>
 
-      <h3 className="mx-auto mb-2 mt-8 w-full max-w-screen-xl text-center text-xl font-semibold">
+      <h2 className="mx-auto mb-2 mt-8 w-full max-w-screen-xl text-center text-xl font-semibold">
         Aniversários
-      </h3>
-      <p className="mx-auto max-w-screen-xl text-justify font-normal">
+      </h2>
+      <p className="mx-auto max-w-screen-xl text-left font-normal">
         Comemore seu aniversário na LGX e viva uma experiência inesquecível, reunindo seus melhores
         amigos para se divertir com seus jogos preferidos. Para organizar sua festa conosco, é
         necessário agendar com antecedência, garantindo que tudo esteja bem preparado para você e
