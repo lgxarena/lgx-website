@@ -20,8 +20,8 @@ const regulares = horarios
 ---
 
 <section aria-labelledby="horarios-titulo" class="border-y border-line bg-bg-alt py-10 md:py-12">
-  <Container class="grid gap-8 lg:grid-cols-[minmax(0,15rem)_1fr] lg:items-center lg:gap-12">
-    <div class="flex flex-col gap-3">
+  <Container class="grid gap-y-3 lg:grid-cols-[minmax(0,15rem)_1fr] lg:items-center lg:gap-x-12">
+    <div class="mb-5 flex flex-col gap-3 lg:mb-0">
       <h2 id="horarios-titulo" class="text-2xl font-extrabold tracking-tight">
         Horários
       </h2>
@@ -35,7 +35,7 @@ const regulares = horarios
       </p>
     </div>
 
-    <div class="flex flex-col gap-3">
+    <div class="contents">
       <dl class="grid grid-cols-2 gap-3 md:grid-cols-4">
         {horarios.map((h) => {
           const corujao = h.data.dias.length === 0
@@ -74,7 +74,7 @@ const regulares = horarios
         })}
       </dl>
       {notaCorujao && (
-        <p class="flex items-center gap-2 text-[13px] text-fg-muted md:justify-end">
+        <p class="flex items-center gap-2 text-[13px] text-fg-muted md:justify-end lg:col-start-2">
           <Icon name="moon" size={14} class="text-link" />
           Corujão: {notaCorujao.charAt(0).toLowerCase() + notaCorujao.slice(1)}.
         </p>
