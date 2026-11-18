@@ -1,0 +1,142 @@
+---
+/**
+ * Números da casa no rodapé do hero. Quando a faixa entra na tela, os números sobem de zero
+ * e o da internet roda como um teste de velocidade (Mbps subindo até virar 1 Gbps).
+ *
+ * O valor final já vem no HTML: sem JavaScript, ou com "reduzir movimento", nada anima.
+ * Leitores de tela leem só o valor final (a contagem fica em `aria-hidden`).
+ */
+interface Props {
+  anos: number
+  fundacao: number
+}
+
+const { anos, fundacao } = Astro.props
+
+const numeros = [
+  { valor: 40, sufixo: '+', rotulo: 'PCs em duas salas' },
+  { valor: 360, unidade: 'Hz', rotulo: 'monitores na Sala Pro' },
+  { valor: 1, unidade: 'Gbps', rotulo: 'de internet dedicada', velocidade: true },
+  { valor: anos, unidade: 'anos', rotulo: `de LGX, desde ${fundacao}` },
+]
+---
+
+<dl data-numeros class="mt-16 grid grid-cols-2 border-t border-fg/15 md:mt-28 lg:grid-cols-4">
+  {numeros.map((n, i) => (
+    <div
+      class:list={[
+        'flex flex-col-reverse gap-2 py-7 lg:py-9',
+        i % 2 === 1 && 'border-l border-fg/15 pl-5 sm:pl-8',
+        i >= 2 && 'border-t border-fg/15 lg:border-t-0',
+        i > 0 && 'lg:border-l lg:pl-8',
+      ]}
+    >
+      <dt class="text-[15px] text-fg-muted">{n.rotulo}</dt>
+      <dd class="flex items-center gap-3">
+        <span class="sr-only">
+          {n.valor}
+          {n.sufixo}
+          {n.unidade && ` ${n.unidade}`}
+        </span>
+        {n.velocidade && (
+          <svg viewBox="0 0 48 48" aria-hidden="true" class="size-11 shrink-0 md:size-12">
+            {/* Arco de velocímetro (270°, aberto embaixo). */}
+            <path
+              d="M10.6 37.4 A19 19 0 1 1 37.4 37.4"
+              pathLength="100"
+              fill="none"
+              stroke-width="5"
+              stroke-linecap="round"
+              class="stroke-fg/20"
+            />
+            <path
+              d="M10.6 37.4 A19 19 0 1 1 37.4 37.4"
+              pathLength="100"
+              fill="none"
+              stroke-width="5"
+              stroke-linecap="round"
+              stroke-dasharray="100"
+              stroke-dashoffset="0"
+              class="stroke-accent"
+              data-arco
+            />
+          </svg>
+        )}
+        <span
+          aria-hidden="true"
+          class="flex items-baseline gap-1.5 text-4xl font-extrabold tracking-tight tabular-nums md:text-5xl"
+        >
+          <span
+            data-contar={n.valor}
+            data-sufixo={n.sufixo}
+            data-velocidade={n.velocidade ? '' : undefined}
+          >
+            {n.valor}
+            {n.sufixo}
+          </span>
+          {n.unidade && (
+            <span class="text-xl font-bold text-fg-soft md:text-2xl" data-unidade>
+              {n.unidade}
+            </span>
+          )}
+        </span>
+      </dd>
+    </div>
+  ))}
+</dl>
+
+<script>
+  const numeros = document.querySelector<HTMLElement>('[data-numeros]')
+  const reduzMovimento = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+  if (numeros && !reduzMovimento && 'IntersectionObserver' in window) {
+    const DURACAO = 1600
+    const suave = (t: number) => 1 - Math.pow(1 - t, 3)
+
+    const animar = (el: HTMLElement) => {
+      const alvo = Number(el.dataset.contar)
+      const sufixo = el.dataset.sufixo ?? ''
+      const velocidade = el.hasAttribute('data-velocidade')
+      const unidade = el.parentElement?.querySelector<HTMLElement>('[data-unidade]')
+      const arco = numeros.querySelector<SVGPathElement>('[data-arco]')
+
+      // Teste de velocidade: conta em Mbps até 1000 e só no fim vira "1 Gbps".
+      const final = velocidade ? alvo * 1000 : alvo
+      if (velocidade && unidade) unidade.textContent = 'Mbps'
+
+      const inicio = performance.now()
+      const passo = (agora: number) => {
+        const t = Math.min(1, (agora - inicio) / DURACAO)
+        const atual = Math.round(final * suave(t))
+        el.textContent = `${atual}${t === 1 ? sufixo : ''}`
+        if (velocidade && arco) arco.style.strokeDashoffset = String(100 - 100 * suave(t))
+        if (t < 1) return requestAnimationFrame(passo)
+        if (velocidade && unidade) {
+          el.textContent = String(alvo)
+          unidade.textContent = 'Gbps'
+        }
+      }
+      requestAnimationFrame(passo)
+    }
+
+    const contadores = [...numeros.querySelectorAll<HTMLElement>('[data-contar]')]
+    const arco = numeros.querySelector<SVGPathElement>('[data-arco]')
+
+    const observador = new IntersectionObserver(
+      ([entrada]) => {
+        if (!entrada?.isIntersecting) return
+        observador.disconnect()
+        contadores.forEach(animar)
+      },
+      { threshold: 0.5 }
+    )
+
+    // Só zera os números se a faixa ainda não estiver à vista (evita piscar o valor final).
+    const caixa = numeros.getBoundingClientRect()
+    if (caixa.top > window.innerHeight - caixa.height / 2) {
+      contadores.forEach((el) => (el.textContent = '0'))
+      if (arco) arco.style.strokeDashoffset = '100'
+    }
+    observador.observe(numeros)
+  }
+</script>
