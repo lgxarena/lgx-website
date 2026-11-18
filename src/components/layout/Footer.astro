@@ -10,6 +10,7 @@ const [site, horarios] = await Promise.all([getSite(), getHorarios()])
 const { endereco } = site
 
 const redes: { nome: string; icone: IconName; href: string }[] = [
+  { nome: 'WhatsApp', icone: 'whatsapp', href: linkWhatsApp(site.whatsapp) },
   { nome: 'Instagram', icone: 'instagram', href: site.redes.instagram },
   { nome: 'TikTok', icone: 'tiktok', href: site.redes.tiktok },
   { nome: 'Twitch', icone: 'twitch', href: site.redes.twitch },
@@ -22,7 +23,7 @@ const tituloColuna = 'mb-4 text-[13px] font-bold tracking-widest text-fg upperca
 const linkColuna = 'flex min-h-10 items-center text-fg-muted no-underline hover:text-fg'
 ---
 
-<footer class="border-t border-line bg-bg-alt pt-16 pb-28 sm:pb-10">
+<footer class="border-t border-line bg-bg-alt pt-16 pb-10">
   <div class="container-page grid gap-12 sm:grid-cols-2 lg:grid-cols-[2fr_1.2fr_1fr_1fr]">
     <div class="flex flex-col gap-5">
       <Brand width={128} />
@@ -37,7 +38,7 @@ const linkColuna = 'flex min-h-10 items-center text-fg-muted no-underline hover:
       >
         Como chegar <Icon name="arrow-right" size={18} />
       </a>
-      <ul class="flex flex-wrap gap-2" aria-label="Redes sociais">
+      <ul class="flex flex-wrap gap-2" aria-label="WhatsApp e redes sociais">
         {redes.map((rede) => (
           <li>
             <a
