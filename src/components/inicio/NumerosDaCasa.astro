@@ -1,7 +1,7 @@
 ---
 /**
  * Números da casa no rodapé do hero. Quando a faixa entra na tela, os números sobem de zero,
- * todos com a mesma animação; o da internet conta em Mbps até virar 1 Gbps.
+ * todos com a mesma animação; o da internet conta em Mbps até virar Gbps.
  *
  * O valor final já vem no HTML: sem JavaScript, ou com "reduzir movimento", nada anima.
  * Leitores de tela leem só o valor final (a contagem fica em `aria-hidden`).
@@ -13,10 +13,12 @@ interface Props {
 
 const { anos, fundacao } = Astro.props
 
-const numeros = [
-  { valor: 40, sufixo: '+', rotulo: 'PCs em duas salas' },
+type Numero = { valor: number; rotulo: string; sufixo?: string; unidade?: string; mbps?: boolean }
+
+const numeros: Numero[] = [
+  { valor: 40, rotulo: 'PCs em duas salas' },
   { valor: 360, unidade: 'Hz', rotulo: 'monitores na Sala Pro' },
-  { valor: 1, unidade: 'Gbps', rotulo: 'de internet dedicada', mbps: true },
+  { valor: 2, unidade: 'Gbps', rotulo: 'de internet dedicada', mbps: true },
   { valor: anos, unidade: 'anos', rotulo: `de LGX, desde ${fundacao}` },
 ]
 ---
@@ -66,7 +68,7 @@ const numeros = [
     const suave = (t: number) => 1 - Math.pow(1 - t, 3)
 
     /**
-     * "1000 Mbps" rola para cima e sai; "1 Gbps" entra por baixo, como num placar.
+     * "2000 Mbps" rola para cima e sai; "2 Gbps" entra por baixo, como num placar.
      * O bloco do número tem `overflow-hidden`, então a troca acontece dentro da linha.
      */
     const virarGbps = (el: HTMLElement, unidade: HTMLElement, alvo: number) => {
@@ -96,7 +98,7 @@ const numeros = [
     const animar = (el: HTMLElement) => {
       const alvo = Number(el.dataset.contar)
       const sufixo = el.dataset.sufixo ?? ''
-      // A internet conta em Mbps (0 → 1000) e, no fim, vira "1 Gbps", como num teste de velocidade.
+      // A internet conta em Mbps (0 → 2000) e, no fim, vira "2 Gbps", como num teste de velocidade.
       const mbps = el.hasAttribute('data-mbps')
       const unidade = el.parentElement?.querySelector<HTMLElement>('[data-unidade]')
       const final = mbps ? alvo * 1000 : alvo
