@@ -3,7 +3,7 @@ import { NOME_DO_SITE, PREVIEW_NOINDEX } from '@/lib/config'
 import { normalizarCaminho } from '@/lib/navegacao'
 
 export interface SeoProps {
-  /** Título da página, sem o nome do site (ele é adicionado aqui). Na página inicial, use o nome do site. */
+  /** Título da página, sem o nome do site (ele é adicionado aqui). Se já tiver o nome do site (como na página inicial), fica como está. */
   title: string
   description: string
   /** Imagem de compartilhamento (URL absoluta ou caminho a partir da raiz). Ver issue #19. */
@@ -14,7 +14,7 @@ export interface SeoProps {
 
 const { title, description, image, imageAlt, noindex = false } = Astro.props as SeoProps
 
-const tituloCompleto = title === NOME_DO_SITE ? title : `${title} · ${NOME_DO_SITE}`
+const tituloCompleto = title.includes(NOME_DO_SITE) ? title : `${title} · ${NOME_DO_SITE}`
 const canonica = new URL(normalizarCaminho(Astro.url.pathname), Astro.site)
 const imagem = image ? new URL(image, Astro.site).toString() : undefined
 const robots = PREVIEW_NOINDEX || noindex ? 'noindex, nofollow' : 'index, follow'

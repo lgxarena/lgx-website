@@ -1,0 +1,179 @@
+---
+/**
+ * Carrossel de avaliações do Google (coleção `avaliacoes`, curadas no painel — issue #29).
+ *
+ * Sem JavaScript continua utilizável: a lista rola na horizontal (toque, trackpad ou teclado).
+ * O script só liga os botões de anterior/próximo e os indicadores de página.
+ * Enquanto não houver avaliações reais, o preview mostra cartões de exemplo marcados como tal.
+ */
+import Container from '@/components/ui/Container.astro'
+import Icon from '@/components/ui/Icon.astro'
+import Stars from '@/components/ui/Stars.astro'
+import { PREVIEW_NOINDEX } from '@/lib/config'
+import { getAvaliacoesEmDestaque, getSite } from '@/lib/conteudo'
+
+const [site, reais] = await Promise.all([getSite(), getAvaliacoesEmDestaque()])
+
+const mesEAno = new Intl.DateTimeFormat('pt-BR', { month: 'long', year: 'numeric' })
+
+type Cartao = { autor: string; foto?: string; nota: number; texto: string; data: string }
+
+const cartoes: Cartao[] =
+  reais.length > 0
+    ? reais.map(({ data }) => ({
+        autor: data.autor,
+        foto: data.fotoAutor,
+        nota: data.nota,
+        texto: data.texto,
+        data: mesEAno.format(data.data),
+      }))
+    : PREVIEW_NOINDEX
+      ? Array.from({ length: 6 }, () => ({
+          autor: '[Nome do cliente]',
+          nota: 5,
+          texto: '[Avaliação real do Google]',
+          data: '[mês de ano]',
+        }))
+      : []
+---
+
+{cartoes.length > 0 && (
+  <section
+    aria-labelledby="avaliacoes-titulo"
+    class="border-y border-line bg-bg-alt py-20 md:py-24"
+    data-carrossel
+  >
+    <Container class="flex flex-col gap-9">
+      <div class="flex flex-wrap items-end justify-between gap-6">
+        <div class="flex flex-col gap-2.5">
+          <h2 id="avaliacoes-titulo" class="text-3xl font-extrabold tracking-tight md:text-[40px]">
+            Quem joga, recomenda
+          </h2>
+          <p class="text-base text-fg-muted">
+            Avaliações de clientes no Google ·{' '}
+            <a href={site.endereco.mapa} target="_blank" rel="noopener">
+              ver todas<span class="sr-only"> (abre em nova aba)</span>
+            </a>
+          </p>
+        </div>
+        <div class="flex gap-2.5" data-controles hidden>
+          <button
+            type="button"
+            data-anterior
+            aria-controls="avaliacoes-lista"
+            class="inline-flex size-13 items-center justify-center rounded-full border border-line-strong text-fg transition-colors hover:bg-surface disabled:cursor-default disabled:opacity-40 disabled:hover:bg-transparent"
+          >
+            <Icon name="chevron-left" label="Avaliações anteriores" />
+          </button>
+          <button
+            type="button"
+            data-proximo
+            aria-controls="avaliacoes-lista"
+            class="inline-flex size-13 items-center justify-center rounded-full bg-fg text-bg transition-opacity hover:opacity-90 disabled:cursor-default disabled:opacity-40"
+          >
+            <Icon name="chevron-right" label="Próximas avaliações" />
+          </button>
+        </div>
+      </div>
+
+      {/* Área rolável precisa receber foco para quem navega pelo teclado (WCAG 2.1.1). */}
+      <div
+        id="avaliacoes-lista"
+        role="region"
+        aria-label="Avaliações"
+        tabindex="0"
+        data-trilho
+        class="-m-1 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth p-1 [scrollbar-width:none] motion-reduce:scroll-auto [&::-webkit-scrollbar]:hidden"
+      >
+        {cartoes.map((c, i) => (
+          <figure
+            aria-label={`${i + 1} de ${cartoes.length}`}
+            class="flex min-h-72 w-[85%] shrink-0 snap-start flex-col gap-4 rounded-xl border border-line bg-surface p-7 sm:w-[calc((100%-1rem)/2)] lg:w-[calc((100%-2rem)/3)]"
+          >
+            <div class="flex items-center justify-between gap-3">
+              <Stars value={c.nota} size={15} />
+              <span class="text-[13px] text-fg-muted">{c.data}</span>
+            </div>
+            <blockquote class="text-[17px] leading-relaxed text-fg-soft">“{c.texto}”</blockquote>
+            <figcaption class="mt-auto flex items-center gap-3">
+              {c.foto ? (
+                <img
+                  src={c.foto}
+                  alt=""
+                  width="38"
+                  height="38"
+                  loading="lazy"
+                  referrerpolicy="no-referrer"
+                  class="size-9.5 rounded-full"
+                />
+              ) : (
+                <span
+                  aria-hidden="true"
+                  class="flex size-9.5 items-center justify-center rounded-full bg-surface-3 text-sm font-bold"
+                >
+                  {c.autor.replace(/^\[/, '').charAt(0).toUpperCase()}
+                </span>
+              )}
+              <span class="flex flex-col gap-0.5">
+                <b class="text-[15px]">{c.autor}</b>
+                <span class="text-[13px] text-fg-muted">Avaliação no Google</span>
+              </span>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+
+      <div class="flex justify-center gap-2" aria-hidden="true" data-pontos></div>
+    </Container>
+  </section>
+)}
+
+<script>
+  const reduzMovimento = window.matchMedia('(prefers-reduced-motion: reduce)')
+
+  for (const carrossel of document.querySelectorAll<HTMLElement>('[data-carrossel]')) {
+    const trilho = carrossel.querySelector<HTMLElement>('[data-trilho]')
+    const controles = carrossel.querySelector<HTMLElement>('[data-controles]')
+    const anterior = carrossel.querySelector<HTMLButtonElement>('[data-anterior]')
+    const proximo = carrossel.querySelector<HTMLButtonElement>('[data-proximo]')
+    const pontos = carrossel.querySelector<HTMLElement>('[data-pontos]')
+    if (!trilho || !controles || !anterior || !proximo || !pontos) continue
+
+    const rolar = (direcao: 1 | -1) =>
+      trilho.scrollBy({
+        left: direcao * trilho.clientWidth,
+        behavior: reduzMovimento.matches ? 'auto' : 'smooth',
+      })
+
+    anterior.addEventListener('click', () => rolar(-1))
+    proximo.addEventListener('click', () => rolar(1))
+
+    const atualizar = () => {
+      const largura = trilho.clientWidth
+      const fim = trilho.scrollWidth - largura
+      const temMais = fim > 1
+      controles.hidden = !temMais
+      pontos.hidden = !temMais
+      anterior.disabled = trilho.scrollLeft <= 1
+      proximo.disabled = trilho.scrollLeft >= fim - 1
+
+      const paginas = Math.ceil(trilho.scrollWidth / largura - 0.05)
+      const atual = proximo.disabled ? paginas - 1 : Math.round(trilho.scrollLeft / largura)
+      if (pontos.childElementCount !== paginas) {
+        pontos.replaceChildren(
+          ...Array.from({ length: paginas }, () => document.createElement('span'))
+        )
+      }
+      ;[...pontos.children].forEach((ponto, i) => {
+        ponto.className = `h-2 rounded-full transition-all ${i === atual ? 'w-7 bg-accent' : 'w-2 bg-surface-3'}`
+      })
+    }
+
+    let quadro = 0
+    trilho.addEventListener('scroll', () => {
+      cancelAnimationFrame(quadro)
+      quadro = requestAnimationFrame(atualizar)
+    })
+    new ResizeObserver(atualizar).observe(trilho)
+  }
+</script>

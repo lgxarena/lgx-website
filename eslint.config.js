@@ -16,5 +16,14 @@ export default defineConfig(
     languageOptions: {
       globals: { ...globals.browser, ...globals.node },
     },
+  },
+  {
+    rules: {
+      // Áreas roláveis (role="region", como o carrossel) precisam de foco para rolar pelo teclado.
+      'astro/jsx-a11y/no-noninteractive-tabindex': [
+        'error',
+        { tags: [], roles: ['tabpanel', 'region'], allowExpressionValues: true },
+      ],
+    },
   }
 )

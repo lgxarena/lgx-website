@@ -1,0 +1,137 @@
+---
+/**
+ * Números da casa no rodapé do hero. Quando a faixa entra na tela, os números sobem de zero,
+ * todos com a mesma animação; o da internet conta em Mbps até virar 1 Gbps.
+ *
+ * O valor final já vem no HTML: sem JavaScript, ou com "reduzir movimento", nada anima.
+ * Leitores de tela leem só o valor final (a contagem fica em `aria-hidden`).
+ */
+interface Props {
+  anos: number
+  fundacao: number
+}
+
+const { anos, fundacao } = Astro.props
+
+const numeros = [
+  { valor: 40, sufixo: '+', rotulo: 'PCs em duas salas' },
+  { valor: 360, unidade: 'Hz', rotulo: 'monitores na Sala Pro' },
+  { valor: 1, unidade: 'Gbps', rotulo: 'de internet dedicada', mbps: true },
+  { valor: anos, unidade: 'anos', rotulo: `de LGX, desde ${fundacao}` },
+]
+---
+
+<dl data-numeros class="grid grid-cols-2 lg:grid-cols-4">
+  {numeros.map((n, i) => (
+    <div
+      class:list={[
+        'flex flex-col-reverse gap-2 py-7 lg:py-9',
+        i % 2 === 1 && 'border-l border-fg/15 pl-5 sm:pl-8',
+        i >= 2 && 'border-t border-fg/15 lg:border-t-0',
+        i > 0 && 'lg:border-l lg:pl-8',
+      ]}
+    >
+      <dt class="text-[15px] text-fg-muted">{n.rotulo}</dt>
+      <dd class="flex items-center gap-3 overflow-hidden">
+        <span class="sr-only">
+          {n.valor}
+          {n.sufixo}
+          {n.unidade && ` ${n.unidade}`}
+        </span>
+        <span
+          aria-hidden="true"
+          class="flex items-baseline gap-1.5 text-4xl font-extrabold tracking-tight tabular-nums md:text-5xl"
+        >
+          <span data-contar={n.valor} data-sufixo={n.sufixo} data-mbps={n.mbps ? '' : undefined}>
+            {n.valor}
+            {n.sufixo}
+          </span>
+          {n.unidade && (
+            <span class="text-xl font-bold text-fg-soft md:text-2xl" data-unidade>
+              {n.unidade}
+            </span>
+          )}
+        </span>
+      </dd>
+    </div>
+  ))}
+</dl>
+
+<script>
+  const numeros = document.querySelector<HTMLElement>('[data-numeros]')
+  const reduzMovimento = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+  if (numeros && !reduzMovimento && 'IntersectionObserver' in window) {
+    const DURACAO = 1600
+    const suave = (t: number) => 1 - Math.pow(1 - t, 3)
+
+    /**
+     * "1000 Mbps" rola para cima e sai; "1 Gbps" entra por baixo, como num placar.
+     * O bloco do número tem `overflow-hidden`, então a troca acontece dentro da linha.
+     */
+    const virarGbps = (el: HTMLElement, unidade: HTMLElement, alvo: number) => {
+      const bloco = el.parentElement
+      if (!bloco) return
+      const saida = bloco.animate(
+        [
+          { transform: 'translateY(0)', opacity: 1 },
+          { transform: 'translateY(-70%)', opacity: 0 },
+        ],
+        { duration: 220, delay: 350, easing: 'cubic-bezier(0.55, 0, 1, 0.45)', fill: 'forwards' }
+      )
+      saida.onfinish = () => {
+        el.textContent = String(alvo)
+        unidade.textContent = 'Gbps'
+        bloco.animate(
+          [
+            { transform: 'translateY(70%)', opacity: 0 },
+            { transform: 'translateY(0)', opacity: 1 },
+          ],
+          { duration: 320, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' }
+        )
+        saida.cancel()
+      }
+    }
+
+    const animar = (el: HTMLElement) => {
+      const alvo = Number(el.dataset.contar)
+      const sufixo = el.dataset.sufixo ?? ''
+      // A internet conta em Mbps (0 → 1000) e, no fim, vira "1 Gbps", como num teste de velocidade.
+      const mbps = el.hasAttribute('data-mbps')
+      const unidade = el.parentElement?.querySelector<HTMLElement>('[data-unidade]')
+      const final = mbps ? alvo * 1000 : alvo
+      if (mbps && unidade) unidade.textContent = 'Mbps'
+
+      const inicio = performance.now()
+      const passo = (agora: number) => {
+        const t = Math.min(1, (agora - inicio) / DURACAO)
+        el.textContent = `${Math.round(final * suave(t))}${t === 1 ? sufixo : ''}`
+        if (t < 1) return requestAnimationFrame(passo)
+        if (mbps && unidade) virarGbps(el, unidade, alvo)
+      }
+      requestAnimationFrame(passo)
+    }
+
+    const contadores = [...numeros.querySelectorAll<HTMLElement>('[data-contar]')]
+
+    const observador = new IntersectionObserver(
+      ([entrada]) => {
+        if (!entrada?.isIntersecting) return
+        observador.disconnect()
+        contadores.forEach(animar)
+      },
+      { threshold: 0.5 }
+    )
+
+    // Só zera os números se a faixa ainda não estiver à vista (evita piscar o valor final).
+    const caixa = numeros.getBoundingClientRect()
+    if (caixa.top > window.innerHeight - caixa.height / 2) {
+      contadores.forEach((el) => {
+        el.textContent = '0'
+        const unidade = el.parentElement?.querySelector<HTMLElement>('[data-unidade]')
+        if (el.hasAttribute('data-mbps') && unidade) unidade.textContent = 'Mbps'
+      })
+    }
+    observador.observe(numeros)
+  }
+</script>

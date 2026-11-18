@@ -1,0 +1,71 @@
+---
+import { getImage } from 'astro:assets'
+
+import heroMobile from '@/assets/inicio/hero-mobile.webp'
+import hero from '@/assets/inicio/hero.webp'
+import Button from '@/components/ui/Button.astro'
+import { getSite } from '@/lib/conteudo'
+
+import NumerosDaCasa from './NumerosDaCasa.astro'
+
+const site = await getSite()
+const anos = new Date().getFullYear() - site.fundacao
+
+// Duas imagens (celular e desktop) em AVIF; o navegador baixa só a do tamanho da tela.
+const [desktop, mobile] = await Promise.all([
+  getImage({ src: hero, format: 'avif', widths: [960, 1440], quality: 60 }),
+  getImage({ src: heroMobile, format: 'avif', width: 360, quality: 60 }),
+])
+---
+
+<section aria-labelledby="hero-titulo">
+  {/* A imagem cobre só a primeira tela (altura da janela menos o cabeçalho). */}
+  <div class="relative isolate overflow-hidden">
+    <picture>
+      <source media="(min-width: 40rem)" srcset={desktop.srcSet.attribute} sizes="100vw" />
+      <img
+        src={mobile.src}
+        alt=""
+        width={mobile.attributes.width}
+        height={mobile.attributes.height}
+        fetchpriority="high"
+        decoding="async"
+        class="absolute inset-0 -z-20 size-full object-cover object-right"
+      />
+    </picture>
+    <div
+      aria-hidden="true"
+      class="absolute inset-0 -z-10 bg-[linear-gradient(0deg,var(--color-bg)_0%,transparent_35%),linear-gradient(90deg,rgb(14_14_14/0.96)_0%,rgb(14_14_14/0.72)_45%,rgb(14_14_14/0.3)_100%)]"
+    ></div>
+
+    <div class="container-page flex min-h-[calc(100svh-5rem)] flex-col justify-center pt-16 pb-24 md:pt-24 md:pb-32">
+      <p class="text-sm font-bold tracking-[0.12em] text-link uppercase">
+        Centro de games e e-sports · São Paulo
+      </p>
+      <h1
+        id="hero-titulo"
+        class="mt-6 max-w-5xl text-[clamp(2.75rem,8vw,7rem)] leading-[0.94] font-extrabold tracking-[-0.035em] uppercase md:mt-7"
+      >
+        Onde os gamers
+        <br />
+        se tornam <span class="text-accent">lendas</span>
+      </h1>
+      <p class="mt-7 max-w-xl text-lg leading-relaxed text-fg-soft md:mt-9 md:text-[21px]">
+        Duas salas, Pro e VIP, com PCs prontos para competir. Jogue umas horas ou vire a madrugada
+        no Corujão.
+      </p>
+      <div class="mt-10 grid gap-3 sm:flex sm:gap-4 md:mt-12">
+        <Button href="/reservar" size="lg">
+          Reservar um PC
+        </Button>
+        <Button href="/precos" size="lg" variant="outline" class="bg-bg/40">
+          Ver preços
+        </Button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-page">
+    <NumerosDaCasa anos={anos} fundacao={site.fundacao} />
+  </div>
+</section>
