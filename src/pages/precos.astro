@@ -1,0 +1,80 @@
+---
+import PrecosSala from '@/components/precos/PrecosSala.astro'
+import Button from '@/components/ui/Button.astro'
+import Container from '@/components/ui/Container.astro'
+import SectionHeading from '@/components/ui/SectionHeading.astro'
+import Base from '@/layouts/Base.astro'
+import { getPlanos, getSalas } from '@/lib/conteudo'
+
+const [salas, pacotes] = await Promise.all([getSalas(), getPlanos('pacote')])
+
+// "Corujinha: sex e sáb. Corujão: vésperas de fim de semana e feriado." Lido dos pacotes.
+const diasDosPacotes = pacotes
+  .filter((p) => p.data.dias || p.id === 'corujinha')
+  .map((p) => `${p.data.nome}: ${(p.data.dias ?? '[dias a confirmar]').toLowerCase()}`)
+  .join('. ')
+
+const card = 'flex flex-col gap-2 rounded-lg bg-surface-2 p-6'
+const cardTitulo = 'text-lg font-bold'
+const cardTexto = 'text-[15px] leading-relaxed text-fg-soft'
+---
+
+<Base
+  title="Preços"
+  description="Preços por PC nas salas Pro e VIP da LGX Arena: horas avulsas a partir de R$ 7 e pacotes Econômico, Corujinha e Corujão."
+>
+  <Container class="flex flex-col gap-14 pt-14 pb-24 md:pt-18 md:pb-28">
+    <SectionHeading
+      as="h1"
+      title="Preços"
+      description="Valores por PC. Horas avulsas ficam salvas na sua conta, na sala em que você comprou; pacotes valem só no horário deles."
+    />
+
+    <div class="grid items-start gap-5 lg:grid-cols-2">
+      {salas.map((sala, i) => (
+        <PrecosSala sala={sala} as="h2" principal={i === 0} />
+      ))}
+    </div>
+
+    <section aria-labelledby="bom-saber" class="flex flex-col gap-5">
+      <h2 id="bom-saber" class="text-[28px] font-extrabold">
+        Bom saber
+      </h2>
+      <ul class="grid gap-4 md:grid-cols-3">
+        <li class={card}>
+          <h3 class={cardTitulo}>Pacotes não acumulam</h3>
+          <p class={cardTexto}>Valem só no horário do pacote. {diasDosPacotes}.</p>
+        </li>
+        <li class={card}>
+          <h3 class={cardTitulo}>Primeira visita</h3>
+          <p class={cardTexto}>
+            Traga um documento com foto para o cadastro. <a href="/regras">Ver as regras</a>
+          </p>
+        </li>
+        <li class={card}>
+          <h3 class={cardTitulo}>Eventos e aniversários</h3>
+          <p class={cardTexto}>
+            Têm orçamento à parte. <a href="/aniversarios">Aniversários</a>
+            {' · '}
+            <a href="/empresas">Empresas &amp; times</a>
+          </p>
+        </li>
+      </ul>
+    </section>
+
+    <section
+      aria-labelledby="pronto"
+      class="flex flex-wrap items-center justify-between gap-5 rounded-xl border-t-[3px] border-accent bg-surface-2 p-8"
+    >
+      <div class="flex flex-col gap-1.5">
+        <h2 id="pronto" class="text-2xl font-extrabold">
+          Pronto para jogar?
+        </h2>
+        <p class="text-fg-muted">Escolha sala e horário; a equipe confirma pelo WhatsApp.</p>
+      </div>
+      <Button href="/reservar" size="lg">
+        Reservar um PC
+      </Button>
+    </section>
+  </Container>
+</Base>
