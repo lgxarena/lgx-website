@@ -1,0 +1,288 @@
+---
+/**
+ * Reserva pelo WhatsApp (issue #12).
+ *
+ * Formulário comum: sem JavaScript, enviar abre a conversa da LGX no WhatsApp. Com JavaScript,
+ * o resumo ao lado calcula o total e monta a mensagem, que vai pronta no link `wa.me`.
+ * Preços e pacotes vêm das coleções `salas` e `planos`.
+ */
+import Icon from '@/components/ui/Icon.astro'
+import SectionHeading from '@/components/ui/SectionHeading.astro'
+import Container from '@/components/ui/Container.astro'
+import Base from '@/layouts/Base.astro'
+import { getPlanos, getSalas, getSite } from '@/lib/conteudo'
+import { formatarHora, linkWhatsApp } from '@/lib/formatar'
+
+const [site, salas, planos] = await Promise.all([getSite(), getSalas(), getPlanos()])
+
+const opcoes = planos.map((p) => {
+  const { nome, tipo, horas, janela, dias, observacao, precos } = p.data
+  const rotulo = janela
+    ? `${nome} · ${horas}h (${formatarHora(janela.inicio)}–${formatarHora(janela.fim)})`
+    : nome
+  const dica =
+    tipo === 'avulso'
+      ? 'Qualquer horário de funcionamento. O tempo fica salvo na sua conta.'
+      : [
+          janela &&
+            `Vale só das ${formatarHora(janela.inicio)} às ${formatarHora(janela.fim)}. Não acumula.`,
+          dias,
+          observacao,
+        ]
+          .filter(Boolean)
+          .join(' ')
+  return { id: p.id, rotulo, dica, precos, inicio: janela?.inicio }
+})
+
+const resumoSala = (id: string) =>
+  ['Monitor', 'Placa de vídeo']
+    .map((item) => salas.find((s) => s.id === id)?.data.hardware.find((h) => h.item === item))
+    .map((h) => h?.modelo.replace(/^.*?(\d+) ?Hz.*$/, '$1 Hz').replace(/ \d+GB$/, ''))
+    .join(' · ')
+
+const campo = 'flex flex-col gap-2 text-[15px] font-bold'
+const controle =
+  'h-12 rounded-md border border-line-strong bg-bg px-3 font-normal text-fg [color-scheme:dark] focus-visible:border-fg'
+---
+
+<Base
+  title="Reservar"
+  description="Reserve um PC na LGX Arena: escolha sala, pacote e horário e envie a reserva pronta pelo WhatsApp."
+>
+  <Container class="flex flex-col gap-10 pt-14 pb-24 md:pt-18 md:pb-28">
+    <SectionHeading
+      as="h1"
+      title="Reservar"
+      description="Escolha sala, pacote e horário. Abrimos o WhatsApp com a mensagem pronta e a equipe confirma a disponibilidade."
+    />
+
+    <div class="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_22rem]">
+      <form
+        id="reserva"
+        action={linkWhatsApp(site.whatsapp)}
+        method="get"
+        target="_blank"
+        data-whatsapp={site.whatsapp}
+        class="flex flex-col gap-6 rounded-xl bg-surface-2 p-6 sm:p-8"
+      >
+        <fieldset class="flex flex-col gap-2.5">
+          <legend class="mb-2.5 text-[15px] font-bold">Sala</legend>
+          <div class="grid gap-3 sm:grid-cols-2">
+            {salas.map((sala, i) => (
+              <label class="flex min-h-16 cursor-pointer items-center gap-3 rounded-lg border border-line-strong bg-bg px-4 has-checked:border-2 has-checked:border-accent has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-fg">
+                <input
+                  type="radio"
+                  name="sala"
+                  value={sala.id}
+                  checked={i === 0}
+                  class="size-4.5 accent-accent focus-visible:outline-none"
+                />
+                <span class="flex flex-col">
+                  <b>{sala.data.nome}</b>
+                  <span class="text-[13px] text-fg-muted">{resumoSala(sala.id)}</span>
+                </span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        <label class={campo}>
+          Pacote
+          <select name="pacote" class={controle} aria-describedby="pacote-dica">
+            {opcoes.map((o) => (
+              <option value={o.id}>{o.rotulo}</option>
+            ))}
+          </select>
+          <span id="pacote-dica" class="text-[13px] font-normal text-fg-muted">
+            {opcoes[0]?.dica}
+          </span>
+        </label>
+
+        <div class="grid gap-4 sm:grid-cols-3">
+          <label class={campo}>
+            Data
+            <input type="date" name="data" required class={controle} />
+          </label>
+          <label class={campo}>
+            Chegada
+            <input type="time" name="hora" required class={controle} />
+          </label>
+          <label class={campo}>
+            Quantos PCs
+            <input
+              type="number"
+              name="pcs"
+              min="1"
+              max="20"
+              value="1"
+              required
+              inputmode="numeric"
+              class={controle}
+            />
+          </label>
+        </div>
+
+        <label class={campo}>
+          Seu nome
+          <input
+            type="text"
+            name="nome"
+            required
+            autocomplete="name"
+            placeholder="Como devemos te chamar"
+            class={controle}
+          />
+        </label>
+
+        <button
+          type="submit"
+          class="inline-flex min-h-13 items-center justify-center gap-2.5 self-stretch rounded-md bg-accent-strong px-7 font-bold text-white transition-colors hover:bg-accent-deep sm:self-start"
+        >
+          <Icon name="whatsapp" /> Enviar pelo WhatsApp
+          <span class="sr-only">(abre em nova aba)</span>
+        </button>
+      </form>
+
+      <aside aria-label="Resumo da reserva" class="flex flex-col gap-4 lg:sticky lg:top-28">
+        <div
+          class="flex flex-col gap-3 rounded-xl border-t-[3px] border-accent bg-surface-2 p-6"
+          aria-live="polite"
+        >
+          <span class="text-[13px] font-bold tracking-widest text-fg-muted uppercase">
+            Total estimado
+          </span>
+          <b data-total class="text-4xl font-extrabold tracking-tight tabular-nums">
+            –
+          </b>
+          <span data-conta class="text-sm text-fg-muted"></span>
+        </div>
+
+        <div class="flex flex-col gap-3 rounded-xl bg-surface p-6">
+          <span class="text-[13px] font-bold tracking-widest text-fg-muted uppercase">
+            Mensagem que vai ser enviada
+          </span>
+          <p data-mensagem class="text-[15px] leading-relaxed whitespace-pre-line text-fg-soft">
+            Preencha o formulário para ver a mensagem.
+          </p>
+        </div>
+
+        <ul class="flex list-disc flex-col gap-2 rounded-xl border border-line p-6 pl-10 text-[15px] leading-relaxed text-fg-soft marker:text-accent">
+          <li>
+            A reserva só é confirmada com <b class="text-fg">pagamento antecipado</b>.
+          </li>
+          <li>
+            Cancelamento tem taxa de <b class="text-fg">50% do valor</b>.
+          </li>
+          <li>Se o jogo ou a internet cair, remarcamos descontando o tempo usado.</li>
+          <li>
+            No Corujão, a reserva expira às 22h45. <a href="/regras">Ver as regras</a>
+          </li>
+        </ul>
+      </aside>
+    </div>
+  </Container>
+</Base>
+
+<script
+  is:inline
+  type="application/json"
+  id="reserva-dados"
+  set:html={JSON.stringify({
+    opcoes,
+    salas: salas.map((s) => ({ id: s.id, nome: s.data.nome })),
+  })}
+/>
+<script>
+  import { formatarPreco, linkWhatsApp } from '@/lib/formatar'
+
+  type Opcao = {
+    id: string
+    rotulo: string
+    dica: string
+    precos: Record<string, number>
+    inicio?: string
+  }
+  type Dados = { opcoes: Opcao[]; salas: { id: string; nome: string }[] }
+
+  const form = document.querySelector<HTMLFormElement>('#reserva')
+  const json = document.getElementById('reserva-dados')?.textContent
+
+  if (form && json) {
+    const { opcoes, salas }: Dados = JSON.parse(json)
+    const campo = <T extends Element>(nome: string) => form.elements.namedItem(nome) as T | null
+    const pacote = campo<HTMLSelectElement>('pacote')!
+    const data = campo<HTMLInputElement>('data')!
+    const hora = campo<HTMLInputElement>('hora')!
+    const pcs = campo<HTMLInputElement>('pcs')!
+    const nome = campo<HTMLInputElement>('nome')!
+    const dica = document.getElementById('pacote-dica')
+    const total = document.querySelector('[data-total]')
+    const conta = document.querySelector('[data-conta]')
+    const mensagem = document.querySelector('[data-mensagem]')
+
+    // Data mínima: hoje, no fuso de São Paulo.
+    const hoje = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Sao_Paulo' }).format(
+      new Date()
+    )
+    data.min = hoje
+
+    // Chegando de um cartão de preços (/reservar?sala=vip), a sala já vem marcada.
+    const salaDaUrl = new URLSearchParams(location.search).get('sala')
+    const radio = form.querySelector<HTMLInputElement>(`input[name="sala"][value="${salaDaUrl}"]`)
+    if (radio) radio.checked = true
+
+    const diaDaSemana = new Intl.DateTimeFormat('pt-BR', { weekday: 'short', timeZone: 'UTC' })
+    const formatarData = (iso: string) => {
+      const [a, m, d] = iso.split('-')
+      const semana = diaDaSemana.format(new Date(`${iso}T12:00:00Z`)).replace('.', '')
+      return `${semana}, ${d}/${m}/${a}`
+    }
+
+    const montar = () => {
+      const opcao = opcoes.find((o) => o.id === pacote.value) ?? opcoes[0]
+      const salaId = form.querySelector<HTMLInputElement>('input[name="sala"]:checked')?.value
+      const sala = salas.find((s) => s.id === salaId) ?? salas[0]
+      if (!opcao || !sala) return ''
+
+      const quantos = Math.min(20, Math.max(1, Number.parseInt(pcs.value, 10) || 1))
+      const unitario = opcao.precos[sala.id] ?? 0
+      const valor = unitario * quantos
+
+      if (dica) dica.textContent = opcao.dica
+      if (total) total.textContent = formatarPreco(valor)
+      if (conta) {
+        conta.textContent = `${quantos} PC${quantos > 1 ? 's' : ''} × ${formatarPreco(unitario)} · ${sala.nome}`
+      }
+
+      const linhas = [
+        'Olá! Quero reservar na LGX:',
+        `• Data: ${data.value ? formatarData(data.value) : '[escolha a data]'}${hora.value ? ` às ${hora.value}` : ''}`,
+        `• ${sala.nome}`,
+        `• Pacote: ${opcao.rotulo}`,
+        `• PCs: ${quantos}`,
+        nome.value.trim() && `• Nome: ${nome.value.trim()}`,
+        `Total estimado: ${formatarPreco(valor)}`,
+      ].filter(Boolean)
+      const texto = linhas.join('\n')
+      if (mensagem) mensagem.textContent = texto
+      return texto
+    }
+
+    // Pacote com janela de horário: a chegada já vem no início da janela.
+    pacote.addEventListener('change', () => {
+      const inicio = opcoes.find((o) => o.id === pacote.value)?.inicio
+      if (inicio) hora.value = inicio
+    })
+
+    form.addEventListener('input', montar)
+    form.addEventListener('change', montar)
+    montar()
+
+    form.addEventListener('submit', (evento) => {
+      evento.preventDefault()
+      if (!form.reportValidity()) return
+      const url = linkWhatsApp(form.dataset.whatsapp ?? '', montar())
+      window.open(url, '_blank', 'noopener')
+    })
+  }
+</script>

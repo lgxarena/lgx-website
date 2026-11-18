@@ -24,6 +24,8 @@ export default defineConfig(
         'error',
         { tags: [], roles: ['tabpanel', 'region'], allowExpressionValues: true },
       ],
+      // O texto do rótulo pode estar alguns níveis abaixo (ex.: <label><input/><span><b>…</b></span>).
+      'astro/jsx-a11y/label-has-associated-control': ['error', { depth: 4 }],
     },
   }
 )
