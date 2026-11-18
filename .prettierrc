@@ -9,11 +9,17 @@
   "endOfLine": "lf",
   "bracketSameLine": false,
   "bracketSpacing": true,
-  "plugins": ["prettier-plugin-tailwindcss", "prettier-plugin-classnames"],
-  "customFunctions": ["cva"],
+  "plugins": ["prettier-plugin-astro", "prettier-plugin-tailwindcss"],
+  "tailwindStylesheet": "./src/styles/global.css",
   "overrides": [
     {
-      "files": ["*.json", ".eslint*"],
+      "files": "*.astro",
+      "options": {
+        "parser": "astro"
+      }
+    },
+    {
+      "files": ["*.json"],
       "options": {
         "trailingComma": "none"
       }
