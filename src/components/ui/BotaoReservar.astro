@@ -1,6 +1,6 @@
 ---
 /**
- * Botão "Reservar": abre o WhatsApp da LGX com uma mensagem pronta para a pessoa completar.
+ * Botão "Reservar": abre o WhatsApp da LGX com uma mensagem pronta.
  * Enquanto não houver a página de reserva, toda chamada para reservar passa por aqui.
  */
 import { getSite } from '@/lib/conteudo'
@@ -19,13 +19,7 @@ type Props = Omit<Parameters<typeof Button>[0], 'href' | 'target' | 'rel'> & {
 const { sala, icone = true, ...rest } = Astro.props
 const site = await getSite()
 
-const mensagem = [
-  `Olá! Quero reservar PCs na LGX Arena${sala ? `, na ${sala}` : ''}.`,
-  'Dia:',
-  'Horário de chegada:',
-  'Quantos PCs:',
-  'Pacote:',
-].join('\n')
+const mensagem = `Olá! Quero reservar PCs na LGX Arena${sala ? `, na ${sala}` : ''}.`
 ---
 
 <Button {...rest} href={linkWhatsApp(site.whatsapp, mensagem)} target="_blank" rel="noopener">
