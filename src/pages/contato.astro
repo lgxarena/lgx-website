@@ -1,7 +1,4 @@
 ---
-import { Image } from 'astro:assets'
-
-import mapa from '@/assets/contato/mapa.png'
 import FaixaHorarios from '@/components/inicio/FaixaHorarios.astro'
 import BotaoReservar from '@/components/ui/BotaoReservar.astro'
 import Button from '@/components/ui/Button.astro'
@@ -50,30 +47,15 @@ const titulo2 = 'text-[28px] font-extrabold'
     />
 
     <div class="grid gap-5 lg:grid-cols-[1.4fr_1fr]">
+      <!-- Mapa do Google, carregado só quando chega perto da tela. -->
       <div class="flex flex-col gap-3">
-        <figure class="flex flex-col gap-2">
-          <a
-            href={endereco.mapa}
-            target="_blank"
-            rel="noopener"
-            class="block overflow-hidden rounded-lg border border-line"
-          >
-            <Image
-              src={mapa}
-              alt={`Mapa da região com a LGX Arena marcada na ${endereco.logradouro.split(' - ')[0]}, ${endereco.bairro}`}
-              widths={[600, 880]}
-              sizes="(min-width: 64rem) 700px, 100vw"
-              class="aspect-16/9 w-full object-cover transition-transform duration-500 hover:scale-[1.02] motion-reduce:transition-none"
-            />
-            <span class="sr-only">Abrir no Google Maps (abre em nova aba)</span>
-          </a>
-          <figcaption class="text-xs text-fg-muted">
-            Mapa: ©{' '}
-            <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">
-              colaboradores do OpenStreetMap
-            </a>
-          </figcaption>
-        </figure>
+        <iframe
+          src={`https://www.google.com/maps?q=${encodeURIComponent(enderecoCompleto)}&hl=pt-BR&output=embed`}
+          title={`Mapa do Google com a LGX Arena: ${enderecoCompleto}`}
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          class="min-h-72 w-full flex-1 rounded-lg border border-line bg-surface"
+        ></iframe>
         <Button
           href={endereco.mapa}
           target="_blank"
@@ -86,8 +68,11 @@ const titulo2 = 'text-[28px] font-extrabold'
         </Button>
       </div>
 
-      <div class="flex flex-col gap-3">
-        <section aria-labelledby="contato" class="flex flex-col gap-5 rounded-lg bg-surface p-6">
+      <div class="flex flex-col">
+        <section
+          aria-labelledby="contato"
+          class="flex flex-1 flex-col gap-5 rounded-lg bg-surface p-6"
+        >
           <div class="flex flex-col gap-1">
             <h2 id="contato" class="text-lg font-bold">
               Fale com a gente
