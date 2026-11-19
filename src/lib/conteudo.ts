@@ -54,3 +54,17 @@ export async function getAvaliacoesEmDestaque() {
 export async function getAvisosAtivos(agora = new Date()) {
   return getCollection('avisos', (a) => a.data.inicio <= agora && agora <= a.data.fim)
 }
+
+/** Campeonatos: os próximos (do mais perto ao mais longe) e os já jogados que têm campeão. */
+export async function getCampeonatos(agora = new Date()) {
+  const todos = await getCollection('campeonatos')
+  const hoje = new Date(agora)
+  hoje.setHours(0, 0, 0, 0)
+  const proximos = todos
+    .filter((c) => c.data.data >= hoje)
+    .sort((a, b) => a.data.data.getTime() - b.data.data.getTime())
+  const anteriores = todos
+    .filter((c) => c.data.data < hoje && c.data.campeao)
+    .sort((a, b) => b.data.data.getTime() - a.data.data.getTime())
+  return { proximos, anteriores }
+}

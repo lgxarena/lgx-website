@@ -1,0 +1,110 @@
+---
+import CabecalhoEventos from '@/components/eventos/CabecalhoEventos.astro'
+import BotaoReservar from '@/components/ui/BotaoReservar.astro'
+import ChamadaReserva from '@/components/ui/ChamadaReserva.astro'
+import Container from '@/components/ui/Container.astro'
+import Placeholder from '@/components/ui/Placeholder.astro'
+import Base from '@/layouts/Base.astro'
+
+const MENSAGEM = 'Olá! Quero um orçamento de aniversário na LGX Arena.'
+
+// Os itens entre colchetes esperam a resposta da issue #4.
+const incluso = [
+  {
+    titulo: 'PCs reservados',
+    texto: 'Um PC por convidado, na Sala Pro ou VIP, pelo tempo combinado.',
+  },
+  {
+    titulo: 'Buffet completo',
+    texto: '[O que o buffet inclui: salgados, lanches, bebidas, bolo?]',
+  },
+  { titulo: 'Duração flexível', texto: '[Opções de duração: 2h, 3h, 4h?]' },
+  { titulo: 'Tamanho do grupo', texto: '[Mínimo e máximo de convidados]' },
+]
+
+const passos = [
+  {
+    titulo: 'Mande data, horário e número de convidados',
+    texto: 'Pelo WhatsApp, com antecedência.',
+  },
+  { titulo: 'Receba o orçamento', texto: 'Com o buffet e o tempo de festa.' },
+  { titulo: 'Confirme pagando antes', texto: 'Se cancelar, cobramos 50% do valor.' },
+]
+
+const titulo2 = 'text-[28px] font-extrabold'
+---
+
+<Base
+  title="Aniversários"
+  description="Aniversário na LGX Arena: PCs reservados para a galera, buffet completo e duração flexível. Peça o orçamento pelo WhatsApp."
+>
+  <Container class="flex flex-col gap-16 pt-10 pb-24 md:pt-14 md:pb-28">
+    <CabecalhoEventos
+      titulo="Aniversário na LGX"
+      descricao="Junte a galera para jogar com PCs reservados e buffet completo. O valor muda conforme o tempo de festa."
+    >
+      <Fragment slot="acoes">
+        <BotaoReservar size="lg" mensagem={MENSAGEM}>
+          Pedir orçamento
+        </BotaoReservar>
+        <p class="text-[15px] text-fg-muted">
+          a partir de <b class="text-fg">[R$ —]</b> por pessoa
+        </p>
+      </Fragment>
+    </CabecalhoEventos>
+
+    <Placeholder label="Foto de uma festa na LGX" class="h-56 md:h-96" />
+
+    <section aria-labelledby="incluso" class="flex flex-col gap-6">
+      <h2 id="incluso" class={titulo2}>
+        O que está incluso
+      </h2>
+      <ul class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {incluso.map((i) => (
+          <li class="flex flex-col gap-2 rounded-lg bg-surface p-6">
+            <h3 class="text-lg font-bold">{i.titulo}</h3>
+            <p class="text-[15px] leading-relaxed text-fg-soft">{i.texto}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section aria-labelledby="agendar" class="flex flex-col gap-6">
+      <h2 id="agendar" class={titulo2}>
+        Como agendar
+      </h2>
+      <ol class="grid gap-6 md:grid-cols-3">
+        {passos.map((p, i) => (
+          <li class="flex gap-4">
+            <span
+              aria-hidden="true"
+              class:list={[
+                'flex size-10 shrink-0 items-center justify-center rounded-full font-extrabold',
+                i === passos.length - 1 ? 'bg-accent-strong text-white' : 'bg-surface-2',
+              ]}
+            >
+              {i + 1}
+            </span>
+            <span class="flex flex-col gap-1 pt-1.5">
+              <b class="font-semibold">{p.titulo}</b>
+              <span class="text-[15px] text-fg-muted">{p.texto}</span>
+            </span>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <div class="grid grid-cols-2 gap-3 md:grid-cols-3">
+      <Placeholder label="Buffet" class="h-40 md:h-56" />
+      <Placeholder label="Grupo jogando" class="h-40 md:h-56" />
+      <Placeholder label="Parabéns" class="h-40 max-md:col-span-2 md:h-56" />
+    </div>
+
+    <ChamadaReserva
+      titulo="Vamos montar a sua festa?"
+      texto="A mensagem já vai pedindo o orçamento de aniversário."
+      mensagem={MENSAGEM}
+      rotuloBotao="Pedir orçamento"
+    />
+  </Container>
+</Base>

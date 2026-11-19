@@ -1,5 +1,5 @@
 ---
-/** Card compacto de chamada para reservar, usado no fim das páginas. */
+/** Card compacto de chamada para o WhatsApp (reserva ou orçamento), usado no fim das páginas. */
 import BotaoReservar from './BotaoReservar.astro'
 
 interface Props {
@@ -7,6 +7,8 @@ interface Props {
   texto?: string
   /** Repassado ao botão para a mensagem do WhatsApp sair com o pacote. */
   pacote?: string
+  /** Mensagem própria do WhatsApp (ex.: orçamento), no lugar da de reserva. */
+  mensagem?: string
   rotuloBotao?: string
   /** `id` do título, único na página. */
   id?: string
@@ -16,6 +18,7 @@ const {
   titulo = 'Pronto para jogar?',
   texto = 'Mande o dia, a sala e quantos PCs; a equipe confirma.',
   pacote,
+  mensagem,
   rotuloBotao = 'Reservar pelo WhatsApp',
   id = 'chamada-reserva',
 } = Astro.props
@@ -31,5 +34,7 @@ const {
     </h2>
     <p class="text-[15px] text-fg-muted">{texto}</p>
   </div>
-  <BotaoReservar pacote={pacote}>{rotuloBotao}</BotaoReservar>
+  <BotaoReservar pacote={pacote} mensagem={mensagem}>
+    {rotuloBotao}
+  </BotaoReservar>
 </section>
