@@ -1,0 +1,75 @@
+---
+import { render } from 'astro:content'
+
+import BotaoReservar from '@/components/ui/BotaoReservar.astro'
+import Container from '@/components/ui/Container.astro'
+import Pergunta from '@/components/ui/Pergunta.astro'
+import SectionHeading from '@/components/ui/SectionHeading.astro'
+import Base from '@/layouts/Base.astro'
+import { getFaq } from '@/lib/conteudo'
+
+const temas = await Promise.all(
+  (await getFaq()).map(async (t) => ({
+    ...t,
+    perguntas: await Promise.all(
+      t.perguntas.map(async (p) => ({ ...p, Resposta: (await render(p)).Content }))
+    ),
+  }))
+)
+---
+
+<Base
+  title="Perguntas frequentes"
+  description="Reservas, preços, idade, comida, estacionamento e jogos: as dúvidas mais comuns sobre a LGX Arena."
+>
+  <Container class="flex flex-col gap-12 pt-14 pb-24 md:pt-18 md:pb-28">
+    <SectionHeading
+      as="h1"
+      title="Perguntas frequentes"
+      description="As dúvidas mais comuns sobre a LGX. Não achou a sua? Fale com a gente pelo WhatsApp."
+    />
+
+    <nav aria-label="Temas" class="flex flex-wrap gap-2">
+      {temas.map((t) => (
+        <a
+          href={`#${t.id}`}
+          class="rounded-full bg-surface-2 px-4 py-2 text-[15px] font-semibold text-fg-soft no-underline transition-colors hover:bg-surface-3 hover:text-fg"
+        >
+          {t.titulo}
+        </a>
+      ))}
+    </nav>
+
+    {temas.map((t) => (
+      <section aria-labelledby={t.id} class="flex flex-col gap-4">
+        <h2 id={t.id} class="text-2xl font-extrabold">
+          {t.titulo}
+        </h2>
+        <div class="flex flex-col gap-3">
+          {t.perguntas.map(({ data, Resposta }) => (
+            <Pergunta pergunta={data.pergunta}>
+              <div class="texto-rico">
+                <Resposta />
+              </div>
+            </Pergunta>
+          ))}
+        </div>
+      </section>
+    ))}
+
+    <section
+      aria-labelledby="duvida"
+      class="flex flex-wrap items-center justify-between gap-x-6 gap-y-4 rounded-lg bg-surface px-6 py-5"
+    >
+      <div class="flex flex-col gap-0.5">
+        <h2 id="duvida" class="text-lg font-bold">
+          Ficou alguma dúvida?
+        </h2>
+        <p class="text-[15px] text-fg-muted">A equipe responde pelo WhatsApp.</p>
+      </div>
+      <BotaoReservar mensagem="Olá! Tenho uma dúvida sobre a LGX Arena.">
+        Falar no WhatsApp
+      </BotaoReservar>
+    </section>
+  </Container>
+</Base>

@@ -1,0 +1,68 @@
+---
+import { render } from 'astro:content'
+
+import Button from '@/components/ui/Button.astro'
+import Container from '@/components/ui/Container.astro'
+import SectionHeading from '@/components/ui/SectionHeading.astro'
+import Base from '@/layouts/Base.astro'
+import { getRegras } from '@/lib/conteudo'
+
+const regras = await Promise.all(
+  (await getRegras()).map(async (r, i) => ({
+    ...r,
+    numero: i + 1,
+    Texto: (await render(r)).Content,
+  }))
+)
+---
+
+<Base
+  title="Regras da casa"
+  description="Regras da LGX Arena: cadastro, reservas, equipamentos pessoais, o que não é permitido e as regras do condomínio."
+>
+  <Container class="flex flex-col gap-12 pt-14 pb-24 md:pt-18 md:pb-28">
+    <div class="flex flex-wrap items-end justify-between gap-6">
+      <SectionHeading
+        as="h1"
+        title="Regras da casa"
+        description="Descumprir as regras pode levar à suspensão do cadastro e à proibição de entrada."
+      />
+      <Button href="/regras.pdf" variant="secondary" download>
+        Baixar em PDF
+      </Button>
+    </div>
+
+    <div class="grid gap-10 lg:grid-cols-[14rem_1fr] lg:gap-16">
+      <nav aria-label="Seções das regras" class="lg:sticky lg:top-28 lg:self-start">
+        <ol class="flex flex-wrap gap-2 lg:flex-col lg:gap-1">
+          {regras.map((r) => (
+            <li>
+              <a
+                href={`#${r.id}`}
+                class="flex rounded-md px-3 py-2 text-[15px] font-semibold text-fg-muted no-underline transition-colors hover:bg-surface hover:text-fg max-lg:bg-surface-2"
+              >
+                {r.numero}. {r.data.titulo}
+              </a>
+            </li>
+          ))}
+        </ol>
+      </nav>
+
+      <div class="flex flex-col gap-4">
+        {regras.map(({ id, numero, data, Texto }) => (
+          <section
+            aria-labelledby={id}
+            class="flex flex-col gap-4 rounded-lg bg-surface p-6 sm:p-8"
+          >
+            <h2 id={id} class="text-xl font-extrabold">
+              {numero}. {data.titulo}
+            </h2>
+            <div class="texto-rico">
+              <Texto />
+            </div>
+          </section>
+        ))}
+      </div>
+    </div>
+  </Container>
+</Base>

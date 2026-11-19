@@ -1,0 +1,57 @@
+---
+import Container from '@/components/ui/Container.astro'
+import SectionHeading from '@/components/ui/SectionHeading.astro'
+import Base from '@/layouts/Base.astro'
+import { getCardapio } from '@/lib/conteudo'
+import { formatarPreco } from '@/lib/formatar'
+
+const categorias = await getCardapio()
+const vazio = categorias.every((c) => c.itens.length === 0)
+---
+
+<Base
+  title="Cardápio"
+  description="Cardápio da lanchonete da LGX Arena: bebidas, salgados, lanches e doces, sem sair do jogo por muito tempo."
+>
+  <Container class="flex flex-col gap-12 pt-14 pb-24 md:pt-18 md:pb-28">
+    <SectionHeading
+      as="h1"
+      title="Cardápio"
+      description="Peça no balcão sem sair do jogo por muito tempo. Não é permitido trazer comida de fora."
+    />
+
+    {vazio ? (
+      <p class="rounded-lg border border-dashed border-placeholder bg-surface px-6 py-8 text-center text-fg-muted">
+        [Itens e preços do cardápio: pendentes da issue #4]
+      </p>
+    ) : (
+      <div class="grid gap-x-12 gap-y-10 md:grid-cols-2">
+        {categorias
+          .filter((c) => c.itens.length > 0)
+          .map((c) => (
+            <section aria-labelledby={c.id} class="flex flex-col gap-2">
+              <h2 id={c.id} class="text-2xl font-extrabold">
+                {c.titulo}
+              </h2>
+              <dl class="flex flex-col">
+                {c.itens.map((i) => (
+                  <div class="flex items-baseline justify-between gap-4 border-b border-line py-3.5 text-[17px]">
+                    <dt>{i.data.nome}</dt>
+                    <dd class="font-semibold tabular-nums">{formatarPreco(i.data.preco)}</dd>
+                  </div>
+                ))}
+              </dl>
+            </section>
+          ))}
+      </div>
+    )}
+
+    <div class="flex flex-col gap-2 rounded-lg bg-surface px-6 py-5 text-[15px] text-fg-muted">
+      <p>
+        Vai fazer aniversário ou evento? O buffet é montado à parte:{' '}
+        <a href="/aniversarios">Aniversários</a> · <a href="/empresas">Empresas & times</a>
+      </p>
+      <p>Não é permitido: bebida alcoólica, narguilé e vape.</p>
+    </div>
+  </Container>
+</Base>
