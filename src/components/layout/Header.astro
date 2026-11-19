@@ -1,5 +1,5 @@
 ---
-import Button from '@/components/ui/Button.astro'
+import BotaoReservar from '@/components/ui/BotaoReservar.astro'
 import Icon from '@/components/ui/Icon.astro'
 import { getSite } from '@/lib/conteudo'
 import { linkWhatsApp } from '@/lib/formatar'
@@ -64,9 +64,9 @@ const naInicio = normalizarCaminho(caminho) === '/'
       >
         <Icon name="whatsapp" label="Falar no WhatsApp (abre em nova aba)" />
       </a>
-      <Button href="/reservar" class="max-lg:hidden">
+      <BotaoReservar class="max-lg:hidden" icone={false}>
         Reservar
-      </Button>
+      </BotaoReservar>
       <button
         type="button"
         id="menu-abrir"
@@ -185,12 +185,9 @@ const naInicio = normalizarCaminho(caminho) === '/'
       </nav>
 
       <div class="container-page flex flex-col gap-3 border-t border-line py-6">
-        <Button href="/reservar" size="lg" block>
-          Reservar
-        </Button>
-        <Button href={whatsapp} variant="outline" size="lg" block target="_blank" rel="noopener">
-          <Icon name="whatsapp" /> Falar no WhatsApp
-        </Button>
+        <BotaoReservar size="lg" block>
+          Reservar pelo WhatsApp
+        </BotaoReservar>
       </div>
     </div>
   </div>

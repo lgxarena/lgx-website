@@ -1,6 +1,6 @@
 ---
 import PrecosSala from '@/components/precos/PrecosSala.astro'
-import Button from '@/components/ui/Button.astro'
+import BotaoReservar from '@/components/ui/BotaoReservar.astro'
 import Container from '@/components/ui/Container.astro'
 import SectionHeading from '@/components/ui/SectionHeading.astro'
 import Base from '@/layouts/Base.astro'
@@ -70,11 +70,11 @@ const cardTexto = 'text-[15px] leading-relaxed text-fg-soft'
         <h2 id="pronto" class="text-2xl font-extrabold">
           Pronto para jogar?
         </h2>
-        <p class="text-fg-muted">Escolha sala e horário; a equipe confirma pelo WhatsApp.</p>
+        <p class="text-fg-muted">
+          Mande o dia, a sala e quantos PCs pelo WhatsApp; a equipe confirma.
+        </p>
       </div>
-      <Button href="/reservar" size="lg">
-        Reservar um PC
-      </Button>
+      <BotaoReservar size="lg">Reservar pelo WhatsApp</BotaoReservar>
     </section>
   </Container>
 </Base>
