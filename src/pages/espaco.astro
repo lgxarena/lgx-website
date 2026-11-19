@@ -16,7 +16,7 @@ const anos = new Date().getFullYear() - site.fundacao
 const fotos = ['Sala de stream', 'Lanchonete', 'Fachada e entrada']
 
 const numeros = [
-  { valor: '40', rotulo: 'PCs em duas salas' },
+  { valor: '40', rotulo: 'PCs entre Pro e VIP' },
   { valor: '144 m²', rotulo: 'de área para jogar' },
   { valor: '2 Gbps', rotulo: 'de internet dedicada' },
   { valor: `${anos} anos`, rotulo: `de LGX, desde ${site.fundacao}` },
@@ -47,7 +47,7 @@ const titulo2 = 'text-[28px] font-extrabold'
 
 <Base
   title="O Espaço"
-  description={`Duas salas de jogo, Pro e VIP, com ${numeros[0]?.valor} PCs, internet de 2 Gbps, sala de stream e lanchonete, num condomínio fechado na Av. Cupecê, em São Paulo.`}
+  description={`Salas Pro e VIP com ${numeros[0]?.valor} PCs, internet de 2 Gbps, sala de stream e lanchonete, num condomínio fechado na Av. Cupecê, em São Paulo.`}
 >
   <Container class="flex flex-col gap-16 pt-14 pb-24 md:pt-18 md:pb-28">
     <div class="flex max-w-2xl flex-col gap-3">
@@ -55,7 +55,7 @@ const titulo2 = 'text-[28px] font-extrabold'
         O Espaço
       </h1>
       <p class="text-lg leading-relaxed text-fg-muted">
-        Duas salas de jogo, sala de stream e lanchonete, dentro de um condomínio fechado na Av.
+        Salas de jogo Pro e VIP, sala de stream e lanchonete, dentro de um condomínio fechado na Av.
         Cupecê.
       </p>
     </div>
@@ -97,9 +97,9 @@ const titulo2 = 'text-[28px] font-extrabold'
     <section aria-labelledby="salas" class="flex flex-col gap-6">
       <div class="flex flex-col gap-2">
         <h2 id="salas" class={titulo2}>
-          As salas
+          Tipos de sala
         </h2>
-        <p class="text-[17px] text-fg-muted">O que tem em cada PC.</p>
+        <p class="text-[17px] text-fg-muted">Pro e VIP. Veja o que tem em cada PC.</p>
       </div>
       <div class="grid gap-5 lg:grid-cols-2">
         {salas.map((sala) => (
