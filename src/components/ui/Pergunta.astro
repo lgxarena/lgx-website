@@ -2,6 +2,9 @@
 /**
  * Pergunta com resposta recolhível, com `<details>` nativo: funciona sem JavaScript,
  * abre com Enter ou Espaço e o leitor de tela anuncia se está aberta ou fechada.
+ *
+ * A resposta abre e fecha deslizando (`::details-content` + `interpolate-size`). Navegador sem
+ * suporte só abre e fecha, sem animação; com "reduzir movimento", também não anima.
  */
 interface Props {
   pergunta: string
@@ -11,7 +14,10 @@ interface Props {
 const { pergunta, aberta = false } = Astro.props
 ---
 
-<details open={aberta} class="group rounded-lg bg-surface open:bg-surface-2">
+<details
+  open={aberta}
+  class="pergunta group rounded-lg bg-surface transition-colors open:bg-surface-2 motion-reduce:transition-none"
+>
   <summary class="flex min-h-15 cursor-pointer list-none items-center justify-between gap-4 rounded-lg px-5 py-4 text-[17px] font-semibold [&::-webkit-details-marker]:hidden">
     {pergunta}
     <svg
@@ -31,3 +37,30 @@ const { pergunta, aberta = false } = Astro.props
     <slot />
   </div>
 </details>
+
+<style>
+  .pergunta {
+    interpolate-size: allow-keywords;
+  }
+
+  .pergunta::details-content {
+    block-size: 0;
+    overflow: clip;
+    opacity: 0;
+    transition:
+      block-size 300ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      opacity 200ms ease,
+      content-visibility 300ms allow-discrete;
+  }
+
+  .pergunta[open]::details-content {
+    block-size: auto;
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pergunta::details-content {
+      transition: none;
+    }
+  }
+</style>
