@@ -110,7 +110,11 @@ const linkPedido = linkWhatsApp(site.whatsapp, MENSAGEM_PEDIDO)
       class="grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"
     >
       {jogos.map((jogo) => (
-        <li data-nome={normalizar(jogo.data.nome)} data-categorias={jogo.data.categorias.join('|')}>
+        <li
+          data-nome={normalizar(jogo.data.nome)}
+          data-categorias={jogo.data.categorias.join('|')}
+          style={`view-transition-name: jogo-${jogo.id}; view-transition-class: jogo`}
+        >
           <figure class="flex flex-col gap-2.5">
             <div class="relative">
               <Image
@@ -244,7 +248,13 @@ const linkPedido = linkWhatsApp(site.whatsapp, MENSAGEM_PEDIDO)
     if (radio?.value && faixa?.parentElement) {
       faixa.parentElement.scrollLeft = faixa.offsetLeft - faixa.parentElement.clientWidth / 2
     }
-    form.addEventListener('input', aplicar)
+    // Ao filtrar, os jogos que ficam deslizam até o novo lugar, os que saem somem e os que voltam
+    // aparecem (View Transitions). Sem suporte, ou com "reduzir movimento", a lista só troca.
+    const reduzMovimento = window.matchMedia('(prefers-reduced-motion: reduce)')
+    form.addEventListener('input', () => {
+      if (!document.startViewTransition || reduzMovimento.matches) return aplicar()
+      document.startViewTransition(aplicar)
+    })
     form.addEventListener('submit', (e) => {
       e.preventDefault()
       busca.blur()
@@ -252,3 +262,40 @@ const linkPedido = linkWhatsApp(site.whatsapp, MENSAGEM_PEDIDO)
     aplicar()
   }
 </script>
+
+<style is:global>
+  /* A página em volta não pisca: só os jogos animam. */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+
+  ::view-transition-group(*.jogo) {
+    animation-duration: 320ms;
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  /* Jogo que volta para a lista: cresce de leve enquanto aparece. */
+  ::view-transition-new(*.jogo):only-child {
+    animation: jogo-entra 320ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+
+  /* Jogo que sai da lista: encolhe e some. */
+  ::view-transition-old(*.jogo):only-child {
+    animation: jogo-sai 180ms ease-in both;
+  }
+
+  @keyframes jogo-entra {
+    from {
+      opacity: 0;
+      scale: 0.92;
+    }
+  }
+
+  @keyframes jogo-sai {
+    to {
+      opacity: 0;
+      scale: 0.92;
+    }
+  }
+</style>
