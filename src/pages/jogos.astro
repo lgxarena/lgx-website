@@ -82,20 +82,39 @@ const linkPedido = linkWhatsApp(site.whatsapp, MENSAGEM_PEDIDO)
 
       <fieldset class="min-w-0">
         <legend class="sr-only">Categoria</legend>
-        <div class="-mx-4 flex gap-2 overflow-x-auto px-4 [scrollbar-width:none] sm:mx-0 sm:px-0">
-          {['', ...categorias].map((c) => (
-            <label class="shrink-0">
-              <input
-                type="radio"
-                name="categoria"
-                value={c}
-                checked={c === ''}
-                class="peer sr-only"
-              />
-              <span class="inline-flex min-h-10 cursor-pointer items-center rounded-full bg-surface-2 px-4 text-[15px] font-semibold whitespace-nowrap text-fg-soft transition-colors peer-checked:bg-fg peer-checked:text-bg peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent hover:bg-surface-3 peer-checked:hover:bg-fg">
-                {c || 'Todos'}
-              </span>
-            </label>
+        <div data-faixa class="relative">
+          <div
+            data-rolagem
+            class="categorias -mx-4 flex gap-2 overflow-x-auto px-4 py-1 [scrollbar-width:none] sm:mx-0 sm:px-0"
+          >
+            {['', ...categorias].map((c) => (
+              <label class="relative shrink-0">
+                <input
+                  type="radio"
+                  name="categoria"
+                  value={c}
+                  checked={c === ''}
+                  class="peer sr-only"
+                />
+                <span class="inline-flex min-h-10 cursor-pointer items-center rounded-full bg-surface-2 px-4 text-[15px] font-semibold whitespace-nowrap text-fg-soft transition-colors peer-checked:bg-fg peer-checked:text-bg peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent hover:bg-surface-3 peer-checked:hover:bg-fg">
+                  {c || 'Todos'}
+                </span>
+              </label>
+            ))}
+          </div>
+          {[-1, 1].map((lado) => (
+            <button
+              type="button"
+              data-seta={lado}
+              tabindex="-1"
+              aria-hidden="true"
+              class:list={[
+                'seta absolute top-1/2 z-10 hidden size-10 -translate-y-1/2 items-center justify-center rounded-full bg-surface-3 text-fg shadow-lg transition-opacity hover:bg-line-strong',
+                lado < 0 ? 'left-0' : 'right-0',
+              ]}
+            >
+              <Icon name={lado < 0 ? 'chevron-left' : 'chevron-right'} size={18} />
+            </button>
           ))}
         </div>
       </fieldset>
@@ -243,6 +262,26 @@ const linkPedido = linkWhatsApp(site.whatsapp, MENSAGEM_PEDIDO)
     if (radio) radio.checked = true
 
     form.hidden = false
+
+    // Faixa de categorias: esmaece a borda do lado que ainda tem mais para rolar e, com mouse,
+    // mostra setas para rolar (no toque, arrasta-se com o dedo; no teclado, as setas trocam a opção).
+    const faixaCategorias = form.querySelector<HTMLElement>('[data-faixa]')
+    const rolagem = form.querySelector<HTMLElement>('[data-rolagem]')
+    if (faixaCategorias && rolagem) {
+      const atualizarBordas = () => {
+        const fim = rolagem.scrollWidth - rolagem.clientWidth
+        faixaCategorias.toggleAttribute('data-mais-inicio', rolagem.scrollLeft > 2)
+        faixaCategorias.toggleAttribute('data-mais-fim', rolagem.scrollLeft < fim - 2)
+      }
+      rolagem.addEventListener('scroll', atualizarBordas, { passive: true })
+      new ResizeObserver(atualizarBordas).observe(rolagem)
+      for (const seta of faixaCategorias.querySelectorAll<HTMLButtonElement>('[data-seta]')) {
+        seta.addEventListener('click', () => {
+          const lado = Number(seta.dataset.seta)
+          rolagem.scrollBy({ left: lado * rolagem.clientWidth * 0.7, behavior: 'smooth' })
+        })
+      }
+    }
     // Traz para a vista a categoria escolhida, se ela estiver fora da faixa rolável.
     const faixa = radio?.closest('label')
     if (radio?.value && faixa?.parentElement) {
@@ -262,6 +301,36 @@ const linkPedido = linkWhatsApp(site.whatsapp, MENSAGEM_PEDIDO)
     aplicar()
   }
 </script>
+
+<style>
+  /* Borda esmaecida só do lado que tem mais categorias escondidas. */
+  .categorias {
+    --esq: 0px;
+    --dir: 0px;
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 var(--esq),
+      #000 calc(100% - var(--dir)),
+      transparent
+    );
+  }
+
+  [data-mais-inicio] .categorias {
+    --esq: 4rem;
+  }
+
+  [data-mais-fim] .categorias {
+    --dir: 4rem;
+  }
+
+  @media (pointer: fine) {
+    [data-mais-inicio] .seta[data-seta='-1'],
+    [data-mais-fim] .seta[data-seta='1'] {
+      display: flex;
+    }
+  }
+</style>
 
 <style is:global>
   /* A página em volta não pisca: só os jogos animam. */
