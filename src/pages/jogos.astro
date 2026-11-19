@@ -1,0 +1,254 @@
+---
+import { Image } from 'astro:assets'
+
+import Container from '@/components/ui/Container.astro'
+import Icon from '@/components/ui/Icon.astro'
+import SectionHeading from '@/components/ui/SectionHeading.astro'
+import Tag from '@/components/ui/Tag.astro'
+import Base from '@/layouts/Base.astro'
+import { getJogos, getSite } from '@/lib/conteudo'
+import { linkWhatsApp } from '@/lib/formatar'
+
+const [site, jogos] = await Promise.all([getSite(), getJogos()])
+
+// Só as categorias que têm jogo, das mais comuns para as menos comuns.
+const contagem = new Map<string, number>()
+for (const jogo of jogos) {
+  for (const c of jogo.data.categorias) contagem.set(c, (contagem.get(c) ?? 0) + 1)
+}
+const categorias = [...contagem.entries()]
+  .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'pt-BR'))
+  .map(([nome]) => nome)
+
+/** Minúsculas e sem acento, para a busca achar "acao" em "Ação". */
+const normalizar = (texto: string) =>
+  texto
+    .normalize('NFD')
+    .replace(/\p{Diacritic}/gu, '')
+    .toLowerCase()
+
+const MENSAGEM_PEDIDO = 'Olá! Queria pedir um jogo para a LGX Arena.'
+const linkPedido = linkWhatsApp(site.whatsapp, MENSAGEM_PEDIDO)
+---
+
+<Base
+  title="Jogos"
+  description={`Os ${jogos.length} jogos instalados nos PCs da LGX Arena, de Counter-Strike 2 e Valorant a League of Legends e Fortnite. Não achou o seu? Peça pelo WhatsApp.`}
+>
+  <Container class="flex flex-col gap-8 pt-14 pb-24 md:pt-18 md:pb-28">
+    <SectionHeading
+      as="h1"
+      title="Jogos"
+      description={`${jogos.length} jogos instalados em todos os PCs. Não achou o seu? Peça pelo WhatsApp.`}
+    />
+
+    <!-- Sem JavaScript a lista aparece inteira e os filtros ficam escondidos. -->
+    <form
+      data-filtros
+      role="search"
+      aria-label="Buscar jogos"
+      hidden
+      class="sticky top-20 z-30 -mx-4 flex flex-col gap-3 border-b border-line bg-bg/95 px-4 py-4 backdrop-blur-sm sm:mx-0 sm:px-0"
+    >
+      <div class="flex gap-3">
+        <label class="relative flex-1">
+          <span class="sr-only">Nome do jogo</span>
+          <Icon
+            name="search"
+            size={20}
+            class="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-fg-muted"
+          />
+          <input
+            type="search"
+            name="q"
+            placeholder="Buscar jogo"
+            autocomplete="off"
+            enterkeyhint="search"
+            class="min-h-12 w-full rounded-md border border-line-strong bg-surface pr-4 pl-12 text-[16px] text-fg placeholder:text-fg-muted focus:border-fg-muted"
+          />
+        </label>
+        <a
+          data-pedir
+          href={linkPedido}
+          target="_blank"
+          rel="noopener"
+          class="inline-flex min-h-12 shrink-0 items-center gap-2 rounded-md bg-surface-2 px-4 text-[15px] font-semibold text-fg no-underline transition-colors hover:bg-surface-3 hover:text-fg sm:px-5"
+        >
+          <Icon name="whatsapp" />
+          <span class="max-sm:sr-only">Pedir um jogo</span>
+          <span class="sr-only">(abre o WhatsApp em nova aba)</span>
+        </a>
+      </div>
+
+      <fieldset class="min-w-0">
+        <legend class="sr-only">Categoria</legend>
+        <div class="-mx-4 flex gap-2 overflow-x-auto px-4 [scrollbar-width:none] sm:mx-0 sm:px-0">
+          {['', ...categorias].map((c) => (
+            <label class="shrink-0">
+              <input
+                type="radio"
+                name="categoria"
+                value={c}
+                checked={c === ''}
+                class="peer sr-only"
+              />
+              <span class="inline-flex min-h-10 cursor-pointer items-center rounded-full bg-surface-2 px-4 text-[15px] font-semibold whitespace-nowrap text-fg-soft transition-colors peer-checked:bg-fg peer-checked:text-bg peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent hover:bg-surface-3 peer-checked:hover:bg-fg">
+                {c || 'Todos'}
+              </span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+    </form>
+
+    <p data-total aria-live="polite" class="text-[15px] text-fg-muted">
+      {jogos.length} jogos
+    </p>
+
+    <ul
+      data-jogos
+      class="grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"
+    >
+      {jogos.map((jogo) => (
+        <li data-nome={normalizar(jogo.data.nome)} data-categorias={jogo.data.categorias.join('|')}>
+          <figure class="flex flex-col gap-2.5">
+            <div class="relative">
+              <Image
+                src={jogo.data.capa}
+                alt=""
+                widths={[240, 360, 480]}
+                sizes="(min-width: 80rem) 240px, (min-width: 64rem) 19vw, (min-width: 40rem) 30vw, 45vw"
+                class="aspect-3/4 w-full rounded-lg bg-surface object-cover"
+              />
+              {jogo.data.popular && (
+                <Tag tone="accent" class="absolute top-2.5 left-2.5">
+                  Popular
+                </Tag>
+              )}
+            </div>
+            <figcaption class="flex flex-col gap-0.5">
+              <span class="font-semibold">{jogo.data.nome}</span>
+              <span class="text-sm text-fg-muted">{jogo.data.categorias.join(' · ')}</span>
+            </figcaption>
+          </figure>
+        </li>
+      ))}
+    </ul>
+
+    <div data-vazio hidden class="flex flex-col items-start gap-4 rounded-lg bg-surface px-6 py-8">
+      <div class="flex flex-col gap-1.5">
+        <h2 class="text-lg font-bold">
+          Não temos <span data-termo>esse jogo</span> ainda
+        </h2>
+        <p class="text-[15px] text-fg-muted">
+          Peça pelo WhatsApp: se der para instalar, ele entra nos PCs.
+        </p>
+      </div>
+      <a
+        data-pedir
+        href={linkPedido}
+        target="_blank"
+        rel="noopener"
+        class="inline-flex min-h-12 items-center gap-2 rounded-md bg-accent-strong px-5 text-[15px] font-semibold text-white no-underline transition-colors hover:bg-accent-deep hover:text-white"
+      >
+        <Icon name="whatsapp" />
+        Pedir este jogo
+        <span class="sr-only">(abre o WhatsApp em nova aba)</span>
+      </a>
+    </div>
+  </Container>
+</Base>
+
+<script
+  is:inline
+  type="application/json"
+  id="jogos-dados"
+  set:html={JSON.stringify({ whatsapp: site.whatsapp, mensagem: MENSAGEM_PEDIDO })}
+/>
+<script>
+  import { linkWhatsApp } from '@/lib/formatar'
+
+  const form = document.querySelector<HTMLFormElement>('[data-filtros]')
+  const lista = document.querySelector<HTMLElement>('[data-jogos]')
+  const total = document.querySelector<HTMLElement>('[data-total]')
+  const vazio = document.querySelector<HTMLElement>('[data-vazio]')
+  const termo = document.querySelector<HTMLElement>('[data-termo]')
+  const dados = JSON.parse(document.getElementById('jogos-dados')?.textContent ?? '{}') as {
+    whatsapp: string
+    mensagem: string
+  }
+
+  if (form && lista && total && vazio && termo) {
+    const busca = form.elements.namedItem('q') as HTMLInputElement
+    const itens = [...lista.querySelectorAll<HTMLElement>('li')]
+    const pedidos = [...document.querySelectorAll<HTMLAnchorElement>('[data-pedir]')]
+
+    const normalizar = (texto: string) =>
+      texto
+        .normalize('NFD')
+        .replace(/\p{Diacritic}/gu, '')
+        .toLowerCase()
+        .trim()
+
+    const categoriaAtual = () =>
+      form.querySelector<HTMLInputElement>('input[name="categoria"]:checked')?.value ?? ''
+
+    const aplicar = () => {
+      const q = normalizar(busca.value)
+      const categoria = categoriaAtual()
+      let visiveis = 0
+
+      for (const item of itens) {
+        const nome = item.dataset.nome ?? ''
+        const categorias = (item.dataset.categorias ?? '').split('|')
+        const passa =
+          (!q || nome.includes(q) || categorias.some((c) => normalizar(c).includes(q))) &&
+          (!categoria || categorias.includes(categoria))
+        item.hidden = !passa
+        if (passa) visiveis++
+      }
+
+      total.textContent = visiveis === 1 ? '1 jogo' : `${visiveis} jogos`
+      vazio.hidden = visiveis > 0
+      lista.hidden = visiveis === 0
+
+      // O pedido já leva o nome buscado, quando houver.
+      const nomeBuscado = busca.value.trim()
+      termo.textContent = nomeBuscado ? `“${nomeBuscado}”` : 'esse jogo'
+      const mensagem = nomeBuscado
+        ? `${dados.mensagem.replace(/\.$/, '')}: ${nomeBuscado}.`
+        : dados.mensagem
+      for (const a of pedidos) a.href = linkWhatsApp(dados.whatsapp, mensagem)
+
+      // Estado na URL, para compartilhar o link e voltar à mesma busca.
+      const url = new URL(location.href)
+      if (busca.value.trim()) url.searchParams.set('q', busca.value.trim())
+      else url.searchParams.delete('q')
+      if (categoria) url.searchParams.set('categoria', categoria)
+      else url.searchParams.delete('categoria')
+      history.replaceState(null, '', url)
+    }
+
+    // Lê o estado da URL ao abrir a página.
+    const params = new URLSearchParams(location.search)
+    busca.value = params.get('q') ?? ''
+    const inicial = params.get('categoria') ?? ''
+    const radio = [...form.querySelectorAll<HTMLInputElement>('input[name="categoria"]')].find(
+      (r) => r.value === inicial
+    )
+    if (radio) radio.checked = true
+
+    form.hidden = false
+    // Traz para a vista a categoria escolhida, se ela estiver fora da faixa rolável.
+    const faixa = radio?.closest('label')
+    if (radio?.value && faixa?.parentElement) {
+      faixa.parentElement.scrollLeft = faixa.offsetLeft - faixa.parentElement.clientWidth / 2
+    }
+    form.addEventListener('input', aplicar)
+    form.addEventListener('submit', (e) => {
+      e.preventDefault()
+      busca.blur()
+    })
+    aplicar()
+  }
+</script>
