@@ -1,0 +1,142 @@
+---
+import ChamadaReserva from '@/components/ui/ChamadaReserva.astro'
+import Container from '@/components/ui/Container.astro'
+import Icon from '@/components/ui/Icon.astro'
+import Pergunta from '@/components/ui/Pergunta.astro'
+import Base from '@/layouts/Base.astro'
+import { getPlanos, getSalas } from '@/lib/conteudo'
+import { formatarHora, formatarPreco } from '@/lib/formatar'
+
+const [salas, pacotes] = await Promise.all([getSalas(), getPlanos('pacote')])
+const corujao = pacotes.find((p) => p.id === 'corujao')
+if (!corujao?.data.janela) throw new Error('Falta o pacote Corujão em src/content/planos')
+const { janela, horas, dias, precos } = corujao.data
+
+const precoPorSala = salas.map((sala) => ({
+  nome: sala.data.nome,
+  preco: formatarPreco(precos[sala.id as keyof typeof precos], { inteiro: true }),
+}))
+
+/** A noite, do aviso de encerramento ao fim do Corujão. */
+const noite = [
+  { hora: '21:00', texto: 'Quem não vai ficar para o Corujão recebe o aviso de encerramento.' },
+  {
+    hora: '21:30',
+    texto: 'Fim do expediente normal. Se o seu PC não estiver reservado, dá para ficar até 00h.',
+  },
+  { hora: '21:45', texto: 'Quem reservou já pode chegar, até 15 minutos antes.' },
+  { hora: '22:00', texto: 'Começa o Corujão.', destaque: true },
+  {
+    hora: '22:45',
+    texto:
+      'Reserva sem ninguém expira e vai para a lista de espera. Vai atrasar? Avise ao reservar.',
+  },
+  { hora: '06:00', texto: 'Fim da noite.' },
+]
+---
+
+<Base
+  title="Corujão"
+  description={`Corujão na LGX Arena: ${horas} horas de jogo, das ${formatarHora(janela.inicio)} às ${formatarHora(janela.fim)}, em ${(dias ?? '').toLowerCase()}. Veja como funciona a noite e reserve pelo WhatsApp.`}
+>
+  <Container class="flex flex-col gap-16 pt-14 pb-24 md:pt-18 md:pb-28">
+    <div class="flex flex-wrap items-end justify-between gap-8">
+      <div class="flex max-w-2xl flex-col gap-3">
+        <p class="flex items-center gap-2 text-sm font-bold tracking-[0.08em] text-link uppercase">
+          <Icon name="moon" size={16} />
+          {janela.inicio} – {janela.fim} · {dias}
+        </p>
+        <h1 class="text-4xl font-extrabold tracking-tight md:text-[64px] md:leading-none">
+          Corujão
+        </h1>
+        <p class="text-lg leading-relaxed text-fg-muted">
+          A madrugada inteira de jogo com os amigos. {horas} horas de PC reservado, lanchonete
+          aberta e condomínio fechado.
+        </p>
+      </div>
+      <dl class="flex gap-3">
+        {precoPorSala.map((s) => (
+          <div class="flex min-w-36 flex-col-reverse gap-1 rounded-lg bg-surface px-5 py-4">
+            <dt class="text-sm text-fg-muted">{s.nome}</dt>
+            <dd class="text-3xl font-extrabold tabular-nums">{s.preco}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+
+    <section aria-labelledby="noite" class="flex flex-col gap-6">
+      <h2 id="noite" class="text-[28px] font-extrabold">
+        Como é a noite
+      </h2>
+      <ol class="relative grid gap-x-4 gap-y-6 before:absolute before:top-1.5 before:bottom-1.5 before:left-[5px] before:w-px before:bg-line-strong md:grid-cols-6 md:before:top-[5px] md:before:right-0 md:before:bottom-auto md:before:left-0 md:before:h-px md:before:w-auto">
+        {noite.map((n) => (
+          <li class="relative flex gap-4 md:flex-col md:gap-3">
+            <span
+              aria-hidden="true"
+              class:list={[
+                'relative z-10 mt-1 size-3 shrink-0 rounded-full md:mt-0',
+                n.destaque ? 'bg-accent ring-4 ring-accent/25' : 'bg-surface-3',
+              ]}
+            />
+            <span class="flex flex-col gap-1">
+              <time
+                datetime={n.hora}
+                class:list={['text-2xl font-extrabold tabular-nums', n.destaque && 'text-accent']}
+              >
+                {n.hora}
+              </time>
+              <span class="text-[15px] leading-snug text-fg-soft">{n.texto}</span>
+            </span>
+          </li>
+        ))}
+      </ol>
+      <p class="text-[15px] text-fg-muted">Faltar sem avisar pode afetar suas próximas reservas.</p>
+    </section>
+
+    <section aria-labelledby="antes" class="flex flex-col gap-6">
+      <h2 id="antes" class="text-[28px] font-extrabold">
+        Antes de reservar
+      </h2>
+      <div class="flex max-w-3xl flex-col gap-3">
+        <Pergunta pergunta="Menores de idade podem ir?" aberta>
+          <p>
+            Sim. Menores de <b>[16 ou 18]</b> anos precisam de autorização dos pais, por escrito e
+            com contato por telefone. Menores de 12 anos só com um adulto responsável.
+          </p>
+        </Pergunta>
+        <Pergunta pergunta="Posso levar comida?">
+          <p>
+            Não é permitido trazer comida de fora nem de outras praças de alimentação. A lanchonete
+            fica aberta com bebidas, salgados, lanches e sorvetes.{' '}
+            <a href="/cardapio">Ver o cardápio</a>
+          </p>
+        </Pergunta>
+        <Pergunta pergunta="Tem estacionamento?">
+          <p>
+            Temos <b>[6 ou 7]</b> vagas no condomínio durante o Corujão. Combinem carona: com as
+            vagas cheias, o carro fica na avenida. <a href="/contato">Como chegar</a>
+          </p>
+        </Pergunta>
+        <Pergunta pergunta="É seguro de madrugada?">
+          <p>
+            A LGX fica dentro de um condomínio fechado com portaria. Para manter a paz com os
+            vizinhos: sem gritaria e sem ficar na porta da loja fumando ou conversando de madrugada.
+            <a href="/regras">Ver as regras</a>
+          </p>
+        </Pergunta>
+        <Pergunta pergunta="Como confirmo a reserva?">
+          <p>
+            A reserva vale depois do pagamento antecipado. Cancelamentos têm taxa de 50% do valor.
+          </p>
+        </Pergunta>
+      </div>
+    </section>
+
+    <ChamadaReserva
+      titulo="Garanta seu PC"
+      texto="As vagas acabam rápido em véspera de feriado."
+      pacote="Corujão"
+      rotuloBotao="Reservar o Corujão"
+    />
+  </Container>
+</Base>
