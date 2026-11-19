@@ -19,19 +19,15 @@ const precoPorSala = salas.map((sala) => ({
 
 /** A noite, do aviso de encerramento ao fim do Corujão. */
 const noite = [
-  { hora: '21:00', texto: 'Quem não vai ficar para o Corujão recebe o aviso de encerramento.' },
+  { hora: '21:00', texto: 'Aviso de fechamento para quem não vai ficar.' },
   {
     hora: '21:30',
-    texto: 'Fim do expediente normal. Se o seu PC não estiver reservado, dá para ficar até 00h.',
+    texto: 'Fim do horário normal. Se o seu PC não foi reservado, você pode ficar até meia-noite.',
   },
-  { hora: '21:45', texto: 'Quem reservou já pode chegar, até 15 minutos antes.' },
+  { hora: '21:45', texto: 'Quem reservou já pode entrar.' },
   { hora: '22:00', texto: 'Começa o Corujão.', destaque: true },
-  {
-    hora: '22:45',
-    texto:
-      'Reserva sem ninguém expira e vai para a lista de espera. Vai atrasar? Avise ao reservar.',
-  },
-  { hora: '06:00', texto: 'Fim da noite.' },
+  { hora: '22:45', texto: 'Quem não chegou perde a reserva. Vai atrasar? Avise antes.' },
+  { hora: '06:00', texto: 'Fim do Corujão.' },
 ]
 ---
 
@@ -90,7 +86,9 @@ const noite = [
           </li>
         ))}
       </ol>
-      <p class="text-[15px] text-fg-muted">Faltar sem avisar pode afetar suas próximas reservas.</p>
+      <p class="text-[15px] text-fg-muted">
+        Faltou sem avisar? Isso pode pesar nas próximas reservas.
+      </p>
     </section>
 
     <section aria-labelledby="antes" class="flex flex-col gap-6">
@@ -100,34 +98,31 @@ const noite = [
       <div class="flex flex-col gap-3">
         <Pergunta pergunta="Menores de idade podem ir?" aberta>
           <p>
-            Sim. Menores de 18 anos precisam de autorização dos pais, por escrito e com contato por
-            telefone. Menores de 12 anos só com um adulto responsável.
+            Sim. Até 17 anos, só com autorização escrita dos pais e um telefone para contato. Até 11
+            anos, só acompanhado de um adulto.
           </p>
         </Pergunta>
         <Pergunta pergunta="Posso levar comida?">
           <p>
-            Não é permitido trazer comida de fora nem de outras praças de alimentação. A lanchonete
-            fica aberta com bebidas, salgados e lanches. <a href="/cardapio">Ver o cardápio</a>
+            Não pode trazer comida de fora. A lanchonete fica aberta, com bebidas, salgados e
+            lanches. <a href="/cardapio">Ver o cardápio</a>
           </p>
         </Pergunta>
         <Pergunta pergunta="Tem estacionamento?">
           <p>
-            São 6 vagas no condomínio durante o Corujão, por ordem de chegada: não reservamos vaga.
-            Combinem carona: com as vagas cheias, o carro fica na avenida.{' '}
-            <a href="/contato">Como chegar</a>
+            Há 6 vagas no condomínio, sem reserva: quem chega primeiro estaciona. Se lotar, o carro
+            fica na avenida, então vale combinar carona. <a href="/contato">Como chegar</a>
           </p>
         </Pergunta>
         <Pergunta pergunta="É seguro de madrugada?">
           <p>
-            A LGX fica dentro de um condomínio fechado com portaria. Para manter a paz com os
-            vizinhos: sem gritaria e sem ficar na porta da loja fumando ou conversando de madrugada.
+            Sim. A LGX fica num condomínio fechado com portaria. Para não incomodar os vizinhos,
+            nada de gritaria nem de ficar na porta fumando ou conversando.{' '}
             <a href="/regras">Ver as regras</a>
           </p>
         </Pergunta>
         <Pergunta pergunta="Como confirmo a reserva?">
-          <p>
-            A reserva vale depois do pagamento antecipado. Cancelamentos têm taxa de 50% do valor.
-          </p>
+          <p>Pagando antes. Se cancelar, cobramos 50% do valor.</p>
         </Pergunta>
       </div>
     </section>
