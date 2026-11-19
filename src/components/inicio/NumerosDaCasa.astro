@@ -24,33 +24,37 @@ const numeros: Numero[] = [
 ---
 
 <dl data-numeros class="grid grid-cols-2 lg:grid-cols-4">
-  {numeros.map((n, i) => (
+  {numeros.map((numero, indice) => (
     <div
       class:list={[
         'flex flex-col-reverse gap-2 py-7 lg:py-9',
-        i % 2 === 1 && 'border-l border-fg/15 pl-5 sm:pl-8',
-        i >= 2 && 'border-t border-fg/15 lg:border-t-0',
-        i > 0 && 'lg:border-l lg:pl-8',
+        indice % 2 === 1 && 'border-l border-fg/15 pl-5 sm:pl-8',
+        indice >= 2 && 'border-t border-fg/15 lg:border-t-0',
+        indice > 0 && 'lg:border-l lg:pl-8',
       ]}
     >
-      <dt class="text-[15px] text-fg-muted">{n.rotulo}</dt>
+      <dt class="text-[15px] text-fg-muted">{numero.rotulo}</dt>
       <dd class="flex items-center gap-3 overflow-hidden">
         <span class="sr-only">
-          {n.valor}
-          {n.sufixo}
-          {n.unidade && ` ${n.unidade}`}
+          {numero.valor}
+          {numero.sufixo}
+          {numero.unidade && ` ${numero.unidade}`}
         </span>
         <span
           aria-hidden="true"
           class="flex items-baseline gap-1.5 text-4xl font-extrabold tracking-tight tabular-nums md:text-5xl"
         >
-          <span data-contar={n.valor} data-sufixo={n.sufixo} data-mbps={n.mbps ? '' : undefined}>
-            {n.valor}
-            {n.sufixo}
+          <span
+            data-contar={numero.valor}
+            data-sufixo={numero.sufixo}
+            data-mbps={numero.mbps ? '' : undefined}
+          >
+            {numero.valor}
+            {numero.sufixo}
           </span>
-          {n.unidade && (
+          {numero.unidade && (
             <span class="text-xl font-bold text-fg-soft md:text-2xl" data-unidade>
-              {n.unidade}
+              {numero.unidade}
             </span>
           )}
         </span>
@@ -65,7 +69,7 @@ const numeros: Numero[] = [
 
   if (numeros && !reduzMovimento && 'IntersectionObserver' in window) {
     const DURACAO = 1600
-    const suave = (t: number) => 1 - Math.pow(1 - t, 3)
+    const suave = (progresso: number) => 1 - Math.pow(1 - progresso, 3)
 
     /**
      * "2000 Mbps" rola para cima e sai; "2 Gbps" entra por baixo, como num placar.
@@ -106,9 +110,9 @@ const numeros: Numero[] = [
 
       const inicio = performance.now()
       const passo = (agora: number) => {
-        const t = Math.min(1, (agora - inicio) / DURACAO)
-        el.textContent = `${Math.round(final * suave(t))}${t === 1 ? sufixo : ''}`
-        if (t < 1) return requestAnimationFrame(passo)
+        const progresso = Math.min(1, (agora - inicio) / DURACAO)
+        el.textContent = `${Math.round(final * suave(progresso))}${progresso === 1 ? sufixo : ''}`
+        if (progresso < 1) return requestAnimationFrame(passo)
         if (mbps && unidade) virarGbps(el, unidade, alvo)
       }
       requestAnimationFrame(passo)
@@ -128,10 +132,10 @@ const numeros: Numero[] = [
     // Só zera os números se a faixa ainda não estiver à vista (evita piscar o valor final).
     const caixa = numeros.getBoundingClientRect()
     if (caixa.top > window.innerHeight - caixa.height / 2) {
-      contadores.forEach((el) => {
-        el.textContent = '0'
-        const unidade = el.parentElement?.querySelector<HTMLElement>('[data-unidade]')
-        if (el.hasAttribute('data-mbps') && unidade) unidade.textContent = 'Mbps'
+      contadores.forEach((contador) => {
+        contador.textContent = '0'
+        const unidade = contador.parentElement?.querySelector<HTMLElement>('[data-unidade]')
+        if (contador.hasAttribute('data-mbps') && unidade) unidade.textContent = 'Mbps'
       })
     }
     observador.observe(numeros)

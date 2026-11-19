@@ -12,11 +12,15 @@ import { getHorarios } from '@/lib/conteudo'
 
 const horarios = await getHorarios()
 
-const notaCorujao = horarios.find((h) => h.data.dias.length === 0)?.data.observacao
+const notaCorujao = horarios.find((horario) => horario.data.dias.length === 0)?.data.observacao
 
 const regulares = horarios
-  .filter((h) => h.data.dias.length > 0)
-  .map((h) => ({ dias: h.data.dias, abre: h.data.abre, fecha: h.data.fecha }))
+  .filter((horario) => horario.data.dias.length > 0)
+  .map((horario) => ({
+    dias: horario.data.dias,
+    abre: horario.data.abre,
+    fecha: horario.data.fecha,
+  }))
 ---
 
 <section aria-labelledby="horarios-titulo" class="border-y border-line bg-bg-alt py-10 md:py-12">
@@ -37,11 +41,11 @@ const regulares = horarios
 
     <div class="contents">
       <dl class="grid grid-cols-2 gap-3 md:grid-cols-4">
-        {horarios.map((h) => {
-          const corujao = h.data.dias.length === 0
+        {horarios.map((horario) => {
+          const corujao = horario.data.dias.length === 0
           return (
             <div
-              data-dias={h.data.dias.join(' ')}
+              data-dias={horario.data.dias.join(' ')}
               class:list={[
                 'relative flex flex-col gap-1.5 rounded-lg border p-4 transition-colors md:p-5',
                 corujao
@@ -50,7 +54,7 @@ const regulares = horarios
               ]}
             >
               <dt class="flex items-center gap-2 text-sm text-fg-muted">
-                {h.data.rotulo}
+                {horario.data.rotulo}
                 {corujao && (
                   <Icon
                     name="moon"
@@ -67,7 +71,7 @@ const regulares = horarios
                 </span>
               </dt>
               <dd class="text-lg font-bold tabular-nums md:text-xl">
-                {h.data.abre} – {h.data.fecha}
+                {horario.data.abre} – {horario.data.fecha}
               </dd>
             </div>
           )
@@ -109,12 +113,13 @@ const regulares = horarios
         hourCycle: 'h23',
       })
         .formatToParts(new Date())
-        .map((p) => [p.type, p.value])
+        .map((parte) => [parte.type, parte.value])
     )
     const indiceHoje = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(partes.weekday)
     const agora = `${partes.hour}:${partes.minute}`
 
-    const doDia = (indice: number) => horarios.find((h) => h.dias.includes(dias[indice % 7]))
+    const doDia = (indice: number) =>
+      horarios.find((horario) => horario.dias.includes(dias[indice % 7]))
     const hora = (hhmm: string) =>
       hhmm.endsWith(':00') ? `${hhmm.slice(0, 2)}h` : hhmm.replace(':', 'h')
 

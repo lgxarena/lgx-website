@@ -85,20 +85,22 @@ const cartoes: Cartao[] =
         data-trilho
         class="-m-1 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth p-1 [scrollbar-width:none] motion-reduce:scroll-auto [&::-webkit-scrollbar]:hidden"
       >
-        {cartoes.map((c, i) => (
+        {cartoes.map((cartao, indice) => (
           <figure
-            aria-label={`${i + 1} de ${cartoes.length}`}
+            aria-label={`${indice + 1} de ${cartoes.length}`}
             class="flex min-h-72 w-[85%] shrink-0 snap-start flex-col gap-4 rounded-xl border border-line bg-surface p-7 sm:w-[calc((100%-1rem)/2)] lg:w-[calc((100%-2rem)/3)]"
           >
             <div class="flex items-center justify-between gap-3">
-              <Stars value={c.nota} size={15} />
-              <span class="text-[13px] text-fg-muted">{c.data}</span>
+              <Stars value={cartao.nota} size={15} />
+              <span class="text-[13px] text-fg-muted">{cartao.data}</span>
             </div>
-            <blockquote class="text-[17px] leading-relaxed text-fg-soft">“{c.texto}”</blockquote>
+            <blockquote class="text-[17px] leading-relaxed text-fg-soft">
+              “{cartao.texto}”
+            </blockquote>
             <figcaption class="mt-auto flex items-center gap-3">
-              {c.foto ? (
+              {cartao.foto ? (
                 <img
-                  src={c.foto}
+                  src={cartao.foto}
                   alt=""
                   width="38"
                   height="38"
@@ -111,11 +113,11 @@ const cartoes: Cartao[] =
                   aria-hidden="true"
                   class="flex size-9.5 items-center justify-center rounded-full bg-surface-3 text-sm font-bold"
                 >
-                  {c.autor.replace(/^\[/, '').charAt(0).toUpperCase()}
+                  {cartao.autor.replace(/^\[/, '').charAt(0).toUpperCase()}
                 </span>
               )}
               <span class="flex flex-col gap-0.5">
-                <b class="text-[15px]">{c.autor}</b>
+                <b class="text-[15px]">{cartao.autor}</b>
                 <span class="text-[13px] text-fg-muted">Avaliação no Google</span>
               </span>
             </figcaption>
@@ -164,8 +166,8 @@ const cartoes: Cartao[] =
           ...Array.from({ length: paginas }, () => document.createElement('span'))
         )
       }
-      ;[...pontos.children].forEach((ponto, i) => {
-        ponto.className = `h-2 rounded-full transition-all ${i === atual ? 'w-7 bg-accent' : 'w-2 bg-surface-3'}`
+      ;[...pontos.children].forEach((ponto, indice) => {
+        ponto.className = `h-2 rounded-full transition-all ${indice === atual ? 'w-7 bg-accent' : 'w-2 bg-surface-3'}`
       })
     }
 

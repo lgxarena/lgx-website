@@ -60,10 +60,10 @@ const titulo2 = 'text-[28px] font-extrabold'
         O que está incluso
       </h2>
       <ul class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        {incluso.map((i) => (
+        {incluso.map((item) => (
           <li class="flex flex-col gap-2 rounded-lg bg-surface p-6">
-            <h3 class="text-lg font-bold">{i.titulo}</h3>
-            <p class="text-[15px] leading-relaxed text-fg-soft">{i.texto}</p>
+            <h3 class="text-lg font-bold">{item.titulo}</h3>
+            <p class="text-[15px] leading-relaxed text-fg-soft">{item.texto}</p>
           </li>
         ))}
       </ul>
@@ -74,20 +74,20 @@ const titulo2 = 'text-[28px] font-extrabold'
         Como agendar
       </h2>
       <ol class="grid gap-6 md:grid-cols-3">
-        {passos.map((p, i) => (
+        {passos.map((passo, indice) => (
           <li class="flex gap-4">
             <span
               aria-hidden="true"
               class:list={[
                 'flex size-10 shrink-0 items-center justify-center rounded-full font-extrabold',
-                i === passos.length - 1 ? 'bg-accent-strong text-white' : 'bg-surface-2',
+                indice === passos.length - 1 ? 'bg-accent-strong text-white' : 'bg-surface-2',
               ]}
             >
-              {i + 1}
+              {indice + 1}
             </span>
             <span class="flex flex-col gap-1 pt-1.5">
-              <b class="font-semibold">{p.titulo}</b>
-              <span class="text-[15px] text-fg-muted">{p.texto}</span>
+              <b class="font-semibold">{passo.titulo}</b>
+              <span class="text-[15px] text-fg-muted">{passo.texto}</span>
             </span>
           </li>
         ))}

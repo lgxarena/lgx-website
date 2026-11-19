@@ -14,10 +14,14 @@ const [site, jogos] = await Promise.all([getSite(), getJogos()])
 // Só as categorias que têm jogo, das mais comuns para as menos comuns.
 const contagem = new Map<string, number>()
 for (const jogo of jogos) {
-  for (const c of jogo.data.categorias) contagem.set(c, (contagem.get(c) ?? 0) + 1)
+  for (const categoria of jogo.data.categorias)
+    contagem.set(categoria, (contagem.get(categoria) ?? 0) + 1)
 }
 const categorias = [...contagem.entries()]
-  .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'pt-BR'))
+  .sort(
+    (primeira, segunda) =>
+      segunda[1] - primeira[1] || primeira[0].localeCompare(segunda[0], 'pt-BR')
+  )
   .map(([nome]) => nome)
 
 /** Minúsculas e sem acento, para a busca achar "acao" em "Ação". */
@@ -87,17 +91,17 @@ const linkPedido = linkWhatsApp(site.whatsapp, MENSAGEM_PEDIDO)
             data-rolagem
             class="categorias -mx-4 flex gap-2 overflow-x-auto px-4 py-1 [scrollbar-width:none] sm:mx-0 sm:px-0"
           >
-            {['', ...categorias].map((c) => (
+            {['', ...categorias].map((categoria) => (
               <label class="relative shrink-0">
                 <input
                   type="radio"
                   name="categoria"
-                  value={c}
-                  checked={c === ''}
+                  value={categoria}
+                  checked={categoria === ''}
                   class="peer sr-only"
                 />
                 <span class="inline-flex min-h-10 cursor-pointer items-center rounded-full bg-surface-2 px-4 text-[15px] font-semibold whitespace-nowrap text-fg-soft transition-colors peer-checked:bg-fg peer-checked:text-bg peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent hover:bg-surface-3 peer-checked:hover:bg-fg">
-                  {c || 'Todos'}
+                  {categoria || 'Todos'}
                 </span>
               </label>
             ))}
@@ -217,7 +221,7 @@ const linkPedido = linkWhatsApp(site.whatsapp, MENSAGEM_PEDIDO)
       form.querySelector<HTMLInputElement>('input[name="categoria"]:checked')?.value ?? ''
 
     const aplicar = () => {
-      const q = normalizar(busca.value)
+      const textoBuscado = normalizar(busca.value)
       const categoria = categoriaAtual()
       let visiveis = 0
 
@@ -225,7 +229,11 @@ const linkPedido = linkWhatsApp(site.whatsapp, MENSAGEM_PEDIDO)
         const nome = item.dataset.nome ?? ''
         const categorias = (item.dataset.categorias ?? '').split('|')
         const passa =
-          (!q || nome.includes(q) || categorias.some((c) => normalizar(c).includes(q))) &&
+          (!textoBuscado ||
+            nome.includes(textoBuscado) ||
+            categorias.some((categoriaDoJogo) =>
+              normalizar(categoriaDoJogo).includes(textoBuscado)
+            )) &&
           (!categoria || categorias.includes(categoria))
         item.hidden = !passa
         if (passa) visiveis++
@@ -241,7 +249,7 @@ const linkPedido = linkWhatsApp(site.whatsapp, MENSAGEM_PEDIDO)
       const mensagem = nomeBuscado
         ? `${dados.mensagem.replace(/\.$/, '')}: ${nomeBuscado}.`
         : dados.mensagem
-      for (const a of pedidos) a.href = linkWhatsApp(dados.whatsapp, mensagem)
+      for (const link of pedidos) link.href = linkWhatsApp(dados.whatsapp, mensagem)
 
       // Estado na URL, para compartilhar o link e voltar à mesma busca.
       const url = new URL(location.href)
@@ -257,7 +265,7 @@ const linkPedido = linkWhatsApp(site.whatsapp, MENSAGEM_PEDIDO)
     busca.value = params.get('q') ?? ''
     const inicial = params.get('categoria') ?? ''
     const radio = [...form.querySelectorAll<HTMLInputElement>('input[name="categoria"]')].find(
-      (r) => r.value === inicial
+      (opcao) => opcao.value === inicial
     )
     if (radio) radio.checked = true
 
@@ -294,8 +302,8 @@ const linkPedido = linkWhatsApp(site.whatsapp, MENSAGEM_PEDIDO)
       if (!document.startViewTransition || reduzMovimento.matches) return aplicar()
       document.startViewTransition(aplicar)
     })
-    form.addEventListener('submit', (e) => {
-      e.preventDefault()
+    form.addEventListener('submit', (evento) => {
+      evento.preventDefault()
       busca.blur()
     })
     aplicar()

@@ -66,10 +66,10 @@ const titulo2 = 'text-[28px] font-extrabold'
         Formatos
       </h2>
       <ul class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        {formatos.map((f) => (
+        {formatos.map((formato) => (
           <li class="flex flex-col gap-2 rounded-lg bg-surface p-6">
-            <h3 class="text-lg font-bold">{f.titulo}</h3>
-            <p class="text-[15px] leading-relaxed text-fg-soft">{f.texto}</p>
+            <h3 class="text-lg font-bold">{formato.titulo}</h3>
+            <p class="text-[15px] leading-relaxed text-fg-soft">{formato.texto}</p>
           </li>
         ))}
       </ul>
@@ -80,10 +80,10 @@ const titulo2 = 'text-[28px] font-extrabold'
         Infraestrutura
       </h2>
       <dl class="grid gap-3 sm:grid-cols-3">
-        {numeros.map((n) => (
+        {numeros.map((numero) => (
           <div class="flex flex-col-reverse gap-1 rounded-lg bg-surface px-5 py-5">
-            <dt class="text-[15px] text-fg-muted">{n.rotulo}</dt>
-            <dd class="text-3xl font-extrabold tracking-tight tabular-nums">{n.valor}</dd>
+            <dt class="text-[15px] text-fg-muted">{numero.rotulo}</dt>
+            <dd class="text-3xl font-extrabold tracking-tight tabular-nums">{numero.valor}</dd>
           </div>
         ))}
       </dl>

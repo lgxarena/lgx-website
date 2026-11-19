@@ -1,15 +1,19 @@
 ---
+import { Image } from 'astro:assets'
+
+import mapa from '@/assets/contato/mapa.png'
+import FaixaHorarios from '@/components/inicio/FaixaHorarios.astro'
 import BotaoReservar from '@/components/ui/BotaoReservar.astro'
 import Button from '@/components/ui/Button.astro'
 import Container from '@/components/ui/Container.astro'
 import Icon from '@/components/ui/Icon.astro'
-import Placeholder from '@/components/ui/Placeholder.astro'
+import RedesSociais from '@/components/ui/RedesSociais.astro'
 import SectionHeading from '@/components/ui/SectionHeading.astro'
 import Base from '@/layouts/Base.astro'
-import { getHorarios, getSite } from '@/lib/conteudo'
-import { formatarHora, formatarTelefone } from '@/lib/formatar'
+import { getSite } from '@/lib/conteudo'
+import { formatarTelefone } from '@/lib/formatar'
 
-const [site, horarios] = await Promise.all([getSite(), getHorarios()])
+const site = await getSite()
 const { endereco } = site
 const enderecoCompleto = `${endereco.logradouro}, ${endereco.bairro}, ${endereco.cidade} – ${endereco.uf}`
 
@@ -38,7 +42,7 @@ const titulo2 = 'text-[28px] font-extrabold'
   title="Como chegar"
   description={`LGX Arena: ${enderecoCompleto}. Mapa, horários, contato e estacionamento no condomínio.`}
 >
-  <Container class="flex flex-col gap-16 pt-14 pb-24 md:pt-18 md:pb-28">
+  <Container class="flex flex-col gap-16 pt-14 pb-16 md:pt-18 md:pb-20">
     <SectionHeading
       as="h1"
       title="Como chegar"
@@ -47,7 +51,29 @@ const titulo2 = 'text-[28px] font-extrabold'
 
     <div class="grid gap-5 lg:grid-cols-[1.4fr_1fr]">
       <div class="flex flex-col gap-3">
-        <Placeholder label="Mapa estático da região, com o pino na LGX" class="h-64 md:h-80" />
+        <figure class="flex flex-col gap-2">
+          <a
+            href={endereco.mapa}
+            target="_blank"
+            rel="noopener"
+            class="block overflow-hidden rounded-lg border border-line"
+          >
+            <Image
+              src={mapa}
+              alt={`Mapa da região com a LGX Arena marcada na ${endereco.logradouro.split(' - ')[0]}, ${endereco.bairro}`}
+              widths={[600, 880]}
+              sizes="(min-width: 64rem) 700px, 100vw"
+              class="aspect-16/9 w-full object-cover transition-transform duration-500 hover:scale-[1.02] motion-reduce:transition-none"
+            />
+            <span class="sr-only">Abrir no Google Maps (abre em nova aba)</span>
+          </a>
+          <figcaption class="text-xs text-fg-muted">
+            Mapa: ©{' '}
+            <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">
+              colaboradores do OpenStreetMap
+            </a>
+          </figcaption>
+        </figure>
         <Button
           href={endereco.mapa}
           target="_blank"
@@ -61,72 +87,48 @@ const titulo2 = 'text-[28px] font-extrabold'
       </div>
 
       <div class="flex flex-col gap-3">
-        <section aria-labelledby="contato" class="flex flex-col gap-4 rounded-lg bg-surface p-6">
-          <h2 id="contato" class="text-lg font-bold">
-            Contato
-          </h2>
-          <ul class="flex flex-col gap-4">
-            <li class="flex flex-col gap-2">
-              <span class="text-[15px] text-fg-muted">
-                O jeito mais rápido de falar com a equipe
-              </span>
-              <BotaoReservar mensagem="Olá! Tenho uma dúvida sobre a LGX Arena." class="self-start">
-                WhatsApp
-              </BotaoReservar>
-            </li>
-            <li class="flex flex-col gap-0.5">
-              <span class="text-[15px] text-fg-muted">Telefone, no horário de funcionamento</span>
-              <a href={`tel:${site.telefone}`} class="text-lg font-semibold">
-                {formatarTelefone(site.telefone)}
-              </a>
-            </li>
-            <li class="flex flex-col gap-0.5">
-              <span class="text-[15px] text-fg-muted">Instagram: eventos, Corujões e avisos</span>
-              <a
-                href={site.redes.instagram}
-                target="_blank"
-                rel="noopener"
-                class="text-lg font-semibold"
-              >
-                @{site.redes.instagram.split('/').pop()}
-                <span class="sr-only">(abre em nova aba)</span>
-              </a>
-            </li>
-          </ul>
-        </section>
-
-        <section aria-labelledby="horarios" class="flex flex-col gap-3 rounded-lg bg-surface p-6">
-          <h2 id="horarios" class="text-lg font-bold">
-            Horários
-          </h2>
-          <dl class="flex flex-col">
-            {horarios.map((h) => (
-              <div class="flex justify-between gap-4 border-t border-line py-2.5 text-[15px] first:border-t-0">
-                <dt class="text-fg-muted">{h.data.rotulo}</dt>
-                <dd class="font-semibold tabular-nums">
-                  {formatarHora(h.data.abre)} – {formatarHora(h.data.fecha)}
-                </dd>
-              </div>
-            ))}
-          </dl>
+        <section aria-labelledby="contato" class="flex flex-col gap-5 rounded-lg bg-surface p-6">
+          <div class="flex flex-col gap-1">
+            <h2 id="contato" class="text-lg font-bold">
+              Fale com a gente
+            </h2>
+            <p class="text-[15px] text-fg-muted">O WhatsApp é o jeito mais rápido.</p>
+          </div>
+          <BotaoReservar mensagem="Olá! Tenho uma dúvida sobre a LGX Arena." class="self-start">
+            Conversar no WhatsApp
+          </BotaoReservar>
+          <p class="flex flex-col gap-0.5">
+            <span class="text-[15px] text-fg-muted">Telefone, no horário de funcionamento</span>
+            <a href={`tel:${site.telefone}`} class="text-lg font-semibold">
+              {formatarTelefone(site.telefone)}
+            </a>
+          </p>
+          <div class="flex flex-col gap-2.5 border-t border-line pt-5">
+            <span class="text-[15px] text-fg-muted">Eventos, Corujões e avisos saem nas redes</span>
+            <RedesSociais whatsapp={false} />
+          </div>
         </section>
       </div>
     </div>
+  </Container>
 
+  <FaixaHorarios />
+
+  <Container class="flex flex-col gap-16 pt-16 pb-24 md:pb-28">
     <section aria-labelledby="estacionamento" class="flex flex-col gap-5">
       <h2 id="estacionamento" class={titulo2}>
         Estacionamento
       </h2>
       <div class="overflow-hidden rounded-lg bg-surface">
         <table class="w-full text-left text-[15px]">
-          <caption class="sr-only">Vagas da LGX no condomínio por período</caption>
+          <caption class="sr-only">Vagas disponíveis no condomínio por período</caption>
           <thead class="text-xs tracking-[0.12em] text-fg-muted uppercase max-md:sr-only">
             <tr>
               <th scope="col" class="px-6 pt-5 pb-3 font-bold">
                 Período
               </th>
               <th scope="col" class="px-6 pt-5 pb-3 font-bold">
-                Vagas da LGX
+                Vagas disponíveis
               </th>
               <th scope="col" class="px-6 pt-5 pb-3 font-bold">
                 Dica
@@ -134,16 +136,19 @@ const titulo2 = 'text-[28px] font-extrabold'
             </tr>
           </thead>
           <tbody>
-            {vagas.map((v) => (
+            {vagas.map((vaga) => (
               <tr class="border-t border-line max-md:flex max-md:flex-col max-md:gap-1 max-md:px-6 max-md:py-4 max-md:first:border-t-0">
                 <th scope="row" class="font-semibold md:px-6 md:py-4">
-                  {v.periodo}
+                  {vaga.periodo}
                 </th>
                 <td class="md:px-6 md:py-4">
-                  <span class="text-2xl font-extrabold tabular-nums">{v.vagas}</span>
-                  <span class="text-fg-muted md:sr-only"> {v.vagas === 1 ? 'vaga' : 'vagas'}</span>
+                  <span class="text-2xl font-extrabold tabular-nums">{vaga.vagas}</span>
+                  <span class="text-fg-muted md:sr-only">
+                    {' '}
+                    {vaga.vagas === 1 ? 'vaga' : 'vagas'}
+                  </span>
                 </td>
-                <td class="text-fg-soft md:px-6 md:py-4">{v.dica}</td>
+                <td class="text-fg-soft md:px-6 md:py-4">{vaga.dica}</td>
               </tr>
             ))}
           </tbody>

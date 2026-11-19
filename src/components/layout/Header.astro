@@ -220,8 +220,8 @@ const naInicio = normalizarCaminho(caminho) === '/'
     })
 
     // Se a tela crescer até o layout de desktop com o menu aberto, fecha o menu.
-    window.matchMedia('(min-width: 64rem)').addEventListener('change', (mq) => {
-      if (mq.matches && menu.open) menu.close()
+    window.matchMedia('(min-width: 64rem)').addEventListener('change', (evento) => {
+      if (evento.matches && menu.open) menu.close()
     })
   }
 </script>

@@ -30,7 +30,7 @@ const [avulsos, pacotes, menorPreco] = await Promise.all([
 // Ficha resumida na ordem em que o jogador compara: monitor, placa, processador, memória.
 const ordemDaFicha = ['Monitor', 'Placa de vídeo', 'Processador', 'Memória']
 const ficha = ordemDaFicha
-  .map((item) => sala.data.hardware.find((h) => h.item === item)?.modelo)
+  .map((item) => sala.data.hardware.find((peca) => peca.item === item)?.modelo)
   .filter(Boolean)
   .join(' · ')
 
@@ -70,11 +70,11 @@ const subtitulo = 'mb-2 text-xs font-bold tracking-[0.12em] text-link uppercase'
     <div>
       <SubTitulo class={subtitulo}>Horas avulsas</SubTitulo>
       <dl>
-        {avulsos.map((p) => (
+        {avulsos.map((avulso) => (
           <div class={linha}>
-            <dt>{p.data.nome}</dt>
+            <dt>{avulso.data.nome}</dt>
             <dd class="font-bold tabular-nums">
-              {formatarPreco(p.data.precos[id], { inteiro: true })}
+              {formatarPreco(avulso.data.precos[id], { inteiro: true })}
             </dd>
           </div>
         ))}
@@ -84,18 +84,18 @@ const subtitulo = 'mb-2 text-xs font-bold tracking-[0.12em] text-link uppercase'
     <div>
       <SubTitulo class={subtitulo}>Pacotes</SubTitulo>
       <dl>
-        {pacotes.map((p) => (
+        {pacotes.map((pacote) => (
           <div class={linha}>
             <dt>
-              {p.data.nome.replace(/^Pacote /, '')}
-              {p.data.janela && (
+              {pacote.data.nome.replace(/^Pacote /, '')}
+              {pacote.data.janela && (
                 <span class="text-sm text-fg-muted">
-                  {` · ${p.data.horas}h, ${formatarHora(p.data.janela.inicio)}–${formatarHora(p.data.janela.fim)}`}
+                  {` · ${pacote.data.horas}h, ${formatarHora(pacote.data.janela.inicio)}–${formatarHora(pacote.data.janela.fim)}`}
                 </span>
               )}
             </dt>
-            <dd class:list={['font-bold tabular-nums', p.data.destaque && 'text-accent']}>
-              {formatarPreco(p.data.precos[id], { inteiro: true })}
+            <dd class:list={['font-bold tabular-nums', pacote.data.destaque && 'text-accent']}>
+              {formatarPreco(pacote.data.precos[id], { inteiro: true })}
             </dd>
           </div>
         ))}
