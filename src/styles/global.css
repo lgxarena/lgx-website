@@ -87,3 +87,20 @@
 @utility container-page {
   @apply mx-auto w-full max-w-[1280px] px-6;
 }
+
+/* Texto vindo de Markdown (FAQ, regras): listas com marcador, negrito em destaque. */
+@utility texto-rico {
+  @apply flex flex-col gap-3 leading-relaxed text-fg-soft;
+
+  & ul {
+    @apply flex list-disc flex-col gap-2 pl-5 marker:text-fg-muted;
+  }
+
+  & strong {
+    @apply font-semibold text-fg;
+  }
+
+  & a {
+    @apply font-semibold;
+  }
+}

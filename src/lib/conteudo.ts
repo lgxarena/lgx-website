@@ -68,3 +68,44 @@ export async function getCampeonatos(agora = new Date()) {
     .sort((a, b) => b.data.data.getTime() - a.data.data.getTime())
   return { proximos, anteriores }
 }
+
+export const TEMAS_FAQ = {
+  reservas: 'Reservas e pagamento',
+  precos: 'Preços e tempo',
+  idade: 'Idade e cadastro',
+  convivencia: 'Comida e convivência',
+  jogos: 'Jogos e equipamentos',
+} as const
+
+/** Perguntas frequentes agrupadas por tema, na ordem de `TEMAS_FAQ`. */
+export async function getFaq() {
+  const perguntas = (await getCollection('faq')).sort(porOrdem)
+  return Object.entries(TEMAS_FAQ)
+    .map(([id, titulo]) => ({
+      id,
+      titulo,
+      perguntas: perguntas.filter((p) => p.data.tema === id),
+    }))
+    .filter((t) => t.perguntas.length > 0)
+}
+
+export async function getRegras() {
+  return (await getCollection('regras')).sort(porOrdem)
+}
+
+export const CATEGORIAS_CARDAPIO = {
+  bebidas: 'Bebidas',
+  salgados: 'Salgados',
+  lanches: 'Lanches',
+  doces: 'Doces',
+} as const
+
+/** Itens disponíveis do cardápio, agrupados por categoria. */
+export async function getCardapio() {
+  const itens = (await getCollection('cardapio', (i) => i.data.disponivel)).sort(porOrdem)
+  return Object.entries(CATEGORIAS_CARDAPIO).map(([id, titulo]) => ({
+    id,
+    titulo,
+    itens: itens.filter((i) => i.data.categoria === id),
+  }))
+}

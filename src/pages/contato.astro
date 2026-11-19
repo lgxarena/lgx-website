@@ -1,0 +1,158 @@
+---
+import BotaoReservar from '@/components/ui/BotaoReservar.astro'
+import Button from '@/components/ui/Button.astro'
+import Container from '@/components/ui/Container.astro'
+import Icon from '@/components/ui/Icon.astro'
+import Placeholder from '@/components/ui/Placeholder.astro'
+import SectionHeading from '@/components/ui/SectionHeading.astro'
+import Base from '@/layouts/Base.astro'
+import { getHorarios, getSite } from '@/lib/conteudo'
+import { formatarHora, formatarTelefone } from '@/lib/formatar'
+
+const [site, horarios] = await Promise.all([getSite(), getHorarios()])
+const { endereco } = site
+const enderecoCompleto = `${endereco.logradouro}, ${endereco.bairro}, ${endereco.cidade} – ${endereco.uf}`
+
+const vagas = [
+  {
+    periodo: 'Dias de semana, até 18h',
+    vagas: 1,
+    dica: 'Use o estacionamento do Atacadão ou do Public, perto do condomínio.',
+  },
+  {
+    periodo: 'Depois das 18h e fins de semana',
+    vagas: 6,
+    dica: 'Vagas limitadas, por ordem de chegada; prefira carona.',
+  },
+  {
+    periodo: 'Corujão',
+    vagas: 6,
+    dica: 'Sem reserva de vaga. Combinem carona: com as vagas cheias, o carro fica na avenida.',
+  },
+]
+
+const titulo2 = 'text-[28px] font-extrabold'
+---
+
+<Base
+  title="Como chegar"
+  description={`LGX Arena: ${enderecoCompleto}. Mapa, horários, contato e estacionamento no condomínio.`}
+>
+  <Container class="flex flex-col gap-16 pt-14 pb-24 md:pt-18 md:pb-28">
+    <SectionHeading
+      as="h1"
+      title="Como chegar"
+      description={`${enderecoCompleto}. Fica dentro de um condomínio fechado: traga um documento com foto para a portaria.`}
+    />
+
+    <div class="grid gap-5 lg:grid-cols-[1.4fr_1fr]">
+      <div class="flex flex-col gap-3">
+        <Placeholder label="Mapa estático da região, com o pino na LGX" class="h-64 md:h-80" />
+        <Button
+          href={endereco.mapa}
+          target="_blank"
+          rel="noopener"
+          variant="secondary"
+          class="self-start"
+        >
+          <Icon name="map-pin" size={18} /> Abrir no Google Maps
+          <span class="sr-only">(abre em nova aba)</span>
+        </Button>
+      </div>
+
+      <div class="flex flex-col gap-3">
+        <section aria-labelledby="contato" class="flex flex-col gap-4 rounded-lg bg-surface p-6">
+          <h2 id="contato" class="text-lg font-bold">
+            Contato
+          </h2>
+          <ul class="flex flex-col gap-4">
+            <li class="flex flex-col gap-2">
+              <span class="text-[15px] text-fg-muted">
+                O jeito mais rápido de falar com a equipe
+              </span>
+              <BotaoReservar mensagem="Olá! Tenho uma dúvida sobre a LGX Arena." class="self-start">
+                WhatsApp
+              </BotaoReservar>
+            </li>
+            <li class="flex flex-col gap-0.5">
+              <span class="text-[15px] text-fg-muted">Telefone, no horário de funcionamento</span>
+              <a href={`tel:${site.telefone}`} class="text-lg font-semibold">
+                {formatarTelefone(site.telefone)}
+              </a>
+            </li>
+            <li class="flex flex-col gap-0.5">
+              <span class="text-[15px] text-fg-muted">Instagram: eventos, Corujões e avisos</span>
+              <a
+                href={site.redes.instagram}
+                target="_blank"
+                rel="noopener"
+                class="text-lg font-semibold"
+              >
+                @{site.redes.instagram.split('/').pop()}
+                <span class="sr-only">(abre em nova aba)</span>
+              </a>
+            </li>
+          </ul>
+        </section>
+
+        <section aria-labelledby="horarios" class="flex flex-col gap-3 rounded-lg bg-surface p-6">
+          <h2 id="horarios" class="text-lg font-bold">
+            Horários
+          </h2>
+          <dl class="flex flex-col">
+            {horarios.map((h) => (
+              <div class="flex justify-between gap-4 border-t border-line py-2.5 text-[15px] first:border-t-0">
+                <dt class="text-fg-muted">{h.data.rotulo}</dt>
+                <dd class="font-semibold tabular-nums">
+                  {formatarHora(h.data.abre)} – {formatarHora(h.data.fecha)}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+      </div>
+    </div>
+
+    <section aria-labelledby="estacionamento" class="flex flex-col gap-5">
+      <h2 id="estacionamento" class={titulo2}>
+        Estacionamento
+      </h2>
+      <div class="overflow-hidden rounded-lg bg-surface">
+        <table class="w-full text-left text-[15px]">
+          <caption class="sr-only">Vagas da LGX no condomínio por período</caption>
+          <thead class="text-xs tracking-[0.12em] text-fg-muted uppercase max-md:sr-only">
+            <tr>
+              <th scope="col" class="px-6 pt-5 pb-3 font-bold">
+                Período
+              </th>
+              <th scope="col" class="px-6 pt-5 pb-3 font-bold">
+                Vagas da LGX
+              </th>
+              <th scope="col" class="px-6 pt-5 pb-3 font-bold">
+                Dica
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {vagas.map((v) => (
+              <tr class="border-t border-line max-md:flex max-md:flex-col max-md:gap-1 max-md:px-6 max-md:py-4 max-md:first:border-t-0">
+                <th scope="row" class="font-semibold md:px-6 md:py-4">
+                  {v.periodo}
+                </th>
+                <td class="md:px-6 md:py-4">
+                  <span class="text-2xl font-extrabold tabular-nums">{v.vagas}</span>
+                  <span class="text-fg-muted md:sr-only"> {v.vagas === 1 ? 'vaga' : 'vagas'}</span>
+                </td>
+                <td class="text-fg-soft md:px-6 md:py-4">{v.dica}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="text-[15px] text-fg-muted">
+        Pare só nas vagas autorizadas. Multas do condomínio são cobradas do responsável pela
+        reserva. Na dúvida, chame um atendente.
+      </p>
+    </section>
+  </Container>
+</Base>
