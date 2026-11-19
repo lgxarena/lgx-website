@@ -1,0 +1,225 @@
+---
+import { Image } from 'astro:assets'
+
+import BotaoReservar from '@/components/ui/BotaoReservar.astro'
+import Button from '@/components/ui/Button.astro'
+import Container from '@/components/ui/Container.astro'
+import Icon from '@/components/ui/Icon.astro'
+import Placeholder from '@/components/ui/Placeholder.astro'
+import Base from '@/layouts/Base.astro'
+import { getSalas, getSite } from '@/lib/conteudo'
+
+const [site, salas] = await Promise.all([getSite(), getSalas()])
+const anos = new Date().getFullYear() - site.fundacao
+
+/** Fotos que ainda faltam (issue #4). A primeira é a grande da galeria. */
+const fotos = ['Sala de stream', 'Lanchonete', 'Fachada e entrada']
+
+const numeros = [
+  { valor: '40', rotulo: 'PCs em duas salas' },
+  { valor: '144 m²', rotulo: 'de área para jogar' },
+  { valor: '2 Gbps', rotulo: 'de internet dedicada' },
+  { valor: `${anos} anos`, rotulo: `de LGX, desde ${site.fundacao}` },
+]
+
+const comodidades = [
+  { texto: 'Salas climatizadas' },
+  { texto: 'Cadeiras gamer' },
+  { texto: 'Sala de stream' },
+  { texto: 'Lanchonete própria', link: { href: '/cardapio', label: 'Ver o cardápio' } },
+  { texto: 'Condomínio fechado com portaria' },
+  { texto: '6 vagas no condomínio', link: { href: '/contato', label: 'Como chegar' } },
+]
+
+const historia = [
+  { ano: '2006', texto: 'Primeira loja, em Diadema, no ABC Paulista.' },
+  { ano: '2010', texto: 'Chegamos a São Paulo, onde está hoje nosso maior centro.' },
+  {
+    ano: 'Hoje',
+    texto:
+      'Foco em e-sport: centro de treino para equipes amadoras e profissionais e torneios como a Liga SP e a LGX CUP.',
+  },
+]
+
+const endereco = `${site.endereco.logradouro}, ${site.endereco.bairro}, ${site.endereco.cidade} - ${site.endereco.uf}`
+const titulo2 = 'text-[28px] font-extrabold'
+---
+
+<Base
+  title="O Espaço"
+  description={`Duas salas de jogo, Pro e VIP, com ${numeros[0]?.valor} PCs, internet de 2 Gbps, sala de stream e lanchonete, num condomínio fechado na Av. Cupecê, em São Paulo.`}
+>
+  <Container class="flex flex-col gap-16 pt-14 pb-24 md:pt-18 md:pb-28">
+    <div class="flex max-w-2xl flex-col gap-3">
+      <h1 class="text-4xl font-extrabold tracking-tight md:text-[56px] md:leading-tight">
+        O Espaço
+      </h1>
+      <p class="text-lg leading-relaxed text-fg-muted">
+        Duas salas de jogo, sala de stream e lanchonete, dentro de um condomínio fechado na Av.
+        Cupecê.
+      </p>
+    </div>
+
+    <!-- Galeria: as salas vêm do conteúdo (foto da sala); o resto ainda é espaço reservado. -->
+    <section
+      aria-label="Fotos do espaço"
+      class="grid grid-cols-2 gap-3 md:grid-cols-4 md:grid-rows-2"
+    >
+      {salas.map((sala, i) =>
+        sala.data.foto ? (
+          <Image
+            src={sala.data.foto}
+            alt={`${sala.data.nome} da LGX Arena`}
+            widths={i === 0 ? [640, 960, 1280] : [400, 640]}
+            sizes={i === 0 ? '(min-width: 48rem) 50vw, 100vw' : '(min-width: 48rem) 25vw, 50vw'}
+            class:list={[
+              'h-full w-full rounded-lg object-cover',
+              i === 0 ? 'col-span-2 aspect-4/3 md:row-span-2 md:aspect-auto' : 'aspect-4/3',
+            ]}
+          />
+        ) : (
+          <Placeholder
+            label={sala.data.nome}
+            class={
+              i === 0 ? 'col-span-2 h-56 md:row-span-2 md:h-full md:min-h-96' : 'h-40 md:h-auto'
+            }
+          />
+        )
+      )}
+      {fotos.map((foto, i) => (
+        <Placeholder
+          label={foto}
+          class:list={['h-40 md:h-auto', i === fotos.length - 1 && 'max-md:col-span-2']}
+        />
+      ))}
+    </section>
+
+    <section aria-labelledby="salas" class="flex flex-col gap-6">
+      <div class="flex flex-col gap-2">
+        <h2 id="salas" class={titulo2}>
+          As salas
+        </h2>
+        <p class="text-[17px] text-fg-muted">O que tem em cada PC.</p>
+      </div>
+      <div class="grid gap-5 lg:grid-cols-2">
+        {salas.map((sala) => (
+          <article class="flex flex-col gap-6 rounded-lg bg-surface p-6 sm:p-8">
+            <div class="flex flex-col gap-1">
+              <h3 class="text-2xl font-extrabold">{sala.data.nome}</h3>
+              <p class="text-[15px] text-fg-muted">{sala.data.resumo}</p>
+            </div>
+            <div class="grid gap-6 sm:grid-cols-2">
+              {[
+                { titulo: 'Computador', itens: sala.data.hardware },
+                { titulo: 'Periféricos', itens: sala.data.perifericos },
+              ].map((grupo) => (
+                <div class="flex flex-col gap-2">
+                  <h4 class="text-xs font-bold tracking-[0.12em] text-link uppercase">
+                    {grupo.titulo}
+                  </h4>
+                  <dl class="flex flex-col">
+                    {grupo.itens.map((it) => (
+                      <div class="flex flex-col gap-0.5 border-t border-line py-2.5">
+                        <dt class="text-sm text-fg-muted">{it.item}</dt>
+                        <dd class="font-semibold">{it.modelo}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                </div>
+              ))}
+            </div>
+            <BotaoReservar sala={sala.data.nome} variant="secondary" class="self-start">
+              Reservar na {sala.data.nome}
+            </BotaoReservar>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section aria-labelledby="estrutura" class="flex flex-col gap-6">
+      <h2 id="estrutura" class={titulo2}>
+        Estrutura
+      </h2>
+      <dl class="grid grid-cols-2 gap-3 lg:grid-cols-4">
+        {numeros.map((n) => (
+          <div class="flex flex-col-reverse gap-1 rounded-lg bg-surface px-5 py-5">
+            <dt class="text-[15px] text-fg-muted">{n.rotulo}</dt>
+            <dd class="text-3xl font-extrabold tracking-tight tabular-nums">{n.valor}</dd>
+          </div>
+        ))}
+      </dl>
+      <ul class="grid gap-x-8 gap-y-3 sm:grid-cols-2 lg:grid-cols-3">
+        {comodidades.map((c) => (
+          <li class="flex items-center gap-3 text-[17px]">
+            <span class="flex size-7 shrink-0 items-center justify-center rounded-full bg-surface-2 text-link">
+              <Icon name="check" size={16} />
+            </span>
+            <span>
+              {c.texto}
+              {c.link && (
+                <>
+                  {' · '}
+                  <a href={c.link.href} class="font-semibold">
+                    {c.link.label}
+                  </a>
+                </>
+              )}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section aria-labelledby="historia" class="flex flex-col gap-6">
+      <h2 id="historia" class={titulo2}>
+        Nossa história
+      </h2>
+      <ol class="relative grid gap-x-6 gap-y-6 before:absolute before:top-1.5 before:bottom-1.5 before:left-[5px] before:w-px before:bg-line-strong md:grid-cols-3 md:before:top-[5px] md:before:right-0 md:before:bottom-auto md:before:left-0 md:before:h-px md:before:w-auto">
+        {historia.map((h, i) => (
+          <li class="relative flex gap-4 md:flex-col md:gap-3">
+            <span
+              aria-hidden="true"
+              class:list={[
+                'relative z-10 mt-1 size-3 shrink-0 rounded-full md:mt-0',
+                i === historia.length - 1 ? 'bg-accent ring-4 ring-accent/25' : 'bg-surface-3',
+              ]}
+            />
+            <span class="flex flex-col gap-1">
+              <span
+                class:list={[
+                  'text-2xl font-extrabold tabular-nums',
+                  i === historia.length - 1 && 'text-accent',
+                ]}
+              >
+                {h.ano}
+              </span>
+              <span class="text-[15px] leading-snug text-fg-soft">{h.texto}</span>
+            </span>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <section
+      aria-labelledby="conhecer"
+      class="flex flex-wrap items-center justify-between gap-x-6 gap-y-4 rounded-lg bg-surface px-6 py-5"
+    >
+      <div class="flex flex-col gap-1">
+        <h2 id="conhecer" class="text-lg font-bold">
+          Venha conhecer
+        </h2>
+        <p class="flex items-start gap-2 text-[15px] text-fg-muted">
+          <Icon name="map-pin" size={18} class="mt-0.5" />
+          {endereco}
+        </p>
+      </div>
+      <div class="flex flex-wrap gap-3">
+        <Button href={site.endereco.mapa} target="_blank" rel="noopener" variant="secondary">
+          Abrir no mapa <Icon name="external-link" size={16} />
+          <span class="sr-only">(abre em nova aba)</span>
+        </Button>
+        <BotaoReservar>Reservar pelo WhatsApp</BotaoReservar>
+      </div>
+    </section>
+  </Container>
+</Base>
