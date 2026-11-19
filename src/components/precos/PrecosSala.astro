@@ -3,7 +3,7 @@
  * Cartão de preços de uma sala: horas avulsas e pacotes, lidos das coleções `salas` e `planos`.
  * Usado no Início e na página de Preços (issue #11).
  */
-import Button from '@/components/ui/Button.astro'
+import BotaoReservar from '@/components/ui/BotaoReservar.astro'
 import Placeholder from '@/components/ui/Placeholder.astro'
 import { getMenorPrecoPorHora, getPlanos, type Sala, type SalaId } from '@/lib/conteudo'
 import { formatarHora, formatarPreco } from '@/lib/formatar'
@@ -102,14 +102,14 @@ const subtitulo = 'mb-2 text-xs font-bold tracking-[0.12em] text-link uppercase'
       </dl>
     </div>
 
-    <Button
-      href={`/reservar?sala=${id}`}
+    <BotaoReservar
+      sala={sala.data.nome}
       variant={principal ? 'primary' : 'secondary'}
       size="lg"
       block
       class="mt-auto"
     >
       Reservar na {sala.data.nome}
-    </Button>
+    </BotaoReservar>
   </div>
 </article>

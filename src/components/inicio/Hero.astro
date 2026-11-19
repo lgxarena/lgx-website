@@ -4,6 +4,7 @@ import { getImage } from 'astro:assets'
 import heroMobile from '@/assets/inicio/hero-mobile.webp'
 import hero from '@/assets/inicio/hero.webp'
 import Button from '@/components/ui/Button.astro'
+import BotaoReservar from '@/components/ui/BotaoReservar.astro'
 import { getSite } from '@/lib/conteudo'
 
 import NumerosDaCasa from './NumerosDaCasa.astro'
@@ -55,9 +56,7 @@ const [desktop, mobile] = await Promise.all([
         no Corujão.
       </p>
       <div class="mt-10 grid gap-3 sm:flex sm:gap-4 md:mt-12">
-        <Button href="/reservar" size="lg">
-          Reservar um PC
-        </Button>
+        <BotaoReservar size="lg">Reservar pelo WhatsApp</BotaoReservar>
         <Button href="/precos" size="lg" variant="outline" class="bg-bg/40">
           Ver preços
         </Button>
