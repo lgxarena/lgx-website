@@ -1,0 +1,33 @@
+---
+/**
+ * Pergunta com resposta recolhível, com `<details>` nativo: funciona sem JavaScript,
+ * abre com Enter ou Espaço e o leitor de tela anuncia se está aberta ou fechada.
+ */
+interface Props {
+  pergunta: string
+  aberta?: boolean
+}
+
+const { pergunta, aberta = false } = Astro.props
+---
+
+<details open={aberta} class="group rounded-lg bg-surface open:bg-surface-2">
+  <summary class="flex min-h-15 cursor-pointer list-none items-center justify-between gap-4 rounded-lg px-5 py-4 text-[17px] font-semibold [&::-webkit-details-marker]:hidden">
+    {pergunta}
+    <svg
+      viewBox="0 0 24 24"
+      width="20"
+      height="20"
+      aria-hidden="true"
+      fill="none"
+      stroke-width="2"
+      stroke-linecap="round"
+      class="shrink-0 stroke-fg-muted transition-transform group-open:rotate-45 motion-reduce:transition-none"
+    >
+      <path d="M12 5v14M5 12h14"></path>
+    </svg>
+  </summary>
+  <div class="px-5 pb-5 text-[15px] leading-relaxed text-fg-soft [&_a]:font-semibold">
+    <slot />
+  </div>
+</details>

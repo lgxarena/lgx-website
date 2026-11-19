@@ -1,6 +1,6 @@
 ---
 import PrecosSala from '@/components/precos/PrecosSala.astro'
-import BotaoReservar from '@/components/ui/BotaoReservar.astro'
+import ChamadaReserva from '@/components/ui/ChamadaReserva.astro'
 import Container from '@/components/ui/Container.astro'
 import SectionHeading from '@/components/ui/SectionHeading.astro'
 import Base from '@/layouts/Base.astro'
@@ -62,19 +62,6 @@ const cardTexto = 'text-[15px] leading-relaxed text-fg-soft'
       </ul>
     </section>
 
-    <section
-      aria-labelledby="pronto"
-      class="flex flex-wrap items-center justify-between gap-x-6 gap-y-4 rounded-lg bg-surface px-6 py-5"
-    >
-      <div class="flex flex-col gap-0.5">
-        <h2 id="pronto" class="text-lg font-bold">
-          Pronto para jogar?
-        </h2>
-        <p class="text-[15px] text-fg-muted">
-          Mande o dia, a sala e quantos PCs; a equipe confirma.
-        </p>
-      </div>
-      <BotaoReservar>Reservar pelo WhatsApp</BotaoReservar>
-    </section>
+    <ChamadaReserva />
   </Container>
 </Base>

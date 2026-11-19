@@ -12,14 +12,16 @@ import Icon from './Icon.astro'
 type Props = Omit<Parameters<typeof Button>[0], 'href' | 'target' | 'rel'> & {
   /** Nome da sala, para a mensagem já sair com ela ("Sala Pro"). */
   sala?: string
+  /** Nome do pacote, para a mensagem já sair com ele ("Corujão"). */
+  pacote?: string
   /** Mostra o ícone do WhatsApp antes do texto. */
   icone?: boolean
 }
 
-const { sala, icone = true, ...rest } = Astro.props
+const { sala, pacote, icone = true, ...rest } = Astro.props
 const site = await getSite()
 
-const mensagem = `Olá! Quero reservar PCs na LGX Arena${sala ? `, na ${sala}` : ''}.`
+const mensagem = `Olá! Quero reservar PCs na LGX Arena${sala ? `, na ${sala}` : ''}${pacote ? `, no ${pacote}` : ''}.`
 ---
 
 <Button {...rest} href={linkWhatsApp(site.whatsapp, mensagem)} target="_blank" rel="noopener">
