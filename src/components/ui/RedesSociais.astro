@@ -1,0 +1,45 @@
+---
+/** WhatsApp e redes da LGX em botões quadrados, como no rodapé. */
+import { getSite } from '@/lib/conteudo'
+import { linkWhatsApp } from '@/lib/formatar'
+
+import Icon, { type IconName } from './Icon.astro'
+
+interface Props {
+  /** Inclui o WhatsApp como primeiro item. */
+  whatsapp?: boolean
+  class?: string
+}
+
+const { whatsapp = true, class: className } = Astro.props
+const site = await getSite()
+
+const redes: { nome: string; icone: IconName; href: string }[] = [
+  ...(whatsapp
+    ? [{ nome: 'WhatsApp', icone: 'whatsapp' as const, href: linkWhatsApp(site.whatsapp) }]
+    : []),
+  { nome: 'Instagram', icone: 'instagram', href: site.redes.instagram },
+  { nome: 'TikTok', icone: 'tiktok', href: site.redes.tiktok },
+  { nome: 'Twitch', icone: 'twitch', href: site.redes.twitch },
+  { nome: 'YouTube', icone: 'youtube', href: site.redes.youtube },
+  { nome: 'Facebook', icone: 'facebook', href: site.redes.facebook },
+]
+---
+
+<ul
+  class:list={['flex flex-wrap gap-2', className]}
+  aria-label={whatsapp ? 'WhatsApp e redes sociais' : 'Redes sociais'}
+>
+  {redes.map((rede) => (
+    <li>
+      <a
+        href={rede.href}
+        target="_blank"
+        rel="noopener"
+        class="inline-flex size-11 items-center justify-center rounded-md bg-surface-2 text-fg no-underline transition-colors hover:bg-surface-3 hover:text-fg"
+      >
+        <Icon name={rede.icone} label={`${rede.nome} da LGX Arena (abre em nova aba)`} />
+      </a>
+    </li>
+  ))}
+</ul>

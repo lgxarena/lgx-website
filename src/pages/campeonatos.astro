@@ -12,10 +12,10 @@ import { formatarPreco } from '@/lib/formatar'
 const [site, { proximos, anteriores }] = await Promise.all([getSite(), getCampeonatos()])
 
 const fuso = 'America/Sao_Paulo'
-const dia = (d: Date) => d.toLocaleDateString('pt-BR', { day: '2-digit', timeZone: fuso })
-const mes = (d: Date) =>
-  d.toLocaleDateString('pt-BR', { month: 'short', timeZone: fuso }).replace('.', '')
-const ano = (d: Date) => d.toLocaleDateString('pt-BR', { year: 'numeric', timeZone: fuso })
+const dia = (data: Date) => data.toLocaleDateString('pt-BR', { day: '2-digit', timeZone: fuso })
+const mes = (data: Date) =>
+  data.toLocaleDateString('pt-BR', { month: 'short', timeZone: fuso }).replace('.', '')
+const ano = (data: Date) => data.toLocaleDateString('pt-BR', { year: 'numeric', timeZone: fuso })
 
 const titulo2 = 'text-[28px] font-extrabold'
 ---
@@ -36,38 +36,40 @@ const titulo2 = 'text-[28px] font-extrabold'
       </h2>
       {proximos.length > 0 ? (
         <ul class="flex flex-col gap-3">
-          {proximos.map(({ data: c }) => {
+          {proximos.map(({ data: campeonato }) => {
             const detalhes = [
-              c.formato,
-              c.inscricao !== undefined && `inscrição ${formatarPreco(c.inscricao)}`,
-              c.premio && `prêmio ${c.premio}`,
+              campeonato.formato,
+              campeonato.inscricao !== undefined &&
+                `inscrição ${formatarPreco(campeonato.inscricao)}`,
+              campeonato.premio && `prêmio ${campeonato.premio}`,
             ].filter(Boolean)
             return (
               <li class="flex flex-wrap items-center gap-x-6 gap-y-4 rounded-lg bg-surface p-5 sm:p-6">
                 <time
-                  datetime={c.data.toISOString().slice(0, 10)}
+                  datetime={campeonato.data.toISOString().slice(0, 10)}
                   class="flex w-16 shrink-0 flex-col items-center rounded-md bg-surface-2 py-2 leading-none"
                 >
-                  <span class="text-2xl font-extrabold tabular-nums">{dia(c.data)}</span>
+                  <span class="text-2xl font-extrabold tabular-nums">{dia(campeonato.data)}</span>
                   <span class="mt-1 text-xs font-bold tracking-[0.12em] text-link uppercase">
-                    {mes(c.data)}
+                    {mes(campeonato.data)}
                   </span>
                 </time>
                 <div class="flex min-w-0 flex-1 flex-col gap-1">
                   <h3 class="text-lg font-bold">
-                    {c.nome} · {c.jogo}
+                    {campeonato.nome} · {campeonato.jogo}
                   </h3>
                   {detalhes.length > 0 && (
                     <p class="text-[15px] text-fg-muted">{detalhes.join(' · ')}</p>
                   )}
                 </div>
-                {c.linkInscricao ? (
-                  <Button href={c.linkInscricao} target="_blank" rel="noopener">
-                    Inscrever time <span class="sr-only">no {c.nome} (abre em nova aba)</span>
+                {campeonato.linkInscricao ? (
+                  <Button href={campeonato.linkInscricao} target="_blank" rel="noopener">
+                    Inscrever time{' '}
+                    <span class="sr-only">no {campeonato.nome} (abre em nova aba)</span>
                   </Button>
                 ) : (
                   <BotaoReservar
-                    mensagem={`Olá! Quero inscrever meu time no ${c.nome} (${c.jogo}).`}
+                    mensagem={`Olá! Quero inscrever meu time no ${campeonato.nome} (${campeonato.jogo}).`}
                   >
                     Inscrever time
                   </BotaoReservar>
@@ -114,12 +116,13 @@ const titulo2 = 'text-[28px] font-extrabold'
           Campeões anteriores
         </h2>
         <ul class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {anteriores.map(({ data: c }) => (
+          {anteriores.map(({ data: campeonato }) => (
             <li class="flex flex-col gap-1 rounded-lg bg-surface p-6">
               <span class="text-sm text-fg-muted">
-                {c.nome} · {c.jogo} · {mes(c.data)} {ano(c.data)}
+                {campeonato.nome} · {campeonato.jogo} · {mes(campeonato.data)}{' '}
+                {ano(campeonato.data)}
               </span>
-              <b class="text-lg">{c.campeao}</b>
+              <b class="text-lg">{campeonato.campeao}</b>
             </li>
           ))}
         </ul>

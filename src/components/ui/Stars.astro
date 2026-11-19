@@ -13,13 +13,13 @@ const star = 'M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6L2.5
 ---
 
 <span role="img" aria-label={label} class:list={['inline-flex gap-0.5', className]}>
-  {[0, 1, 2, 3, 4].map((i) => (
+  {[0, 1, 2, 3, 4].map((posicao) => (
     <svg
       width={size}
       height={size}
       viewBox="0 0 24 24"
       aria-hidden="true"
-      class={i < filled ? 'fill-accent' : 'fill-surface-3'}
+      class={posicao < filled ? 'fill-accent' : 'fill-surface-3'}
     >
       <path d={star} />
     </svg>

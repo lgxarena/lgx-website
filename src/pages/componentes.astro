@@ -197,9 +197,9 @@ const icones: IconName[] = [
               <th scope="col" class="p-4 font-semibold">
                 Quando vale
               </th>
-              {salas.map((s) => (
+              {salas.map((sala) => (
                 <th scope="col" class="p-4 text-right font-semibold">
-                  {s.data.nome}
+                  {sala.data.nome}
                 </th>
               ))}
             </tr>
@@ -215,9 +215,9 @@ const icones: IconName[] = [
                     ? `${formatarHora(data.janela.inicio)} – ${formatarHora(data.janela.fim)}`
                     : 'Qualquer horário'}
                 </td>
-                {salas.map((s) => (
+                {salas.map((sala) => (
                   <td class="p-4 text-right font-bold" data-plano={id}>
-                    {formatarPreco(data.precos[s.id as 'pro' | 'vip'], { inteiro: true })}
+                    {formatarPreco(data.precos[sala.id as 'pro' | 'vip'], { inteiro: true })}
                   </td>
                 ))}
               </tr>
@@ -228,7 +228,7 @@ const icones: IconName[] = [
       <p class="text-fg-soft">
         A partir de {formatarPreco(aPartirDe.pro)}/h na Pro e {formatarPreco(aPartirDe.vip)}/h na
         VIP · {horarios.length} faixas de horário · {jogos.length} jogos (
-        {jogos.filter((j) => j.data.popular).length} populares).
+        {jogos.filter((jogo) => jogo.data.popular).length} populares).
       </p>
     </Section>
   </div>

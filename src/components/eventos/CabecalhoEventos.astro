@@ -11,7 +11,7 @@ interface Props {
 }
 
 const { titulo, descricao } = Astro.props
-const paginas = MENU_PRINCIPAL.find((i) => i.rotulo === 'Eventos')?.filhos ?? []
+const paginas = MENU_PRINCIPAL.find((item) => item.rotulo === 'Eventos')?.filhos ?? []
 const atual = normalizarCaminho(Astro.url.pathname)
 ---
 
@@ -21,12 +21,12 @@ const atual = normalizarCaminho(Astro.url.pathname)
     class="-mx-4 overflow-x-auto px-4 [scrollbar-width:none] sm:mx-0 sm:px-0"
   >
     <ul class="grid grid-cols-3 gap-1 rounded-lg bg-surface p-1 sm:flex sm:w-max">
-      {paginas.map((p) => {
-        const ativa = atual === p.href
+      {paginas.map((pagina) => {
+        const ativa = atual === pagina.href
         return (
           <li>
             <a
-              href={p.href}
+              href={pagina.href}
               aria-current={ativa ? 'page' : undefined}
               class:list={[
                 'flex min-h-11 items-center justify-center rounded-md px-2 text-[15px] sm:px-4 font-semibold whitespace-nowrap no-underline transition-colors',
@@ -34,9 +34,9 @@ const atual = normalizarCaminho(Astro.url.pathname)
               ]}
             >
               {/* No celular, "Empresas & times" vira "Empresas" para as três abas caberem. */}
-              {p.rotulo.split(' & ')[0]}
-              {p.rotulo.includes(' & ') && (
-                <span class="max-sm:hidden">&nbsp;& {p.rotulo.split(' & ')[1]}</span>
+              {pagina.rotulo.split(' & ')[0]}
+              {pagina.rotulo.includes(' & ') && (
+                <span class="max-sm:hidden">&nbsp;& {pagina.rotulo.split(' & ')[1]}</span>
               )}
             </a>
           </li>

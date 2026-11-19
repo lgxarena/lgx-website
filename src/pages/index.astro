@@ -13,7 +13,7 @@ import Base from '@/layouts/Base.astro'
 import { getJogos, getSalas, getSite } from '@/lib/conteudo'
 
 const [site, salas, jogos] = await Promise.all([getSite(), getSalas(), getJogos()])
-const maisJogados = jogos.filter((j) => j.data.popular).slice(0, 5)
+const maisJogados = jogos.filter((jogo) => jogo.data.popular).slice(0, 5)
 
 const fotosDoEspaco = ['Sala Pro', 'Sala VIP', 'Lanchonete', 'Evento na LGX']
 
@@ -54,8 +54,8 @@ const eventos = [
       link={{ href: '/precos', label: 'Detalhes e regras' }}
     />
     <div class="grid items-start gap-5 lg:grid-cols-2">
-      {salas.map((sala, i) => (
-        <PrecosSala sala={sala} principal={i === 0} />
+      {salas.map((sala, indice) => (
+        <PrecosSala sala={sala} principal={indice === 0} />
       ))}
     </div>
   </Section>
@@ -83,8 +83,8 @@ const eventos = [
       link={{ href: '/jogos', label: `Ver os ${jogos.length} jogos` }}
     />
     <ul class="grid grid-cols-2 gap-4 md:grid-cols-5">
-      {maisJogados.map((jogo, i) => (
-        <li class:list={[i === 4 && 'max-md:hidden']}>
+      {maisJogados.map((jogo, indice) => (
+        <li class:list={[indice === 4 && 'max-md:hidden']}>
           <figure class="flex flex-col gap-2.5">
             <Image
               src={jogo.data.capa}
@@ -103,16 +103,16 @@ const eventos = [
   <Section aria-labelledby="eventos-titulo" class="border-t border-line">
     <SectionHeading id="eventos-titulo" title="Faça seu evento na LGX" />
     <ul class="grid gap-4 md:grid-cols-3">
-      {eventos.map((e) => (
+      {eventos.map((evento) => (
         <li>
           <a
-            href={e.href}
+            href={evento.href}
             class="group flex h-full flex-col gap-2.5 rounded-lg bg-surface-2 p-6 text-fg no-underline transition-colors hover:bg-surface-3 hover:text-fg"
           >
-            <h3 class="text-[22px] font-extrabold">{e.titulo}</h3>
-            <p class="leading-relaxed text-fg-soft">{e.texto}</p>
+            <h3 class="text-[22px] font-extrabold">{evento.titulo}</h3>
+            <p class="leading-relaxed text-fg-soft">{evento.texto}</p>
             <span class="mt-auto inline-flex items-center gap-1.5 pt-2 font-semibold text-link group-hover:text-link-hover">
-              {e.acao} <Icon name="arrow-right" size={18} />
+              {evento.acao} <Icon name="arrow-right" size={18} />
             </span>
           </a>
         </li>

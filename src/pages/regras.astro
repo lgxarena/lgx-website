@@ -8,10 +8,10 @@ import Base from '@/layouts/Base.astro'
 import { getRegras } from '@/lib/conteudo'
 
 const regras = await Promise.all(
-  (await getRegras()).map(async (r, i) => ({
-    ...r,
-    numero: i + 1,
-    Texto: (await render(r)).Content,
+  (await getRegras()).map(async (regra, indice) => ({
+    ...regra,
+    numero: indice + 1,
+    Texto: (await render(regra)).Content,
   }))
 )
 ---
@@ -35,13 +35,13 @@ const regras = await Promise.all(
     <div class="grid gap-10 lg:grid-cols-[14rem_1fr] lg:gap-16">
       <nav aria-label="Seções das regras" class="lg:sticky lg:top-28 lg:self-start">
         <ol class="flex flex-wrap gap-2 lg:flex-col lg:gap-1">
-          {regras.map((r) => (
+          {regras.map((regra) => (
             <li>
               <a
-                href={`#${r.id}`}
+                href={`#${regra.id}`}
                 class="flex rounded-md px-3 py-2 text-[15px] font-semibold text-fg-muted no-underline transition-colors hover:bg-surface hover:text-fg max-lg:bg-surface-2"
               >
-                {r.numero}. {r.data.titulo}
+                {regra.numero}. {regra.data.titulo}
               </a>
             </li>
           ))}
@@ -54,7 +54,7 @@ const regras = await Promise.all(
             aria-labelledby={id}
             class="flex flex-col gap-4 rounded-lg bg-surface p-6 sm:p-8"
           >
-            <h2 id={id} class="text-xl font-extrabold">
+            <h2 id={id} class="scroll-mt-12 text-xl font-extrabold">
               {numero}. {data.titulo}
             </h2>
             <div class="texto-rico">

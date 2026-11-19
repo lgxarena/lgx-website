@@ -9,10 +9,13 @@ import Base from '@/layouts/Base.astro'
 import { getFaq } from '@/lib/conteudo'
 
 const temas = await Promise.all(
-  (await getFaq()).map(async (t) => ({
-    ...t,
+  (await getFaq()).map(async (tema) => ({
+    ...tema,
     perguntas: await Promise.all(
-      t.perguntas.map(async (p) => ({ ...p, Resposta: (await render(p)).Content }))
+      tema.perguntas.map(async (pergunta) => ({
+        ...pergunta,
+        Resposta: (await render(pergunta)).Content,
+      }))
     ),
   }))
 )
@@ -30,23 +33,23 @@ const temas = await Promise.all(
     />
 
     <nav aria-label="Temas" class="flex flex-wrap gap-2">
-      {temas.map((t) => (
+      {temas.map((tema) => (
         <a
-          href={`#${t.id}`}
+          href={`#${tema.id}`}
           class="rounded-full bg-surface-2 px-4 py-2 text-[15px] font-semibold text-fg-soft no-underline transition-colors hover:bg-surface-3 hover:text-fg"
         >
-          {t.titulo}
+          {tema.titulo}
         </a>
       ))}
     </nav>
 
-    {temas.map((t) => (
-      <section aria-labelledby={t.id} class="flex flex-col gap-4">
-        <h2 id={t.id} class="text-2xl font-extrabold">
-          {t.titulo}
+    {temas.map((tema) => (
+      <section aria-labelledby={tema.id} class="flex flex-col gap-4">
+        <h2 id={tema.id} class="scroll-mt-4 text-2xl font-extrabold">
+          {tema.titulo}
         </h2>
         <div class="flex flex-col gap-3">
-          {t.perguntas.map(({ data, Resposta }) => (
+          {tema.perguntas.map(({ data, Resposta }) => (
             <Pergunta pergunta={data.pergunta}>
               <div class="texto-rico">
                 <Resposta />
