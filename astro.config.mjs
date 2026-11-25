@@ -13,9 +13,9 @@ export default defineConfig({
     format: 'file',
   },
   integrations: [
-    // Fora do sitemap: o guia de componentes e a página 404.
+    // Fora do sitemap: 404, página offline e o atalho /reservar (vai para o WhatsApp).
     sitemap({
-      filter: (pagina) => !/\/(componentes|404|offline|reservar)$/.test(new URL(pagina).pathname),
+      filter: (pagina) => !/\/(404|offline|reservar)$/.test(new URL(pagina).pathname),
     }),
     // App instalável e página offline (issue #21). O service worker fica em src/sw.ts.
     AstroPWA({
