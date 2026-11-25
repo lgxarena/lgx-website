@@ -17,7 +17,8 @@
     "format": "prettier --write .",
     "prepare": "husky",
     "icones": "node scripts/gerar-icones.mjs",
-    "lighthouse": "lhci autorun --config=lighthouserc.cjs"
+    "lighthouse": "lhci autorun --config=lighthouserc.cjs",
+    "deploy": "astro build && wrangler deploy"
   },
   "lint-staged": {
     "*.{astro,ts,tsx,js,mjs}": [
@@ -62,6 +63,7 @@
     "workbox-precaching": "^7.4.1",
     "workbox-routing": "^7.4.1",
     "workbox-strategies": "^7.4.1",
-    "workbox-window": "^7.4.1"
+    "workbox-window": "^7.4.1",
+    "wrangler": "^4.168.0"
   }
 }

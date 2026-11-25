@@ -1,0 +1,16 @@
+// Hospedagem no Cloudflare Workers (só arquivos estáticos, sem código no servidor).
+// A branch `main` publica o site oficial; as outras viram previews (ver issue #25).
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "lgx-website",
+  "account_id": "4ee37d62a8edcdb70dcbd2a573b3d4ad",
+  "compatibility_date": "2026-11-25",
+  "assets": {
+    "directory": "./dist",
+    // /precos serve dist/precos.html; endereço inexistente mostra o 404.html com status 404.
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page",
+  },
+  "preview_urls": true,
+  "observability": { "enabled": true },
+}
