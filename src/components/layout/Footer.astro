@@ -12,6 +12,7 @@ const { endereco } = site
 
 const ajuda = [...MENU_AJUDA, { rotulo: 'Empresas & times', href: '/empresas' }]
 const tituloColuna = 'mb-4 text-[13px] font-bold tracking-widest text-fg uppercase'
+const linkLegal = 'inline-flex min-h-11 items-center text-fg-muted no-underline hover:text-fg'
 const linkColuna = 'flex min-h-11 items-center text-fg-muted no-underline hover:text-fg'
 ---
 
@@ -83,9 +84,14 @@ const linkColuna = 'flex min-h-11 items-center text-fg-muted no-underline hover:
         © {new Date().getFullYear()} {site.razaoSocial} · CNPJ {site.cnpj}. Todos os direitos
         reservados.
       </p>
-      <a href="/privacidade" class="inline-flex min-h-11 items-center text-fg-muted hover:text-fg">
-        Privacidade
-      </a>
+      <div class="flex flex-wrap gap-x-5">
+        <a href="/privacidade" class={linkLegal}>
+          Privacidade
+        </a>
+        <a href="/politica-de-cookies" class={linkLegal}>
+          Política de cookies
+        </a>
+      </div>
     </div>
   </div>
 </footer>

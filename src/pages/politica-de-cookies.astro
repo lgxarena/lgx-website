@@ -1,0 +1,107 @@
+---
+import Container from '@/components/ui/Container.astro'
+import SectionHeading from '@/components/ui/SectionHeading.astro'
+import Base from '@/layouts/Base.astro'
+import { categoriasDeCookie } from '@/lib/cookies'
+
+const atualizacao = '25 de novembro de 2026'
+---
+
+<Base
+  title="Política de Cookies"
+  description="O que o site da LGX Arena guarda no seu navegador e os cookies de terceiros, como o mapa do Google."
+>
+  <Container class="flex max-w-3xl flex-col gap-10 pt-14 pb-24 md:pt-18 md:pb-28">
+    <SectionHeading
+      as="h1"
+      title="Política de Cookies"
+      description={`O site não usa cookies de rastreamento nem de publicidade. Atualizado em ${atualizacao}.`}
+    />
+
+    <div class="texto-rico">
+      <p>
+        Cookies são pequenos arquivos que os sites guardam no navegador. Aqui listamos tudo o que o
+        site da LGX guarda no seu aparelho e o que terceiros podem gravar quando você usa algo deles
+        dentro do site.
+      </p>
+    </div>
+
+    {categoriasDeCookie.map((categoria) => (
+      <section
+        id={categoria.ancora}
+        aria-labelledby={`${categoria.ancora}-titulo`}
+        class="flex scroll-mt-12 flex-col gap-4 rounded-lg bg-surface p-6 sm:p-8"
+      >
+        <div class="flex flex-col gap-1">
+          <h2 id={`${categoria.ancora}-titulo`} class="text-xl font-extrabold">
+            {categoria.titulo}
+          </h2>
+          <p class="text-[15px] text-fg-muted">{categoria.resumo}</p>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full min-w-[32rem] text-left text-[14px]">
+            <thead class="text-xs tracking-[0.12em] text-fg-muted uppercase">
+              <tr>
+                <th scope="col" class="py-2 pr-4 font-bold">
+                  Nome
+                </th>
+                <th scope="col" class="py-2 pr-4 font-bold">
+                  De quem
+                </th>
+                <th scope="col" class="py-2 pr-4 font-bold">
+                  Para quê
+                </th>
+                <th scope="col" class="py-2 font-bold">
+                  Duração
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {categoria.itens.map((item) => (
+                <tr class="border-t border-line align-top">
+                  <th scope="row" class="py-3 pr-4 font-semibold">
+                    {item.nome}
+                  </th>
+                  <td class="py-3 pr-4 text-fg-soft">{item.fornecedor}</td>
+                  <td class="py-3 pr-4 text-fg-soft">{item.finalidade}</td>
+                  <td class="py-3 text-fg-soft">{item.duracao}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    ))}
+
+    <section
+      aria-labelledby="controle"
+      class="flex flex-col gap-3 rounded-lg bg-surface p-6 sm:p-8"
+    >
+      <h2 id="controle" class="text-xl font-extrabold">
+        Como controlar
+      </h2>
+      <div class="texto-rico">
+        <ul>
+          <li>
+            Você pode apagar ou bloquear cookies e dados do site nas configurações do navegador. O
+            site continua funcionando.
+          </li>
+          <li>
+            Os cookies do Google seguem a{' '}
+            <a
+              href="https://policies.google.com/technologies/cookies?hl=pt-BR"
+              target="_blank"
+              rel="noopener"
+            >
+              política de cookies do Google
+            </a>
+            . Para evitá-los, bloqueie cookies de terceiros nas configurações do navegador.
+          </li>
+          <li>
+            Mais sobre como tratamos dados na página de <a href="/privacidade">Privacidade</a>.
+          </li>
+        </ul>
+      </div>
+    </section>
+  </Container>
+</Base>

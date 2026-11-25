@@ -1,0 +1,66 @@
+---
+/**
+ * Aviso de cookies. O site não usa cookies de rastreamento; o único terceiro é o mapa do Google
+ * em Como chegar. Nasce escondido e só aparece para quem ainda não viu este aviso.
+ */
+import { CHAVE_AVISO, VERSAO_AVISO } from '@/lib/cookies'
+---
+
+<div
+  id="aviso-cookies"
+  data-chave={CHAVE_AVISO}
+  data-versao={VERSAO_AVISO}
+  hidden
+  role="region"
+  aria-label="Aviso de cookies"
+  class="fixed inset-x-0 bottom-0 z-50 flex justify-center p-4"
+>
+  <div class="flex w-full max-w-[960px] flex-wrap items-center gap-x-6 gap-y-3 rounded-lg border border-line-strong bg-surface/95 p-5 shadow-[0_24px_60px_-16px_rgba(0,0,0,0.8)] backdrop-blur-md">
+    <p class="flex-[1_1_340px] text-[15px] leading-relaxed text-fg-soft">
+      Usamos só o necessário para o site funcionar, sem cookies de rastreamento. O mapa do Google,
+      em Como chegar, pode gravar cookies do Google. Veja a{' '}
+      <a href="/politica-de-cookies">Política de Cookies</a> e a{' '}
+      <a href="/privacidade">Privacidade</a>.
+    </p>
+    <button
+      type="button"
+      data-aviso-ok
+      class="inline-flex min-h-11 w-full items-center justify-center rounded-md bg-accent-strong px-6 text-[15px] font-semibold text-white transition-colors hover:bg-accent-deep sm:w-auto"
+    >
+      Entendi
+    </button>
+  </div>
+</div>
+
+<script>
+  const aviso = document.getElementById('aviso-cookies')
+
+  if (aviso) {
+    const chave = aviso.dataset.chave ?? ''
+    const versao = aviso.dataset.versao ?? '1'
+    let visto = false
+    try {
+      visto = localStorage.getItem(chave) === versao
+    } catch {
+      // Sem armazenamento (aba anônima, bloqueio): mostra o aviso nesta visita.
+    }
+    aviso.hidden = visto
+
+    aviso.querySelector('[data-aviso-ok]')?.addEventListener('click', () => {
+      try {
+        localStorage.setItem(chave, versao)
+      } catch {
+        // Sem armazenamento: some só nesta visita.
+      }
+      aviso.hidden = true
+    })
+
+    // "Aviso de cookies" no rodapé mostra de novo.
+    for (const gatilho of document.querySelectorAll('[data-reabrir-aviso]')) {
+      gatilho.addEventListener('click', () => {
+        aviso.hidden = false
+        aviso.querySelector<HTMLButtonElement>('[data-aviso-ok]')?.focus()
+      })
+    }
+  }
+</script>
