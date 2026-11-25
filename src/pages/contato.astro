@@ -48,8 +48,8 @@ const dadosEstruturados = [await negocio()]
     />
 
     <div class="grid gap-5 lg:grid-cols-[1.4fr_1fr]">
-      <!-- Mapa do Google sempre à mostra; o aviso de cookies fica logo abaixo e na Política de Cookies. -->
-      <figure class="flex min-h-72 flex-col gap-2">
+      <!-- Mapa do Google sempre à mostra; os cookies dele estão na Política de Cookies e no aviso. -->
+      <div class="flex min-h-72 flex-col">
         <iframe
           src={`https://www.google.com/maps?q=${encodeURIComponent(enderecoCompleto)}&hl=pt-BR&output=embed`}
           title={`Mapa do Google com a LGX Arena: ${enderecoCompleto}`}
@@ -57,11 +57,7 @@ const dadosEstruturados = [await negocio()]
           referrerpolicy="no-referrer-when-downgrade"
           class="min-h-72 w-full flex-1 rounded-lg border border-line bg-surface"
         ></iframe>
-        <figcaption class="text-[13px] text-fg-muted">
-          Mapa do Google: ao abrir, o Google pode gravar cookies dele.{' '}
-          <a href="/politica-de-cookies">Política de Cookies</a>
-        </figcaption>
-      </figure>
+      </div>
 
       <div class="flex flex-col">
         <section
