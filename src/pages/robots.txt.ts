@@ -3,8 +3,8 @@ import type { APIRoute } from 'astro'
 import { PREVIEW_NOINDEX } from '@/lib/config'
 
 /**
- * robots.txt gerado no build. Em preview (branch dev) bloqueia tudo; na virada (#25), basta
- * `PREVIEW_NOINDEX = false` para liberar os buscadores e apontar o sitemap.
+ * robots.txt gerado no build. Na `main` (site público) libera os buscadores e aponta o sitemap;
+ * em qualquer outra branch bloqueia tudo. Ver `PREVIEW_NOINDEX` em src/lib/config.ts.
  */
 export const GET: APIRoute = ({ site }) => {
   const texto = PREVIEW_NOINDEX
