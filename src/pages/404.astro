@@ -1,0 +1,67 @@
+---
+import BotaoReservar from '@/components/ui/BotaoReservar.astro'
+import Button from '@/components/ui/Button.astro'
+import Container from '@/components/ui/Container.astro'
+import Icon from '@/components/ui/Icon.astro'
+import Base from '@/layouts/Base.astro'
+
+/** Atalhos para o que mais se procura no site. */
+const atalhos = [
+  { rotulo: 'Preços', texto: 'Horas avulsas e pacotes', href: '/precos' },
+  { rotulo: 'Corujão', texto: 'A madrugada inteira de jogo', href: '/corujao' },
+  { rotulo: 'Jogos', texto: 'O que está instalado nos PCs', href: '/jogos' },
+  { rotulo: 'Como chegar', texto: 'Endereço, horários e vagas', href: '/contato' },
+]
+---
+
+<Base
+  title="Página não encontrada"
+  description="Esta página não existe ou mudou de endereço."
+  noindex
+>
+  <Container class="flex flex-col gap-14 pt-16 pb-24 md:pt-24 md:pb-32">
+    <div class="flex max-w-2xl flex-col gap-4">
+      <p class="text-sm font-bold tracking-[0.12em] text-link uppercase">Erro 404</p>
+      <h1 class="text-4xl font-extrabold tracking-tight md:text-[56px] md:leading-tight">
+        Essa página saiu da partida
+      </h1>
+      <p class="text-lg leading-relaxed text-fg-muted">
+        O endereço não existe ou mudou. Volte para o início ou escolha um dos atalhos abaixo.
+      </p>
+      <div class="mt-4 grid gap-3 sm:flex">
+        <Button href="/" size="lg">
+          Voltar para o início
+        </Button>
+        <BotaoReservar size="lg" variant="secondary">
+          Reservar pelo WhatsApp
+        </BotaoReservar>
+      </div>
+    </div>
+
+    <nav aria-labelledby="atalhos">
+      <h2 id="atalhos" class="sr-only">
+        Atalhos
+      </h2>
+      <ul class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {atalhos.map((atalho) => (
+          <li>
+            <a
+              href={atalho.href}
+              class="group flex h-full flex-col gap-1 rounded-lg bg-surface p-5 text-fg no-underline transition-colors hover:bg-surface-2 hover:text-fg"
+            >
+              <span class="flex items-center justify-between gap-2 text-lg font-bold">
+                {atalho.rotulo}
+                <Icon
+                  name="arrow-right"
+                  size={18}
+                  class="text-fg-muted transition-transform group-hover:translate-x-0.5 group-hover:text-fg"
+                />
+              </span>
+              <span class="text-[15px] text-fg-muted">{atalho.texto}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </Container>
+</Base>
