@@ -1,4 +1,5 @@
 # Endereços do site antigo que mudaram (Cloudflare Pages).
-/sobre       /espaco    301
-/eventos     /empresas  301
-/regras.pdf  /regras    301
+/sobre       /espaco             301
+/eventos     /empresas           301
+/regras.pdf  /regras             301
+/sitemap.xml /sitemap-index.xml  301
