@@ -5,6 +5,7 @@ import Avisos from '@/components/layout/Avisos.astro'
 import Footer from '@/components/layout/Footer.astro'
 import Header from '@/components/layout/Header.astro'
 import Seo, { type SeoProps } from '@/components/layout/Seo.astro'
+import { pwaInfo } from 'virtual:pwa-info'
 
 import '@/styles/global.css'
 
@@ -23,6 +24,8 @@ const props = Astro.props
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    {pwaInfo && <Fragment set:html={pwaInfo.webManifest.linkTag} />}
+    <slot name="head" />
     <Font cssVariable="--font-inter" preload />
     <meta name="generator" content={Astro.generator} />
   </head>
@@ -39,5 +42,11 @@ const props = Astro.props
       <slot />
     </main>
     <Footer />
+    <script>
+      import { registerSW } from 'virtual:pwa-register'
+
+      // Instala o service worker (app instalável e página offline). Atualiza sozinho.
+      registerSW({ immediate: true })
+    </script>
   </body>
 </html>
