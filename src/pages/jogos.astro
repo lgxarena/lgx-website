@@ -100,7 +100,7 @@ const linkPedido = linkWhatsApp(site.whatsapp, MENSAGEM_PEDIDO)
                   checked={categoria === ''}
                   class="peer sr-only"
                 />
-                <span class="inline-flex min-h-10 cursor-pointer items-center rounded-full bg-surface-2 px-4 text-[15px] font-semibold whitespace-nowrap text-fg-soft transition-colors peer-checked:bg-fg peer-checked:text-bg peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent hover:bg-surface-3 peer-checked:hover:bg-fg">
+                <span class="inline-flex min-h-11 cursor-pointer items-center rounded-full bg-surface-2 px-4 text-[15px] font-semibold whitespace-nowrap text-fg-soft transition-colors peer-checked:bg-fg peer-checked:text-bg peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent hover:bg-surface-3 peer-checked:hover:bg-fg">
                   {categoria || 'Todos'}
                 </span>
               </label>
@@ -113,7 +113,7 @@ const linkPedido = linkWhatsApp(site.whatsapp, MENSAGEM_PEDIDO)
               tabindex="-1"
               aria-hidden="true"
               class:list={[
-                'seta absolute top-1/2 z-10 hidden size-10 -translate-y-1/2 items-center justify-center rounded-full bg-surface-3 text-fg shadow-lg transition-opacity hover:bg-line-strong',
+                'seta absolute top-1/2 z-10 hidden size-11 -translate-y-1/2 items-center justify-center rounded-full bg-surface-3 text-fg shadow-lg transition-opacity hover:bg-line-strong',
                 lado < 0 ? 'left-0' : 'right-0',
               ]}
             >

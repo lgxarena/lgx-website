@@ -75,7 +75,10 @@ const dadosEstruturados = [await negocio()]
           </BotaoReservar>
           <p class="flex flex-col gap-0.5">
             <span class="text-[15px] text-fg-muted">Telefone, no horário de funcionamento</span>
-            <a href={`tel:${site.telefone}`} class="text-lg font-semibold">
+            <a
+              href={`tel:${site.telefone}`}
+              class="inline-flex min-h-11 items-center text-lg font-semibold"
+            >
               {formatarTelefone(site.telefone)}
             </a>
           </p>
