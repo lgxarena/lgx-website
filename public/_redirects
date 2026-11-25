@@ -1,4 +1,4 @@
-# Endereços do site antigo que mudaram (Cloudflare Pages).
+# Endereços antigos que mudaram (Cloudflare Workers).
 /sobre       /espaco             301
 /eventos     /empresas           301
 /regras.pdf  /regras             301
