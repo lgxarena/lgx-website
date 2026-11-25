@@ -28,7 +28,10 @@ const { title, description, link, id, as: Heading = 'h2' } = Astro.props
     {description && <p class="text-[17px] leading-relaxed text-fg-muted">{description}</p>}
   </div>
   {link && (
-    <a href={link.href} class="inline-flex items-center gap-1.5 py-2 font-semibold no-underline">
+    <a
+      href={link.href}
+      class="inline-flex min-h-11 items-center gap-1.5 font-semibold no-underline"
+    >
       {link.label}
       <Icon name="arrow-right" size={18} />
     </a>

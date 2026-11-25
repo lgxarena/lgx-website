@@ -126,6 +126,8 @@ const cartoes: Cartao[] =
       </div>
 
       <div class="flex justify-center gap-2" aria-hidden="true" data-pontos></div>
+      {/* Anuncia, sem interromper, quais avaliações estão à vista depois de usar os botões. */}
+      <p class="sr-only" aria-live="polite" data-anuncio></p>
     </Container>
   </section>
 )}
@@ -139,13 +141,19 @@ const cartoes: Cartao[] =
     const anterior = carrossel.querySelector<HTMLButtonElement>('[data-anterior]')
     const proximo = carrossel.querySelector<HTMLButtonElement>('[data-proximo]')
     const pontos = carrossel.querySelector<HTMLElement>('[data-pontos]')
-    if (!trilho || !controles || !anterior || !proximo || !pontos) continue
+    const anuncio = carrossel.querySelector<HTMLElement>('[data-anuncio]')
+    if (!trilho || !controles || !anterior || !proximo || !pontos || !anuncio) continue
 
-    const rolar = (direcao: 1 | -1) =>
+    // Só anuncia depois de um clique nos botões, nunca ao carregar ou ao rolar com o dedo.
+    let anunciar = false
+
+    const rolar = (direcao: 1 | -1) => {
+      anunciar = true
       trilho.scrollBy({
         left: direcao * trilho.clientWidth,
         behavior: reduzMovimento.matches ? 'auto' : 'smooth',
       })
+    }
 
     anterior.addEventListener('click', () => rolar(-1))
     proximo.addEventListener('click', () => rolar(1))
@@ -166,6 +174,22 @@ const cartoes: Cartao[] =
           ...Array.from({ length: paginas }, () => document.createElement('span'))
         )
       }
+      if (anunciar) {
+        const cartoes = [...trilho.children] as HTMLElement[]
+        const caixa = trilho.getBoundingClientRect()
+        const visiveis = cartoes
+          .map((cartao, indice) => ({ indice, caixa: cartao.getBoundingClientRect() }))
+          .filter(
+            (item) => item.caixa.left >= caixa.left - 2 && item.caixa.right <= caixa.right + 2
+          )
+        const primeira = (visiveis[0]?.indice ?? 0) + 1
+        const ultima = (visiveis.at(-1)?.indice ?? 0) + 1
+        anuncio.textContent =
+          primeira === ultima
+            ? `Avaliação ${primeira} de ${cartoes.length}`
+            : `Avaliações ${primeira} a ${ultima} de ${cartoes.length}`
+      }
+
       ;[...pontos.children].forEach((ponto, indice) => {
         ponto.className = `h-2 rounded-full transition-all ${indice === atual ? 'w-7 bg-accent' : 'w-2 bg-surface-3'}`
       })
