@@ -1,0 +1,120 @@
+---
+import Container from '@/components/ui/Container.astro'
+import SectionHeading from '@/components/ui/SectionHeading.astro'
+import Base from '@/layouts/Base.astro'
+import { getSite } from '@/lib/conteudo'
+import { formatarTelefone } from '@/lib/formatar'
+
+const site = await getSite()
+const { endereco } = site
+const atualizacao = '25 de novembro de 2026'
+
+const secao = 'flex flex-col gap-3 rounded-lg bg-surface p-6 sm:p-8'
+const titulo = 'text-xl font-extrabold'
+---
+
+<Base
+  title="Privacidade"
+  description="Como a LGX Arena trata dados pessoais no site e na loja, conforme a Lei Geral de Proteção de Dados (LGPD)."
+>
+  <Container class="flex max-w-3xl flex-col gap-10 pt-14 pb-24 md:pt-18 md:pb-28">
+    <SectionHeading
+      as="h1"
+      title="Privacidade"
+      description={`Como tratamos seus dados, conforme a LGPD (Lei nº 13.709/2018). Atualizado em ${atualizacao}.`}
+    />
+
+    <div class="flex flex-col gap-4">
+      <section aria-labelledby="quem" class={secao}>
+        <h2 id="quem" class={titulo}>
+          Quem somos
+        </h2>
+        <div class="texto-rico">
+          <p>
+            {site.razaoSocial}, CNPJ {site.cnpj}, {endereco.logradouro}, {endereco.bairro},
+            {endereco.cidade} – {endereco.uf}. Somos os responsáveis (controladores) pelos dados
+            tratados no site e na loja.
+          </p>
+        </div>
+      </section>
+
+      <section aria-labelledby="site" class={secao}>
+        <h2 id="site" class={titulo}>
+          O que o site coleta
+        </h2>
+        <div class="texto-rico">
+          <ul>
+            <li>
+              <strong>Nenhum cadastro, formulário ou cookie próprio.</strong> Não usamos cookies de
+              rastreamento nem ferramentas de publicidade.
+            </li>
+            <li>
+              <strong>No seu aparelho:</strong> o site guarda páginas já visitadas para abrir sem
+              internet e, se você pedir, lembra que aceitou carregar o mapa do Google. Isso fica só
+              no seu navegador e pode ser apagado nas configurações dele.
+            </li>
+            <li>
+              <strong>Hospedagem:</strong> a Cloudflare, que hospeda o site, registra dados técnicos
+              de acesso (como endereço IP) para segurança e prevenção de ataques.
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section aria-labelledby="terceiros" class={secao}>
+        <h2 id="terceiros" class={titulo}>
+          Serviços de terceiros
+        </h2>
+        <div class="texto-rico">
+          <p>
+            Estes serviços só entram em ação quando você clica neles, e seguem as políticas de
+            privacidade de cada empresa:
+          </p>
+          <ul>
+            <li>
+              <strong>WhatsApp (Meta):</strong> reservas, orçamentos e dúvidas. Usamos o que você
+              nos mandar só para atender o seu pedido.
+            </li>
+            <li>
+              <strong>Google Maps:</strong> o mapa em Como chegar só carrega quando você clica em
+              "Mostrar mapa"; a partir daí o Google pode usar cookies.
+            </li>
+            <li>
+              <strong>Redes sociais:</strong> Instagram, TikTok, Twitch, YouTube e Facebook abrem
+              nos sites deles.
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section aria-labelledby="loja" class={secao}>
+        <h2 id="loja" class={titulo}>
+          Na loja
+        </h2>
+        <div class="texto-rico">
+          <p>
+            Para usar os computadores, fazemos um cadastro com documento com foto. Esses dados
+            servem para identificar quem usa as máquinas, cumprir as regras da casa e do condomínio
+            e, no caso de menores, guardar a autorização dos responsáveis. Não vendemos nem
+            compartilhamos esses dados, exceto quando a lei exigir.
+          </p>
+        </div>
+      </section>
+
+      <section aria-labelledby="direitos" class={secao}>
+        <h2 id="direitos" class={titulo}>
+          Seus direitos
+        </h2>
+        <div class="texto-rico">
+          <p>
+            Você pode pedir a qualquer momento para confirmar se tratamos seus dados, acessar,
+            corrigir, apagar ou levar seus dados para outro serviço, e revogar um consentimento.
+            Fale com a gente pelo WhatsApp ou telefone{' '}
+            <a href={`tel:${site.telefone}`}>{formatarTelefone(site.telefone)}</a>. Se não
+            resolvermos, você pode procurar a Autoridade Nacional de Proteção de Dados (ANPD).
+          </p>
+        </div>
+      </section>
+    </div>
+  </Container>
+</Base>

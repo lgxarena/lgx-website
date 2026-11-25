@@ -12,6 +12,29 @@ export default defineConfig({
   build: {
     format: 'file',
   },
+  // Política de segurança de conteúdo (CSP): o Astro gera os hashes dos scripts e estilos da
+  // página; só o que está aqui pode carregar. Os outros cabeçalhos ficam em public/_headers.
+  security: {
+    csp: {
+      directives: [
+        "default-src 'self'",
+        "img-src 'self' data: https://lh3.googleusercontent.com",
+        "font-src 'self'",
+        "connect-src 'self'",
+        "manifest-src 'self'",
+        "worker-src 'self'",
+        // Mapa do Google em Como chegar, só depois que a pessoa aceita carregar.
+        'frame-src https://www.google.com',
+        "object-src 'none'",
+        "base-uri 'self'",
+        "form-action 'self'",
+      ],
+      // Atributos style="" (ex.: nomes de transição dos jogos) seguem permitidos.
+      styleDirective: {
+        resources: ["'self'", { resource: "'unsafe-inline'", kind: 'attribute' }],
+      },
+    },
+  },
   integrations: [
     // Fora do sitemap: 404, página offline e o atalho /reservar (vai para o WhatsApp).
     sitemap({
