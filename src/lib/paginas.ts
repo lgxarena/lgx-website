@@ -32,6 +32,14 @@ export const PAGINAS_OG: Record<string, { titulo: string; texto: string }> = {
   },
   regras: { titulo: 'Regras da casa', texto: 'Cadastro, reservas, equipamentos e condomínio.' },
   cardapio: { titulo: 'Cardápio', texto: 'Bebidas, salgados e lanches sem sair do jogo.' },
+  privacidade: {
+    titulo: 'Privacidade',
+    texto: 'Como a LGX Arena trata seus dados, conforme a LGPD.',
+  },
+  'politica-de-cookies': {
+    titulo: 'Política de Cookies',
+    texto: 'O que o site guarda no navegador e os cookies de terceiros.',
+  },
   contato: { titulo: 'Como chegar', texto: 'Av. Cupecê, 6062, Jardim Prudência, São Paulo.' },
 }
 

@@ -48,14 +48,14 @@ const dadosEstruturados = [await negocio()]
     />
 
     <div class="grid gap-5 lg:grid-cols-[1.4fr_1fr]">
-      <!-- Mapa do Google, carregado só quando chega perto da tela. -->
-      <div class="flex flex-col gap-3">
+      <!-- Mapa do Google sempre à mostra; os cookies dele estão na Política de Cookies e no aviso. -->
+      <div class="flex min-h-72 flex-col">
         <iframe
           src={`https://www.google.com/maps?q=${encodeURIComponent(enderecoCompleto)}&hl=pt-BR&output=embed`}
           title={`Mapa do Google com a LGX Arena: ${enderecoCompleto}`}
           loading="lazy"
           referrerpolicy="no-referrer-when-downgrade"
-          class="h-full min-h-72 w-full rounded-lg border border-line bg-surface"
+          class="min-h-72 w-full flex-1 rounded-lg border border-line bg-surface"
         ></iframe>
       </div>
 

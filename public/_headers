@@ -1,0 +1,14 @@
+# Cabeçalhos de segurança (Cloudflare Workers). A CSP de scripts e estilos vem no <meta> que o
+# Astro gera em cada página; aqui só o que não pode ir em <meta>.
+/*
+  Strict-Transport-Security: max-age=31536000
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: DENY
+  Content-Security-Policy: frame-ancestors 'none'
+  Cross-Origin-Opener-Policy: same-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=()
+
+# Arquivos com hash no nome nunca mudam: cache de um ano.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
