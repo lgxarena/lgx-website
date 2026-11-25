@@ -27,3 +27,5 @@ package-lock.json
 .DS_Store
 .idea/
 *.pem
+
+.lighthouseci/

@@ -63,7 +63,7 @@ const dadosEstruturados = await Promise.all([negocio(), organizacao()])
     </div>
   </Section>
 
-  <Section aria-labelledby="espaco-titulo" class="border-t border-line">
+  <Section aria-labelledby="espaco-titulo" class="adiada border-t border-line">
     <SectionHeading
       id="espaco-titulo"
       title="O espaço"
@@ -79,7 +79,7 @@ const dadosEstruturados = await Promise.all([negocio(), organizacao()])
 
   <Avaliacoes />
 
-  <Section aria-labelledby="jogos-titulo">
+  <Section aria-labelledby="jogos-titulo" class="adiada">
     <SectionHeading
       id="jogos-titulo"
       title="Os mais jogados"
@@ -103,7 +103,7 @@ const dadosEstruturados = await Promise.all([negocio(), organizacao()])
     </ul>
   </Section>
 
-  <Section aria-labelledby="eventos-titulo" class="border-t border-line">
+  <Section aria-labelledby="eventos-titulo" class="adiada border-t border-line">
     <SectionHeading id="eventos-titulo" title="Faça seu evento na LGX" />
     <ul class="grid gap-4 md:grid-cols-3">
       {eventos.map((evento) => (

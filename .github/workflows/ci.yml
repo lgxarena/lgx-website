@@ -29,3 +29,5 @@ jobs:
         run: pnpm check
       - name: Build
         run: pnpm build
+      - name: Lighthouse (Performance, Acessibilidade e SEO ≥ 95)
+        run: pnpm lighthouse
