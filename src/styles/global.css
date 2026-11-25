@@ -109,3 +109,9 @@
     @apply font-semibold;
   }
 }
+
+/* Seção abaixo da dobra: o navegador só calcula o layout quando ela chega perto da tela. */
+@utility adiada {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 36rem;
+}

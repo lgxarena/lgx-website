@@ -46,13 +46,22 @@ const linkPedido = linkWhatsApp(site.whatsapp, MENSAGEM_PEDIDO)
       description={`${jogos.length} jogos instalados em todos os PCs. Não achou o seu? Peça pelo WhatsApp.`}
     />
 
-    <!-- Sem JavaScript a lista aparece inteira e os filtros ficam escondidos. -->
+    <!--
+      O espaço da barra fica reservado (invisível) até o script ligar os filtros, para a lista
+      não pular. Sem JavaScript a barra some e a lista aparece inteira.
+    -->
+    <noscript>
+      <style>
+        [data-filtros] {
+          display: none !important;
+        }
+      </style>
+    </noscript>
     <form
       data-filtros
       role="search"
       aria-label="Buscar jogos"
-      hidden
-      class="sticky top-20 z-30 -mx-4 flex flex-col gap-3 border-b border-line bg-bg/95 px-4 py-4 backdrop-blur-sm sm:mx-0 sm:px-0"
+      class="invisible sticky top-20 z-30 -mx-4 flex flex-col gap-3 border-b border-line bg-bg/95 px-4 py-4 backdrop-blur-sm sm:mx-0 sm:px-0"
     >
       <div class="flex gap-3">
         <label class="relative flex-1">
@@ -132,11 +141,14 @@ const linkPedido = linkWhatsApp(site.whatsapp, MENSAGEM_PEDIDO)
       data-jogos
       class="grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"
     >
-      {jogos.map((jogo) => (
+      {jogos.map((jogo, indice) => (
         <li
           data-nome={normalizar(jogo.data.nome)}
           data-categorias={jogo.data.categorias.join('|')}
           style={`view-transition-name: jogo-${jogo.id}; view-transition-class: jogo`}
+          class:list={[
+            indice >= 2 && '[contain-intrinsic-size:auto_20rem] [content-visibility:auto]',
+          ]}
         >
           <figure class="flex flex-col gap-2.5">
             <div class="relative">
@@ -146,6 +158,9 @@ const linkPedido = linkWhatsApp(site.whatsapp, MENSAGEM_PEDIDO)
                 widths={[240, 360, 480]}
                 sizes="(min-width: 80rem) 240px, (min-width: 64rem) 19vw, (min-width: 40rem) 30vw, 45vw"
                 class="aspect-3/4 w-full rounded-lg bg-surface object-cover"
+                quality={60}
+                loading={indice < 2 ? 'eager' : 'lazy'}
+                fetchpriority={indice < 2 ? 'high' : 'auto'}
               />
               {jogo.data.popular && (
                 <Tag tone="accent" class="absolute top-2.5 left-2.5">
@@ -269,7 +284,7 @@ const linkPedido = linkWhatsApp(site.whatsapp, MENSAGEM_PEDIDO)
     )
     if (radio) radio.checked = true
 
-    form.hidden = false
+    form.classList.remove('invisible')
 
     // Faixa de categorias: esmaece a borda do lado que ainda tem mais para rolar e, com mouse,
     // mostra setas para rolar (no toque, arrasta-se com o dedo; no teclado, as setas trocam a opção).
