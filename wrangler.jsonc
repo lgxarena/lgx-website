@@ -12,5 +12,7 @@
     "not_found_handling": "404-page",
   },
   "preview_urls": true,
+  // Cada branch e PR ganha um preview próprio (fora do Google; ver src/lib/config.ts).
+  "previews": {},
   "observability": { "enabled": true },
 }
