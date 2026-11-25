@@ -7,7 +7,7 @@ import { defineConfig, fontProviders } from 'astro/config'
 // https://astro.build/config
 export default defineConfig({
   site: 'https://lgxarena.com.br',
-  // URLs sem barra no final (/precos), como no site atual
+  // URLs sem barra no final (/precos), como no site atual; o Workers serve precos.html em /precos
   trailingSlash: 'never',
   build: {
     format: 'file',
