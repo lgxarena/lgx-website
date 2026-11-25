@@ -1,11 +1,7 @@
 ---
-import { Image } from 'astro:assets'
-
-import mapa from '@/assets/contato/mapa.png'
 import FaixaHorarios from '@/components/inicio/FaixaHorarios.astro'
 import BotaoReservar from '@/components/ui/BotaoReservar.astro'
 import Container from '@/components/ui/Container.astro'
-import Icon from '@/components/ui/Icon.astro'
 import RedesSociais from '@/components/ui/RedesSociais.astro'
 import SectionHeading from '@/components/ui/SectionHeading.astro'
 import Base from '@/layouts/Base.astro'
@@ -52,57 +48,20 @@ const dadosEstruturados = [await negocio()]
     />
 
     <div class="grid gap-5 lg:grid-cols-[1.4fr_1fr]">
-      <!--
-        O mapa do Google grava cookies. Pela LGPD, ele só carrega quando a pessoa pede; até lá
-        aparece uma prévia sem cookies (OpenStreetMap). A escolha fica salva neste navegador.
-      -->
-      <div
-        data-mapa
-        data-src={`https://www.google.com/maps?q=${encodeURIComponent(enderecoCompleto)}&hl=pt-BR&output=embed`}
-        data-titulo={`Mapa do Google com a LGX Arena: ${enderecoCompleto}`}
-        class="relative isolate flex min-h-72 overflow-hidden rounded-lg border border-line bg-surface"
-      >
-        <Image
-          src={mapa}
-          alt=""
-          widths={[600, 880]}
-          sizes="(min-width: 64rem) 700px, 100vw"
-          class="absolute inset-0 -z-10 size-full object-cover opacity-70"
-        />
-        <div
-          data-mapa-aviso
-          class="m-auto flex max-w-sm flex-col items-center gap-3 rounded-lg bg-bg/85 px-6 py-5 text-center backdrop-blur-sm"
-        >
-          <p class="text-[15px] text-fg-soft">
-            O mapa interativo é do Google, que pode usar cookies.
-          </p>
-          <div class="flex flex-wrap justify-center gap-2">
-            <button
-              type="button"
-              data-mapa-carregar
-              hidden
-              class="inline-flex min-h-11 items-center gap-2 rounded-md bg-fg px-4 text-[15px] font-semibold text-bg transition-colors hover:bg-white"
-            >
-              <Icon name="map-pin" size={18} /> Mostrar mapa
-            </button>
-            <a
-              href={endereco.mapa}
-              target="_blank"
-              rel="noopener"
-              class="inline-flex min-h-11 items-center gap-1.5 rounded-md bg-surface-2 px-4 text-[15px] font-semibold text-fg no-underline transition-colors hover:bg-surface-3 hover:text-fg"
-            >
-              Abrir no Google Maps <Icon name="external-link" size={16} />
-              <span class="sr-only">(abre em nova aba)</span>
-            </a>
-          </div>
-        </div>
-        <p class="absolute right-2 bottom-1.5 text-[11px] text-fg-muted">
-          Prévia: ©{' '}
-          <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">
-            OpenStreetMap
-          </a>
-        </p>
-      </div>
+      <!-- Mapa do Google sempre à mostra; o aviso de cookies fica logo abaixo e na Política de Cookies. -->
+      <figure class="flex min-h-72 flex-col gap-2">
+        <iframe
+          src={`https://www.google.com/maps?q=${encodeURIComponent(enderecoCompleto)}&hl=pt-BR&output=embed`}
+          title={`Mapa do Google com a LGX Arena: ${enderecoCompleto}`}
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          class="min-h-72 w-full flex-1 rounded-lg border border-line bg-surface"
+        ></iframe>
+        <figcaption class="text-[13px] text-fg-muted">
+          Mapa do Google: ao abrir, o Google pode gravar cookies dele.{' '}
+          <a href="/politica-de-cookies">Política de Cookies</a>
+        </figcaption>
+      </figure>
 
       <div class="flex flex-col">
         <section
@@ -185,36 +144,3 @@ const dadosEstruturados = [await negocio()]
     </section>
   </Container>
 </Base>
-
-<script>
-  const CHAVE = 'lgx-mapa-google'
-  const caixa = document.querySelector<HTMLElement>('[data-mapa]')
-  const botao = caixa?.querySelector<HTMLButtonElement>('[data-mapa-carregar]')
-
-  const carregar = () => {
-    if (!caixa?.dataset.src) return
-    const iframe = document.createElement('iframe')
-    iframe.src = caixa.dataset.src
-    iframe.title = caixa.dataset.titulo ?? 'Mapa do Google'
-    iframe.referrerPolicy = 'no-referrer-when-downgrade'
-    iframe.className = 'absolute inset-0 size-full'
-    caixa.replaceChildren(iframe)
-  }
-
-  if (caixa && botao) {
-    botao.hidden = false
-    botao.addEventListener('click', () => {
-      try {
-        localStorage.setItem(CHAVE, 'sim')
-      } catch {
-        // Sem armazenamento (aba anônima): carrega só desta vez.
-      }
-      carregar()
-    })
-    try {
-      if (localStorage.getItem(CHAVE) === 'sim') carregar()
-    } catch {
-      // Sem armazenamento: mantém a prévia.
-    }
-  }
-</script>
