@@ -1,0 +1,12 @@
+nome: Corujão
+tipo: pacote
+horas: 8
+janela:
+  inicio: '22:00'
+  fim: '06:00'
+dias: Vésperas de fim de semana e feriado
+precos:
+  pro: 90
+  vip: 60
+destaque: true
+ordem: 7

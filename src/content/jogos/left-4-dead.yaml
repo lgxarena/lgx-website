@@ -1,0 +1,7 @@
+nome: 'Left 4 Dead'
+capa: ./left-4-dead.jpg
+categorias:
+  - FPS
+  - Tiro
+  - Sobrevivência
+popular: false

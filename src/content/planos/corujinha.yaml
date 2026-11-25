@@ -1,0 +1,11 @@
+nome: Corujinha
+tipo: pacote
+horas: 4
+janela:
+  inicio: '22:00'
+  fim: '02:00'
+# Dias da semana ainda a confirmar (issue #3)
+precos:
+  pro: 50
+  vip: 35
+ordem: 6

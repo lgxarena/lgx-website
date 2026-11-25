@@ -1,0 +1,125 @@
+---
+import { Image } from 'astro:assets'
+
+import Avaliacoes from '@/components/inicio/Avaliacoes.astro'
+import FaixaHorarios from '@/components/inicio/FaixaHorarios.astro'
+import Hero from '@/components/inicio/Hero.astro'
+import PrecosSala from '@/components/precos/PrecosSala.astro'
+import Icon from '@/components/ui/Icon.astro'
+import Placeholder from '@/components/ui/Placeholder.astro'
+import Section from '@/components/ui/Section.astro'
+import SectionHeading from '@/components/ui/SectionHeading.astro'
+import Base from '@/layouts/Base.astro'
+import { getJogos, getSalas, getSite } from '@/lib/conteudo'
+import { negocio, organizacao } from '@/lib/dadosEstruturados'
+
+const [site, salas, jogos] = await Promise.all([getSite(), getSalas(), getJogos()])
+const maisJogados = jogos.filter((jogo) => jogo.data.popular).slice(0, 5)
+
+const fotosDoEspaco = ['Sala Pro', 'Sala VIP', 'Lanchonete', 'Evento na LGX']
+
+const eventos = [
+  {
+    titulo: 'Aniversários',
+    texto: 'Pacote com buffet completo; o valor varia com o tempo de permanência.',
+    href: '/aniversarios',
+    acao: 'Ver o pacote',
+  },
+  {
+    titulo: 'Campeonatos',
+    texto: 'LGX CUP e Liga SP: próximas datas, inscrições e ranking.',
+    href: '/campeonatos',
+    acao: 'Ver a agenda',
+  },
+  {
+    titulo: 'Empresas & times',
+    texto: 'Bootcamps, mix e confraternizações, com servidores dedicados.',
+    href: '/empresas',
+    acao: 'Pedir orçamento',
+  },
+]
+const dadosEstruturados = await Promise.all([negocio(), organizacao()])
+---
+
+<Base
+  jsonLd={dadosEstruturados}
+  title={`${site.nome}: centro de games e e-sports em São Paulo`}
+  description="Salas Pro e VIP, com PCs de alta performance, internet de 2 Gbps e Corujão de madrugada. Na Av. Cupecê, Jardim Prudência, São Paulo."
+>
+  <Hero />
+  <FaixaHorarios />
+
+  <Section aria-labelledby="precos-titulo">
+    <SectionHeading
+      id="precos-titulo"
+      title="Preços"
+      description="Valores por PC. Horas avulsas ficam salvas na sua conta; pacotes valem só no horário deles."
+      link={{ href: '/precos', label: 'Detalhes e regras' }}
+    />
+    <div class="grid items-start gap-5 lg:grid-cols-2">
+      {salas.map((sala, indice) => (
+        <PrecosSala sala={sala} principal={indice === 0} />
+      ))}
+    </div>
+  </Section>
+
+  <Section aria-labelledby="espaco-titulo" class="adiada border-t border-line">
+    <SectionHeading
+      id="espaco-titulo"
+      title="O espaço"
+      description="Salas climatizadas, internet de 2 Gbps, lanchonete própria, dentro de um condomínio fechado."
+      link={{ href: '/espaco', label: 'Ver o espaço' }}
+    />
+    <div class="grid grid-cols-2 gap-3 lg:grid-cols-4">
+      {fotosDoEspaco.map((foto) => (
+        <Placeholder label={foto} class="h-40 md:h-56" />
+      ))}
+    </div>
+  </Section>
+
+  <Avaliacoes />
+
+  <Section aria-labelledby="jogos-titulo" class="adiada">
+    <SectionHeading
+      id="jogos-titulo"
+      title="Os mais jogados"
+      link={{ href: '/jogos', label: `Ver os ${jogos.length} jogos` }}
+    />
+    <ul class="grid grid-cols-2 gap-4 md:grid-cols-5">
+      {maisJogados.map((jogo, indice) => (
+        <li class:list={[indice === 4 && 'max-md:hidden']}>
+          <figure class="flex flex-col gap-2.5">
+            <Image
+              src={jogo.data.capa}
+              alt=""
+              widths={[240, 360, 480]}
+              sizes="(min-width: 80rem) 240px, (min-width: 48rem) 19vw, 45vw"
+              class="aspect-3/4 w-full rounded-lg object-cover"
+            />
+            <figcaption class="font-semibold">{jogo.data.nome}</figcaption>
+          </figure>
+        </li>
+      ))}
+    </ul>
+  </Section>
+
+  <Section aria-labelledby="eventos-titulo" class="adiada border-t border-line">
+    <SectionHeading id="eventos-titulo" title="Faça seu evento na LGX" />
+    <ul class="grid gap-4 md:grid-cols-3">
+      {eventos.map((evento) => (
+        <li>
+          <a
+            href={evento.href}
+            class="group flex h-full flex-col gap-2.5 rounded-lg bg-surface-2 p-6 text-fg no-underline transition-colors hover:bg-surface-3 hover:text-fg"
+          >
+            <h3 class="text-[22px] font-extrabold">{evento.titulo}</h3>
+            <p class="leading-relaxed text-fg-soft">{evento.texto}</p>
+            <span class="mt-auto inline-flex items-center gap-1.5 pt-2 font-semibold text-link group-hover:text-link-hover">
+              {evento.acao} <Icon name="arrow-right" size={18} />
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </Section>
+</Base>

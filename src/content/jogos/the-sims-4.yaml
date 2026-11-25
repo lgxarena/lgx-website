@@ -1,0 +1,5 @@
+nome: 'The Sims 4'
+capa: ./the-sims-4.jpg
+categorias:
+  - Simulação
+popular: false

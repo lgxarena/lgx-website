@@ -1,0 +1,7 @@
+nome: 'Left 4 Dead 2'
+capa: ./left-4-dead-2.jpg
+categorias:
+  - FPS
+  - Tiro
+  - Sobrevivência
+popular: false

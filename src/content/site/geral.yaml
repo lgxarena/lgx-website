@@ -1,0 +1,24 @@
+nome: LGX Arena
+descricao: Centro de games e e-sports em São Paulo desde 2006.
+fundacao: 2006
+razaoSocial: L.G.X E-SPORT ARENA
+cnpj: 09.553.807/0001-26
+telefone: '+551156234874'
+whatsapp: '551156234874'
+endereco:
+  logradouro: Av. Cupecê, 6062 - Bloco 1, Loja 16
+  bairro: Jardim Prudência
+  cidade: São Paulo
+  uf: SP
+  cep: '04366-001'
+  mapa: https://maps.app.goo.gl/LJ4SzpHvXiL5AQ2ZA
+  geo:
+    latitude: -23.684011
+    longitude: -46.6342673
+redes:
+  instagram: https://instagram.com/lgxarena
+  tiktok: https://tiktok.com/@lgxlan
+  twitch: https://twitch.tv/lgxarena
+  youtube: https://www.youtube.com/@lgxarena
+  facebook: https://www.facebook.com/lgxarenasp
+rank: https://rank.lgxarena.com.br

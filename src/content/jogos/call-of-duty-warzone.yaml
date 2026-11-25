@@ -1,0 +1,7 @@
+nome: 'Call of Duty: Warzone'
+capa: ./call-of-duty-warzone.png
+categorias:
+  - Battle Royale
+  - FPS
+  - Tiro
+popular: false

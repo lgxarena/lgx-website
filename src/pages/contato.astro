@@ -1,0 +1,142 @@
+---
+import FaixaHorarios from '@/components/inicio/FaixaHorarios.astro'
+import BotaoReservar from '@/components/ui/BotaoReservar.astro'
+import Container from '@/components/ui/Container.astro'
+import RedesSociais from '@/components/ui/RedesSociais.astro'
+import SectionHeading from '@/components/ui/SectionHeading.astro'
+import Base from '@/layouts/Base.astro'
+import { getSite } from '@/lib/conteudo'
+import { formatarTelefone } from '@/lib/formatar'
+import { negocio } from '@/lib/dadosEstruturados'
+
+const site = await getSite()
+const { endereco } = site
+const enderecoCompleto = `${endereco.logradouro}, ${endereco.bairro}, ${endereco.cidade} – ${endereco.uf}`
+
+const vagas = [
+  {
+    periodo: 'Dias de semana, até 18h',
+    vagas: 1,
+    dica: 'Use o estacionamento do Atacadão ou do Public, perto do condomínio.',
+  },
+  {
+    periodo: 'Depois das 18h e fins de semana',
+    vagas: 6,
+    dica: 'Vagas limitadas, por ordem de chegada; prefira carona.',
+  },
+  {
+    periodo: 'Corujão',
+    vagas: 6,
+    dica: 'Sem reserva de vaga. Combinem carona: com as vagas cheias, o carro fica na avenida.',
+  },
+]
+
+const titulo2 = 'text-[28px] font-extrabold'
+const dadosEstruturados = [await negocio()]
+---
+
+<Base
+  jsonLd={dadosEstruturados}
+  title="Como chegar"
+  description={`LGX Arena: ${enderecoCompleto}. Mapa, horários, contato e estacionamento no condomínio.`}
+>
+  <Container class="flex flex-col gap-16 pt-14 pb-16 md:pt-18 md:pb-20">
+    <SectionHeading
+      as="h1"
+      title="Como chegar"
+      description={`${enderecoCompleto}. Fica dentro de um condomínio fechado: traga um documento com foto para a portaria.`}
+    />
+
+    <div class="grid gap-5 lg:grid-cols-[1.4fr_1fr]">
+      <!-- Mapa do Google, carregado só quando chega perto da tela. -->
+      <div class="flex flex-col gap-3">
+        <iframe
+          src={`https://www.google.com/maps?q=${encodeURIComponent(enderecoCompleto)}&hl=pt-BR&output=embed`}
+          title={`Mapa do Google com a LGX Arena: ${enderecoCompleto}`}
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          class="h-full min-h-72 w-full rounded-lg border border-line bg-surface"
+        ></iframe>
+      </div>
+
+      <div class="flex flex-col">
+        <section
+          aria-labelledby="contato"
+          class="flex flex-1 flex-col gap-5 rounded-lg bg-surface p-6"
+        >
+          <div class="flex flex-col gap-1">
+            <h2 id="contato" class="text-lg font-bold">
+              Fale com a gente
+            </h2>
+            <p class="text-[15px] text-fg-muted">O WhatsApp é o jeito mais rápido.</p>
+          </div>
+          <BotaoReservar mensagem="Olá! Tenho uma dúvida sobre a LGX Arena." class="self-start">
+            Conversar no WhatsApp
+          </BotaoReservar>
+          <p class="flex flex-col gap-0.5">
+            <span class="text-[15px] text-fg-muted">Telefone, no horário de funcionamento</span>
+            <a
+              href={`tel:${site.telefone}`}
+              class="inline-flex min-h-11 items-center text-lg font-semibold"
+            >
+              {formatarTelefone(site.telefone)}
+            </a>
+          </p>
+          <div class="flex flex-col gap-2.5 border-t border-line pt-5">
+            <span class="text-[15px] text-fg-muted">Eventos, Corujões e avisos saem nas redes</span>
+            <RedesSociais whatsapp={false} />
+          </div>
+        </section>
+      </div>
+    </div>
+  </Container>
+
+  <FaixaHorarios />
+
+  <Container class="flex flex-col gap-16 pt-16 pb-24 md:pb-28">
+    <section aria-labelledby="estacionamento" class="flex flex-col gap-5">
+      <h2 id="estacionamento" class={titulo2}>
+        Estacionamento
+      </h2>
+      <div class="overflow-hidden rounded-lg bg-surface">
+        <table class="w-full text-left text-[15px]">
+          <caption class="sr-only">Vagas disponíveis no condomínio por período</caption>
+          <thead class="text-xs tracking-[0.12em] text-fg-muted uppercase max-md:sr-only">
+            <tr>
+              <th scope="col" class="px-6 pt-5 pb-3 font-bold">
+                Período
+              </th>
+              <th scope="col" class="px-6 pt-5 pb-3 font-bold">
+                Vagas disponíveis
+              </th>
+              <th scope="col" class="px-6 pt-5 pb-3 font-bold">
+                Dica
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {vagas.map((vaga) => (
+              <tr class="border-t border-line max-md:flex max-md:flex-col max-md:gap-1 max-md:px-6 max-md:py-4 max-md:first:border-t-0">
+                <th scope="row" class="font-semibold md:px-6 md:py-4">
+                  {vaga.periodo}
+                </th>
+                <td class="md:px-6 md:py-4">
+                  <span class="text-2xl font-extrabold tabular-nums">{vaga.vagas}</span>
+                  <span class="text-fg-muted md:sr-only">
+                    {' '}
+                    {vaga.vagas === 1 ? 'vaga' : 'vagas'}
+                  </span>
+                </td>
+                <td class="text-fg-soft md:px-6 md:py-4">{vaga.dica}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="text-[15px] text-fg-muted">
+        Pare só nas vagas autorizadas. Multas do condomínio são cobradas do responsável pela
+        reserva. Na dúvida, chame um atendente.
+      </p>
+    </section>
+  </Container>
+</Base>

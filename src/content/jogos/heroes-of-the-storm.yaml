@@ -1,0 +1,7 @@
+nome: 'Heroes of the Storm'
+capa: ./heroes-of-the-storm.jpg
+categorias:
+  - MOBA
+  - Estratégia
+  - Competitivo
+popular: false

@@ -1,0 +1,68 @@
+---
+import BotaoReservar from '@/components/ui/BotaoReservar.astro'
+import Button from '@/components/ui/Button.astro'
+import Icon from '@/components/ui/Icon.astro'
+import Base from '@/layouts/Base.astro'
+
+/** "Próximas fases": atalhos para o que mais se procura no site. */
+const atalhos = [
+  { rotulo: 'Preços', texto: 'Compre suas horas de jogo', href: '/precos' },
+  { rotulo: 'Corujão', texto: 'Modo noturno: 8 horas seguidas', href: '/corujao' },
+  { rotulo: 'Jogos', texto: 'Escolha o seu próximo main', href: '/jogos' },
+  { rotulo: 'Como chegar', texto: 'O caminho até o servidor', href: '/contato' },
+]
+---
+
+<Base
+  title="Página não encontrada"
+  description="Esta página não existe ou mudou de endereço."
+  noindex
+>
+  <div class="container-page flex flex-col gap-16 py-20 md:py-28">
+    <div class="flex flex-col items-center gap-4 text-center">
+      <p class="text-[88px] leading-none font-extrabold tracking-[-0.04em] text-accent md:text-[120px]">
+        404
+      </p>
+      <h1 class="text-4xl font-extrabold tracking-tight md:text-[56px] md:leading-tight">
+        Game Over!
+      </h1>
+      <p class="max-w-md text-[17px] leading-relaxed text-fg-muted">
+        Essa área está fora de alcance. Parece que você foi para um mapa secreto… e ele não existe!
+      </p>
+      <div class="mt-3 grid w-full gap-3 sm:flex sm:w-auto sm:justify-center">
+        <Button href="/" size="lg">
+          Voltar para o início
+        </Button>
+        <BotaoReservar size="lg" variant="secondary">
+          Reservar um PC
+        </BotaoReservar>
+      </div>
+    </div>
+
+    <nav aria-labelledby="proximas-fases" class="mx-auto flex w-full max-w-3xl flex-col gap-4">
+      <h2 id="proximas-fases" class="text-center text-lg font-bold">
+        Escolha a próxima fase
+      </h2>
+      <ul class="grid gap-3 sm:grid-cols-2">
+        {atalhos.map((atalho) => (
+          <li>
+            <a
+              href={atalho.href}
+              class="group flex h-full flex-col gap-1 rounded-lg bg-surface p-5 text-fg no-underline transition-colors hover:bg-surface-2 hover:text-fg"
+            >
+              <span class="flex items-center justify-between gap-2 text-lg font-bold">
+                {atalho.rotulo}
+                <Icon
+                  name="arrow-right"
+                  size={18}
+                  class="text-fg-muted transition-transform group-hover:translate-x-0.5 group-hover:text-fg"
+                />
+              </span>
+              <span class="text-[15px] text-fg-muted">{atalho.texto}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+</Base>

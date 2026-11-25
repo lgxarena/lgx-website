@@ -1,0 +1,6 @@
+nome: 'Point Blank'
+capa: ./point-blank.jpg
+categorias:
+  - FPS
+  - Tiro
+popular: false

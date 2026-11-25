@@ -1,0 +1,5 @@
+nome: 'Path of Exile'
+capa: ./path-of-exile.jpg
+categorias:
+  - RPG de Ação
+popular: false

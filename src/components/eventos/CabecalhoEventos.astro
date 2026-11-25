@@ -1,0 +1,57 @@
+---
+/**
+ * Topo comum das páginas de Eventos (Aniversários, Campeonatos, Empresas & times):
+ * subnavegação entre as três, título e descrição. O slot `acoes` fica abaixo do texto.
+ */
+import { MENU_PRINCIPAL, normalizarCaminho } from '@/lib/navegacao'
+
+interface Props {
+  titulo: string
+  descricao: string
+}
+
+const { titulo, descricao } = Astro.props
+const paginas = MENU_PRINCIPAL.find((item) => item.rotulo === 'Eventos')?.filhos ?? []
+const atual = normalizarCaminho(Astro.url.pathname)
+---
+
+<div class="flex flex-col gap-10">
+  <nav
+    aria-label="Eventos"
+    class="-mx-4 overflow-x-auto px-4 [scrollbar-width:none] sm:mx-0 sm:px-0"
+  >
+    <ul class="grid grid-cols-3 gap-1 rounded-lg bg-surface p-1 sm:flex sm:w-max">
+      {paginas.map((pagina) => {
+        const ativa = atual === pagina.href
+        return (
+          <li>
+            <a
+              href={pagina.href}
+              aria-current={ativa ? 'page' : undefined}
+              class:list={[
+                'flex min-h-11 items-center justify-center rounded-md px-2 text-[15px] sm:px-4 font-semibold whitespace-nowrap no-underline transition-colors',
+                ativa ? 'bg-surface-3 text-fg' : 'text-fg-muted hover:bg-surface-2 hover:text-fg',
+              ]}
+            >
+              {/* No celular, "Empresas & times" vira "Empresas" para as três abas caberem. */}
+              {pagina.rotulo.split(' & ')[0]}
+              {pagina.rotulo.includes(' & ') && (
+                <span class="max-sm:hidden">&nbsp;& {pagina.rotulo.split(' & ')[1]}</span>
+              )}
+            </a>
+          </li>
+        )
+      })}
+    </ul>
+  </nav>
+
+  <div class="flex max-w-2xl flex-col gap-3">
+    <h1 class="text-4xl font-extrabold tracking-tight md:text-[56px] md:leading-tight">{titulo}</h1>
+    <p class="text-lg leading-relaxed text-fg-muted">{descricao}</p>
+    {Astro.slots.has('acoes') && (
+      <div class="mt-4 flex flex-wrap items-center gap-4">
+        <slot name="acoes" />
+      </div>
+    )}
+  </div>
+</div>

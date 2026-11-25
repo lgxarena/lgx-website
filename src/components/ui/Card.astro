@@ -1,0 +1,30 @@
+---
+import type { HTMLAttributes } from 'astro/types'
+
+type Props = HTMLAttributes<'div'> & {
+  as?: 'div' | 'article' | 'li' | 'figure' | 'aside'
+  /** `surface` com borda (padrão), `raised` mais claro sem borda, `accent` vermelho de destaque. */
+  tone?: 'surface' | 'raised' | 'accent'
+  padding?: 'md' | 'lg'
+}
+
+const { as: Tag = 'div', tone = 'surface', padding = 'md', class: className, ...rest } = Astro.props
+
+const tones = {
+  surface: 'border border-line bg-surface',
+  raised: 'bg-surface-2',
+  accent: 'bg-accent-deep text-white',
+}
+---
+
+<Tag
+  {...rest}
+  class:list={[
+    'flex flex-col gap-4 rounded-lg',
+    tones[tone],
+    padding === 'lg' ? 'p-8' : 'p-6',
+    className,
+  ]}
+>
+  <slot />
+</Tag>

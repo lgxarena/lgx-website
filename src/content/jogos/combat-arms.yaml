@@ -1,0 +1,6 @@
+nome: 'Combat Arms'
+capa: ./combat-arms.jpg
+categorias:
+  - FPS
+  - Tiro
+popular: false

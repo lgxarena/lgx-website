@@ -1,0 +1,62 @@
+---
+import { NOME_DO_SITE, PREVIEW_NOINDEX } from '@/lib/config'
+import { trilha } from '@/lib/dadosEstruturados'
+import { chaveDaPagina } from '@/lib/paginas'
+import { normalizarCaminho } from '@/lib/navegacao'
+
+export interface SeoProps {
+  /** Título da página, sem o nome do site (ele é adicionado aqui). Se já tiver o nome do site (como na página inicial), fica como está. */
+  title: string
+  description: string
+  /** Imagem de compartilhamento (URL absoluta ou caminho a partir da raiz). Ver issue #19. */
+  image?: string
+  imageAlt?: string
+  noindex?: boolean
+  /** Dados estruturados (JSON-LD) próprios da página. A trilha "Início › Página" entra sozinha. */
+  jsonLd?: object[]
+}
+
+const {
+  title,
+  description,
+  image,
+  imageAlt,
+  noindex = false,
+  jsonLd = [],
+} = Astro.props as SeoProps
+
+const tituloCompleto = title.includes(NOME_DO_SITE) ? title : `${title} · ${NOME_DO_SITE}`
+const canonica = new URL(normalizarCaminho(Astro.url.pathname), Astro.site)
+// Sem imagem própria, usa a gerada no build para a página (/og/<pagina>.png).
+const caminho = normalizarCaminho(Astro.url.pathname)
+const imagem = new URL(image ?? `/og/${chaveDaPagina(caminho)}.png`, Astro.site).toString()
+const textoDaImagem = imageAlt ?? tituloCompleto
+const paginaInterna = caminho !== '/' && !noindex
+const dados = [...jsonLd, ...(paginaInterna ? [trilha(title, canonica.toString())] : [])]
+const robots = PREVIEW_NOINDEX || noindex ? 'noindex, nofollow' : 'index, follow'
+---
+
+<title>{tituloCompleto}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonica} />
+<meta name="robots" content={robots} />
+
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="pt_BR" />
+<meta property="og:site_name" content={NOME_DO_SITE} />
+<meta property="og:url" content={canonica} />
+<meta property="og:title" content={tituloCompleto} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={imagem} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={textoDaImagem} />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={tituloCompleto} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={imagem} />
+
+{dados.map((item) => (
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(item)} />
+))}

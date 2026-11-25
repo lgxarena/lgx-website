@@ -1,0 +1,143 @@
+---
+/**
+ * Números da casa no rodapé do hero. Quando a faixa entra na tela, os números sobem de zero,
+ * todos com a mesma animação; o da internet conta em Mbps até virar Gbps.
+ *
+ * O valor final já vem no HTML: sem JavaScript, ou com "reduzir movimento", nada anima.
+ * Leitores de tela leem só o valor final (a contagem fica em `aria-hidden`).
+ */
+interface Props {
+  anos: number
+  fundacao: number
+}
+
+const { anos, fundacao } = Astro.props
+
+type Numero = { valor: number; rotulo: string; sufixo?: string; unidade?: string; mbps?: boolean }
+
+const numeros: Numero[] = [
+  { valor: 40, rotulo: 'PCs entre Pro e VIP' },
+  { valor: 360, unidade: 'Hz', rotulo: 'monitores na Sala Pro' },
+  { valor: 2, unidade: 'Gbps', rotulo: 'de internet dedicada', mbps: true },
+  { valor: anos, unidade: 'anos', rotulo: `de LGX, desde ${fundacao}` },
+]
+---
+
+<dl data-numeros class="grid grid-cols-2 lg:grid-cols-4">
+  {numeros.map((numero, indice) => (
+    <div
+      class:list={[
+        'flex flex-col-reverse gap-2 py-7 lg:py-9',
+        indice % 2 === 1 && 'border-l border-fg/15 pl-5 sm:pl-8',
+        indice >= 2 && 'border-t border-fg/15 lg:border-t-0',
+        indice > 0 && 'lg:border-l lg:pl-8',
+      ]}
+    >
+      <dt class="text-[15px] text-fg-muted">{numero.rotulo}</dt>
+      <dd class="flex items-center gap-3 overflow-hidden">
+        <span class="sr-only">
+          {numero.valor}
+          {numero.sufixo}
+          {numero.unidade && ` ${numero.unidade}`}
+        </span>
+        <span
+          aria-hidden="true"
+          class="flex items-baseline gap-1.5 text-4xl font-extrabold tracking-tight tabular-nums md:text-5xl"
+        >
+          <span
+            data-contar={numero.valor}
+            data-sufixo={numero.sufixo}
+            data-mbps={numero.mbps ? '' : undefined}
+          >
+            {numero.valor}
+            {numero.sufixo}
+          </span>
+          {numero.unidade && (
+            <span class="text-xl font-bold text-fg-soft md:text-2xl" data-unidade>
+              {numero.unidade}
+            </span>
+          )}
+        </span>
+      </dd>
+    </div>
+  ))}
+</dl>
+
+<script>
+  const numeros = document.querySelector<HTMLElement>('[data-numeros]')
+  const reduzMovimento = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+  if (numeros && !reduzMovimento && 'IntersectionObserver' in window) {
+    const DURACAO = 1600
+    const suave = (progresso: number) => 1 - Math.pow(1 - progresso, 3)
+
+    /**
+     * "2000 Mbps" rola para cima e sai; "2 Gbps" entra por baixo, como num placar.
+     * O bloco do número tem `overflow-hidden`, então a troca acontece dentro da linha.
+     */
+    const virarGbps = (el: HTMLElement, unidade: HTMLElement, alvo: number) => {
+      const bloco = el.parentElement
+      if (!bloco) return
+      const saida = bloco.animate(
+        [
+          { transform: 'translateY(0)', opacity: 1 },
+          { transform: 'translateY(-70%)', opacity: 0 },
+        ],
+        { duration: 220, delay: 350, easing: 'cubic-bezier(0.55, 0, 1, 0.45)', fill: 'forwards' }
+      )
+      saida.onfinish = () => {
+        el.textContent = String(alvo)
+        unidade.textContent = 'Gbps'
+        bloco.animate(
+          [
+            { transform: 'translateY(70%)', opacity: 0 },
+            { transform: 'translateY(0)', opacity: 1 },
+          ],
+          { duration: 320, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' }
+        )
+        saida.cancel()
+      }
+    }
+
+    const animar = (el: HTMLElement) => {
+      const alvo = Number(el.dataset.contar)
+      const sufixo = el.dataset.sufixo ?? ''
+      // A internet conta em Mbps (0 → 2000) e, no fim, vira "2 Gbps", como num teste de velocidade.
+      const mbps = el.hasAttribute('data-mbps')
+      const unidade = el.parentElement?.querySelector<HTMLElement>('[data-unidade]')
+      const final = mbps ? alvo * 1000 : alvo
+      if (mbps && unidade) unidade.textContent = 'Mbps'
+
+      const inicio = performance.now()
+      const passo = (agora: number) => {
+        const progresso = Math.min(1, (agora - inicio) / DURACAO)
+        el.textContent = `${Math.round(final * suave(progresso))}${progresso === 1 ? sufixo : ''}`
+        if (progresso < 1) return requestAnimationFrame(passo)
+        if (mbps && unidade) virarGbps(el, unidade, alvo)
+      }
+      requestAnimationFrame(passo)
+    }
+
+    const contadores = [...numeros.querySelectorAll<HTMLElement>('[data-contar]')]
+
+    const observador = new IntersectionObserver(
+      ([entrada]) => {
+        if (!entrada?.isIntersecting) return
+        observador.disconnect()
+        contadores.forEach(animar)
+      },
+      { threshold: 0.5 }
+    )
+
+    // Só zera os números se a faixa ainda não estiver à vista (evita piscar o valor final).
+    const caixa = numeros.getBoundingClientRect()
+    if (caixa.top > window.innerHeight - caixa.height / 2) {
+      contadores.forEach((contador) => {
+        contador.textContent = '0'
+        const unidade = contador.parentElement?.querySelector<HTMLElement>('[data-unidade]')
+        if (contador.hasAttribute('data-mbps') && unidade) unidade.textContent = 'Mbps'
+      })
+    }
+    observador.observe(numeros)
+  }
+</script>

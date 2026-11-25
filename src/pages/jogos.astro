@@ -1,0 +1,393 @@
+---
+import { Image } from 'astro:assets'
+
+import Container from '@/components/ui/Container.astro'
+import Icon from '@/components/ui/Icon.astro'
+import SectionHeading from '@/components/ui/SectionHeading.astro'
+import Tag from '@/components/ui/Tag.astro'
+import Base from '@/layouts/Base.astro'
+import { getJogos, getSite } from '@/lib/conteudo'
+import { linkWhatsApp } from '@/lib/formatar'
+
+const [site, jogos] = await Promise.all([getSite(), getJogos()])
+
+// Só as categorias que têm jogo, das mais comuns para as menos comuns.
+const contagem = new Map<string, number>()
+for (const jogo of jogos) {
+  for (const categoria of jogo.data.categorias)
+    contagem.set(categoria, (contagem.get(categoria) ?? 0) + 1)
+}
+const categorias = [...contagem.entries()]
+  .sort(
+    (primeira, segunda) =>
+      segunda[1] - primeira[1] || primeira[0].localeCompare(segunda[0], 'pt-BR')
+  )
+  .map(([nome]) => nome)
+
+/** Minúsculas e sem acento, para a busca achar "acao" em "Ação". */
+const normalizar = (texto: string) =>
+  texto
+    .normalize('NFD')
+    .replace(/\p{Diacritic}/gu, '')
+    .toLowerCase()
+
+const MENSAGEM_PEDIDO = 'Olá! Queria pedir um jogo para a LGX Arena.'
+const linkPedido = linkWhatsApp(site.whatsapp, MENSAGEM_PEDIDO)
+---
+
+<Base
+  title="Jogos"
+  description={`Os ${jogos.length} jogos instalados nos PCs da LGX Arena, de Counter-Strike 2 e Valorant a League of Legends e Fortnite. Não achou o seu? Peça pelo WhatsApp.`}
+>
+  <Container class="flex flex-col gap-8 pt-14 pb-24 md:pt-18 md:pb-28">
+    <SectionHeading
+      as="h1"
+      title="Jogos"
+      description={`${jogos.length} jogos instalados em todos os PCs. Não achou o seu? Peça pelo WhatsApp.`}
+    />
+
+    <!--
+      O espaço da barra fica reservado (invisível) até o script ligar os filtros, para a lista
+      não pular. Sem JavaScript a barra some e a lista aparece inteira.
+    -->
+    <noscript>
+      <style>
+        [data-filtros] {
+          display: none !important;
+        }
+      </style>
+    </noscript>
+    <form
+      data-filtros
+      role="search"
+      aria-label="Buscar jogos"
+      class="invisible sticky top-20 z-30 -mx-4 flex flex-col gap-3 border-b border-line bg-bg/95 px-4 py-4 backdrop-blur-sm sm:mx-0 sm:px-0"
+    >
+      <div class="flex gap-3">
+        <label class="relative flex-1">
+          <span class="sr-only">Nome do jogo</span>
+          <Icon
+            name="search"
+            size={20}
+            class="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-fg-muted"
+          />
+          <input
+            type="search"
+            name="q"
+            placeholder="Buscar jogo"
+            autocomplete="off"
+            enterkeyhint="search"
+            class="min-h-12 w-full rounded-md border border-line-strong bg-surface pr-4 pl-12 text-[16px] text-fg placeholder:text-fg-muted focus:border-fg-muted"
+          />
+        </label>
+        <a
+          data-pedir
+          href={linkPedido}
+          target="_blank"
+          rel="noopener"
+          class="inline-flex min-h-12 shrink-0 items-center gap-2 rounded-md bg-surface-2 px-4 text-[15px] font-semibold text-fg no-underline transition-colors hover:bg-surface-3 hover:text-fg sm:px-5"
+        >
+          <Icon name="whatsapp" />
+          <span class="max-sm:sr-only">Pedir um jogo</span>
+          <span class="sr-only">(abre o WhatsApp em nova aba)</span>
+        </a>
+      </div>
+
+      <fieldset class="min-w-0">
+        <legend class="sr-only">Categoria</legend>
+        <div data-faixa class="relative">
+          <div
+            data-rolagem
+            class="categorias -mx-4 flex gap-2 overflow-x-auto px-4 py-1 [scrollbar-width:none] sm:mx-0 sm:px-0"
+          >
+            {['', ...categorias].map((categoria) => (
+              <label class="relative shrink-0">
+                <input
+                  type="radio"
+                  name="categoria"
+                  value={categoria}
+                  checked={categoria === ''}
+                  class="peer sr-only"
+                />
+                <span class="inline-flex min-h-11 cursor-pointer items-center rounded-full bg-surface-2 px-4 text-[15px] font-semibold whitespace-nowrap text-fg-soft transition-colors peer-checked:bg-fg peer-checked:text-bg peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent hover:bg-surface-3 peer-checked:hover:bg-fg">
+                  {categoria || 'Todos'}
+                </span>
+              </label>
+            ))}
+          </div>
+          {[-1, 1].map((lado) => (
+            <button
+              type="button"
+              data-seta={lado}
+              tabindex="-1"
+              aria-hidden="true"
+              class:list={[
+                'seta absolute top-1/2 z-10 hidden size-11 -translate-y-1/2 items-center justify-center rounded-full bg-surface-3 text-fg shadow-lg transition-opacity hover:bg-line-strong',
+                lado < 0 ? 'left-0' : 'right-0',
+              ]}
+            >
+              <Icon name={lado < 0 ? 'chevron-left' : 'chevron-right'} size={18} />
+            </button>
+          ))}
+        </div>
+      </fieldset>
+    </form>
+
+    <p data-total aria-live="polite" class="text-[15px] text-fg-muted">
+      {jogos.length} jogos
+    </p>
+
+    <ul
+      data-jogos
+      class="grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"
+    >
+      {jogos.map((jogo, indice) => (
+        <li
+          data-nome={normalizar(jogo.data.nome)}
+          data-categorias={jogo.data.categorias.join('|')}
+          style={`view-transition-name: jogo-${jogo.id}; view-transition-class: jogo`}
+          class:list={[
+            indice >= 2 && '[contain-intrinsic-size:auto_20rem] [content-visibility:auto]',
+          ]}
+        >
+          <figure class="flex flex-col gap-2.5">
+            <div class="relative">
+              <Image
+                src={jogo.data.capa}
+                alt=""
+                widths={[240, 360, 480]}
+                sizes="(min-width: 80rem) 240px, (min-width: 64rem) 19vw, (min-width: 40rem) 30vw, 45vw"
+                class="aspect-3/4 w-full rounded-lg bg-surface object-cover"
+                quality={60}
+                loading={indice < 2 ? 'eager' : 'lazy'}
+                fetchpriority={indice < 2 ? 'high' : 'auto'}
+              />
+              {jogo.data.popular && (
+                <Tag tone="accent" class="absolute top-2.5 left-2.5">
+                  Popular
+                </Tag>
+              )}
+            </div>
+            <figcaption class="flex flex-col gap-0.5">
+              <span class="font-semibold">{jogo.data.nome}</span>
+              <span class="text-sm text-fg-muted">{jogo.data.categorias.join(' · ')}</span>
+            </figcaption>
+          </figure>
+        </li>
+      ))}
+    </ul>
+
+    <div data-vazio hidden class="flex flex-col items-start gap-4 rounded-lg bg-surface px-6 py-8">
+      <div class="flex flex-col gap-1.5">
+        <h2 class="text-lg font-bold">
+          Não temos <span data-termo>esse jogo</span> ainda
+        </h2>
+        <p class="text-[15px] text-fg-muted">
+          Peça pelo WhatsApp: se der para instalar, ele entra nos PCs.
+        </p>
+      </div>
+      <a
+        data-pedir
+        href={linkPedido}
+        target="_blank"
+        rel="noopener"
+        class="inline-flex min-h-12 items-center gap-2 rounded-md bg-accent-strong px-5 text-[15px] font-semibold text-white no-underline transition-colors hover:bg-accent-deep hover:text-white"
+      >
+        <Icon name="whatsapp" />
+        Pedir este jogo
+        <span class="sr-only">(abre o WhatsApp em nova aba)</span>
+      </a>
+    </div>
+  </Container>
+</Base>
+
+<script
+  is:inline
+  type="application/json"
+  id="jogos-dados"
+  set:html={JSON.stringify({ whatsapp: site.whatsapp, mensagem: MENSAGEM_PEDIDO })}
+/>
+<script>
+  import { linkWhatsApp } from '@/lib/formatar'
+
+  const form = document.querySelector<HTMLFormElement>('[data-filtros]')
+  const lista = document.querySelector<HTMLElement>('[data-jogos]')
+  const total = document.querySelector<HTMLElement>('[data-total]')
+  const vazio = document.querySelector<HTMLElement>('[data-vazio]')
+  const termo = document.querySelector<HTMLElement>('[data-termo]')
+  const dados = JSON.parse(document.getElementById('jogos-dados')?.textContent ?? '{}') as {
+    whatsapp: string
+    mensagem: string
+  }
+
+  if (form && lista && total && vazio && termo) {
+    const busca = form.elements.namedItem('q') as HTMLInputElement
+    const itens = [...lista.querySelectorAll<HTMLElement>('li')]
+    const pedidos = [...document.querySelectorAll<HTMLAnchorElement>('[data-pedir]')]
+
+    const normalizar = (texto: string) =>
+      texto
+        .normalize('NFD')
+        .replace(/\p{Diacritic}/gu, '')
+        .toLowerCase()
+        .trim()
+
+    const categoriaAtual = () =>
+      form.querySelector<HTMLInputElement>('input[name="categoria"]:checked')?.value ?? ''
+
+    const aplicar = () => {
+      const textoBuscado = normalizar(busca.value)
+      const categoria = categoriaAtual()
+      let visiveis = 0
+
+      for (const item of itens) {
+        const nome = item.dataset.nome ?? ''
+        const categorias = (item.dataset.categorias ?? '').split('|')
+        const passa =
+          (!textoBuscado ||
+            nome.includes(textoBuscado) ||
+            categorias.some((categoriaDoJogo) =>
+              normalizar(categoriaDoJogo).includes(textoBuscado)
+            )) &&
+          (!categoria || categorias.includes(categoria))
+        item.hidden = !passa
+        if (passa) visiveis++
+      }
+
+      total.textContent = visiveis === 1 ? '1 jogo' : `${visiveis} jogos`
+      vazio.hidden = visiveis > 0
+      lista.hidden = visiveis === 0
+
+      // O pedido já leva o nome buscado, quando houver.
+      const nomeBuscado = busca.value.trim()
+      termo.textContent = nomeBuscado ? `“${nomeBuscado}”` : 'esse jogo'
+      const mensagem = nomeBuscado
+        ? `${dados.mensagem.replace(/\.$/, '')}: ${nomeBuscado}.`
+        : dados.mensagem
+      for (const link of pedidos) link.href = linkWhatsApp(dados.whatsapp, mensagem)
+
+      // Estado na URL, para compartilhar o link e voltar à mesma busca.
+      const url = new URL(location.href)
+      if (busca.value.trim()) url.searchParams.set('q', busca.value.trim())
+      else url.searchParams.delete('q')
+      if (categoria) url.searchParams.set('categoria', categoria)
+      else url.searchParams.delete('categoria')
+      history.replaceState(null, '', url)
+    }
+
+    // Lê o estado da URL ao abrir a página.
+    const params = new URLSearchParams(location.search)
+    busca.value = params.get('q') ?? ''
+    const inicial = params.get('categoria') ?? ''
+    const radio = [...form.querySelectorAll<HTMLInputElement>('input[name="categoria"]')].find(
+      (opcao) => opcao.value === inicial
+    )
+    if (radio) radio.checked = true
+
+    form.classList.remove('invisible')
+
+    // Faixa de categorias: esmaece a borda do lado que ainda tem mais para rolar e, com mouse,
+    // mostra setas para rolar (no toque, arrasta-se com o dedo; no teclado, as setas trocam a opção).
+    const faixaCategorias = form.querySelector<HTMLElement>('[data-faixa]')
+    const rolagem = form.querySelector<HTMLElement>('[data-rolagem]')
+    if (faixaCategorias && rolagem) {
+      const atualizarBordas = () => {
+        const fim = rolagem.scrollWidth - rolagem.clientWidth
+        faixaCategorias.toggleAttribute('data-mais-inicio', rolagem.scrollLeft > 2)
+        faixaCategorias.toggleAttribute('data-mais-fim', rolagem.scrollLeft < fim - 2)
+      }
+      rolagem.addEventListener('scroll', atualizarBordas, { passive: true })
+      new ResizeObserver(atualizarBordas).observe(rolagem)
+      for (const seta of faixaCategorias.querySelectorAll<HTMLButtonElement>('[data-seta]')) {
+        seta.addEventListener('click', () => {
+          const lado = Number(seta.dataset.seta)
+          rolagem.scrollBy({ left: lado * rolagem.clientWidth * 0.7, behavior: 'smooth' })
+        })
+      }
+    }
+    // Traz para a vista a categoria escolhida, se ela estiver fora da faixa rolável.
+    const faixa = radio?.closest('label')
+    if (radio?.value && faixa?.parentElement) {
+      faixa.parentElement.scrollLeft = faixa.offsetLeft - faixa.parentElement.clientWidth / 2
+    }
+    // Ao filtrar, os jogos que ficam deslizam até o novo lugar, os que saem somem e os que voltam
+    // aparecem (View Transitions). Sem suporte, ou com "reduzir movimento", a lista só troca.
+    const reduzMovimento = window.matchMedia('(prefers-reduced-motion: reduce)')
+    form.addEventListener('input', () => {
+      if (!document.startViewTransition || reduzMovimento.matches) return aplicar()
+      document.startViewTransition(aplicar)
+    })
+    form.addEventListener('submit', (evento) => {
+      evento.preventDefault()
+      busca.blur()
+    })
+    aplicar()
+  }
+</script>
+
+<style>
+  /* Borda esmaecida só do lado que tem mais categorias escondidas. */
+  .categorias {
+    --esq: 0px;
+    --dir: 0px;
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 var(--esq),
+      #000 calc(100% - var(--dir)),
+      transparent
+    );
+  }
+
+  [data-mais-inicio] .categorias {
+    --esq: 4rem;
+  }
+
+  [data-mais-fim] .categorias {
+    --dir: 4rem;
+  }
+
+  @media (pointer: fine) {
+    [data-mais-inicio] .seta[data-seta='-1'],
+    [data-mais-fim] .seta[data-seta='1'] {
+      display: flex;
+    }
+  }
+</style>
+
+<style is:global>
+  /* A página em volta não pisca: só os jogos animam. */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+
+  ::view-transition-group(*.jogo) {
+    animation-duration: 320ms;
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  /* Jogo que volta para a lista: cresce de leve enquanto aparece. */
+  ::view-transition-new(*.jogo):only-child {
+    animation: jogo-entra 320ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+
+  /* Jogo que sai da lista: encolhe e some. */
+  ::view-transition-old(*.jogo):only-child {
+    animation: jogo-sai 180ms ease-in both;
+  }
+
+  @keyframes jogo-entra {
+    from {
+      opacity: 0;
+      scale: 0.92;
+    }
+  }
+
+  @keyframes jogo-sai {
+    to {
+      opacity: 0;
+      scale: 0.92;
+    }
+  }
+</style>

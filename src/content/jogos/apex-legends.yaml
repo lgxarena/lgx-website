@@ -1,0 +1,7 @@
+nome: 'Apex Legends'
+capa: ./apex-legends.jpg
+categorias:
+  - Battle Royale
+  - FPS
+  - Tiro
+popular: false

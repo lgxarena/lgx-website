@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [dev, main]
+  push:
+    branches: [dev]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  qualidade:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Lint
+        run: pnpm lint
+      - name: Prettier
+        run: pnpm prettier --check .
+      - name: Tipos e diagnósticos do Astro
+        run: pnpm check
+      - name: Build
+        run: pnpm build
+      - name: Lighthouse (Performance, Acessibilidade e SEO ≥ 95)
+        run: pnpm lighthouse

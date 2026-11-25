@@ -1,0 +1,21 @@
+nome: Sala Pro
+resumo: Alienware 360 Hz · RTX 3060 · i5 13400
+ordem: 1
+hardware:
+  - item: Processador
+    modelo: Intel Core i5 13400
+  - item: Memória
+    modelo: 16GB DDR5 5600 MHz
+  - item: Placa de vídeo
+    modelo: RTX 3060 12GB
+  - item: Monitor
+    modelo: Alienware 25” 360Hz 0.5ms
+perifericos:
+  - item: Teclado
+    modelo: Redragon Kumara
+  - item: Mouse
+    modelo: Redragon Cobra
+  - item: Headset
+    modelo: Redragon Zeus
+  - item: Mousepad
+    modelo: Redragon Flick S

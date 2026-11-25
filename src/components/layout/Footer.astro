@@ -1,0 +1,86 @@
+---
+import RedesSociais from '@/components/ui/RedesSociais.astro'
+import Icon from '@/components/ui/Icon.astro'
+import { getHorarios, getSite } from '@/lib/conteudo'
+import { formatarTelefone, linkWhatsApp } from '@/lib/formatar'
+import { MENU_AJUDA } from '@/lib/navegacao'
+
+import Brand from './Brand.astro'
+
+const [site, horarios] = await Promise.all([getSite(), getHorarios()])
+const { endereco } = site
+
+const ajuda = [...MENU_AJUDA, { rotulo: 'Empresas & times', href: '/empresas' }]
+const tituloColuna = 'mb-4 text-[13px] font-bold tracking-widest text-fg uppercase'
+const linkColuna = 'flex min-h-11 items-center text-fg-muted no-underline hover:text-fg'
+---
+
+<footer class="border-t border-line bg-bg-alt pt-16 pb-10">
+  <div class="container-page grid gap-12 sm:grid-cols-2 lg:grid-cols-[2fr_1.2fr_1fr_1fr]">
+    <div class="flex flex-col gap-5">
+      <Brand width={128} />
+      <address class="text-[15px] leading-relaxed text-fg-muted not-italic">
+        {endereco.logradouro}
+        <br />
+        {endereco.bairro}, {endereco.cidade} – {endereco.uf}
+      </address>
+      <a
+        href="/contato"
+        class="inline-flex min-h-11 items-center gap-1.5 self-start font-semibold no-underline"
+      >
+        Como chegar <Icon name="arrow-right" size={18} />
+      </a>
+      <RedesSociais />
+    </div>
+
+    <div>
+      <h2 class={tituloColuna}>Horários</h2>
+      <dl class="flex flex-col gap-2.5 text-[15px]">
+        {horarios.map((horario) => (
+          <div class="flex justify-between gap-4">
+            <dt class="text-fg-muted">{horario.data.rotulo}</dt>
+            <dd class="tabular-nums">
+              {horario.data.abre} – {horario.data.fecha}
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+
+    <div>
+      <h2 class={tituloColuna}>Contato</h2>
+      <ul class="text-[15px]">
+        <li>
+          <a href={linkWhatsApp(site.whatsapp)} target="_blank" rel="noopener" class={linkColuna}>
+            WhatsApp
+          </a>
+        </li>
+        <li>
+          <a href={`tel:${site.telefone}`} class={linkColuna}>
+            {formatarTelefone(site.telefone)}
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <nav aria-label="Ajuda">
+      <h2 class={tituloColuna}>Ajuda</h2>
+      <ul class="text-[15px]">
+        {ajuda.map((item) => (
+          <li>
+            <a href={item.href} class={linkColuna}>
+              {item.rotulo}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+
+  <div class="container-page mt-12">
+    <p class="border-t border-line pt-6 text-[13px] text-fg-subtle">
+      © {new Date().getFullYear()} {site.razaoSocial} · CNPJ {site.cnpj}. Todos os direitos
+      reservados.
+    </p>
+  </div>
+</footer>

@@ -1,0 +1,7 @@
+nome: 'League of Legends'
+capa: ./league-of-legends.jpg
+categorias:
+  - MOBA
+  - Estratégia
+  - Competitivo
+popular: true

@@ -1,0 +1,6 @@
+nome: 'Crossfire'
+capa: ./crossfire.jpg
+categorias:
+  - FPS
+  - Tiro
+popular: false

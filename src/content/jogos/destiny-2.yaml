@@ -1,0 +1,9 @@
+nome: 'Destiny 2'
+capa: ./destiny-2.jpg
+categorias:
+  - FPS
+  - MMO
+  - Aventura
+  - RPG
+  - Sci-Fi
+popular: false

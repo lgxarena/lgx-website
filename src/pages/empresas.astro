@@ -1,0 +1,116 @@
+---
+import CabecalhoEventos from '@/components/eventos/CabecalhoEventos.astro'
+import BotaoReservar from '@/components/ui/BotaoReservar.astro'
+import ChamadaReserva from '@/components/ui/ChamadaReserva.astro'
+import Container from '@/components/ui/Container.astro'
+import Icon from '@/components/ui/Icon.astro'
+import Placeholder from '@/components/ui/Placeholder.astro'
+import Base from '@/layouts/Base.astro'
+
+const MENSAGEM = 'Olá! Quero um orçamento de evento na LGX Arena para empresa ou time.'
+
+const formatos = [
+  {
+    titulo: 'Bootcamp',
+    texto: 'Treino concentrado de times amadores e profissionais, com servidor dedicado.',
+  },
+  {
+    titulo: 'Mix',
+    texto: 'Partidas entre jogadores que se inscrevem sozinhos, com times sorteados na hora.',
+  },
+  {
+    titulo: 'Campeonato interno',
+    texto: 'Para empresas, faculdades e instituições, em qualquer jogo da casa.',
+  },
+  {
+    titulo: 'Confraternização',
+    texto: 'Fim de ano, integração de equipe ou happy hour gamer, com a lanchonete.',
+  },
+]
+
+const numeros = [
+  { valor: '40', rotulo: 'PCs de alta performance' },
+  { valor: '2 Gbps', rotulo: 'de internet dedicada' },
+  { valor: '360 Hz', rotulo: 'monitores na Sala Pro' },
+]
+
+const paraOrcamento = [
+  'Data e horário',
+  'Número de pessoas',
+  'Jogo ou jogos',
+  'Se precisa da casa fechada',
+  'Se quer comida',
+]
+
+const titulo2 = 'text-[28px] font-extrabold'
+---
+
+<Base
+  title="Empresas e times"
+  description="Bootcamps, mix, campeonatos internos e confraternizações na LGX Arena, com 40 PCs, internet de 2 Gbps e servidores dedicados. Peça o orçamento pelo WhatsApp."
+>
+  <Container class="flex flex-col gap-16 pt-10 pb-24 md:pt-14 md:pb-28">
+    <CabecalhoEventos
+      titulo="Empresas & times"
+      descricao="Bootcamps, mix, treinos de equipe, campeonatos internos e confraternizações. Se precisar, a casa fica fechada só para o seu grupo."
+    >
+      <BotaoReservar slot="acoes" size="lg" mensagem={MENSAGEM}>
+        Pedir orçamento
+      </BotaoReservar>
+    </CabecalhoEventos>
+
+    <Placeholder label="Evento corporativo ou bootcamp" class="h-56 md:h-96" />
+
+    <section aria-labelledby="formatos" class="flex flex-col gap-6">
+      <h2 id="formatos" class={titulo2}>
+        Formatos
+      </h2>
+      <ul class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {formatos.map((formato) => (
+          <li class="flex flex-col gap-2 rounded-lg bg-surface p-6">
+            <h3 class="text-lg font-bold">{formato.titulo}</h3>
+            <p class="text-[15px] leading-relaxed text-fg-soft">{formato.texto}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section aria-labelledby="infra" class="flex flex-col gap-6">
+      <h2 id="infra" class={titulo2}>
+        Infraestrutura
+      </h2>
+      <dl class="grid gap-3 sm:grid-cols-3">
+        {numeros.map((numero) => (
+          <div class="flex flex-col-reverse gap-1 rounded-lg bg-surface px-5 py-5">
+            <dt class="text-[15px] text-fg-muted">{numero.rotulo}</dt>
+            <dd class="text-3xl font-extrabold tracking-tight tabular-nums">{numero.valor}</dd>
+          </div>
+        ))}
+      </dl>
+      <p class="text-[17px] text-fg-soft">
+        Também: servidores dedicados, sala de stream, cadeiras gamer e lanchonete própria.{' '}
+        <a href="/espaco" class="inline-flex min-h-11 items-center gap-1 font-semibold">
+          Ver o espaço <Icon name="arrow-right" size={16} />
+        </a>
+      </p>
+    </section>
+
+    <section aria-labelledby="orcamento" class="flex flex-col gap-4">
+      <h2 id="orcamento" class={titulo2}>
+        Para o orçamento, mande
+      </h2>
+      <ul class="flex flex-wrap gap-2">
+        {paraOrcamento.map((item) => (
+          <li class="rounded-full bg-surface-2 px-4 py-2 text-[15px] font-semibold">{item}</li>
+        ))}
+      </ul>
+    </section>
+
+    <ChamadaReserva
+      titulo="Vamos montar o seu evento?"
+      texto="A mensagem já vai pedindo o orçamento para empresa ou time."
+      mensagem={MENSAGEM}
+      rotuloBotao="Pedir orçamento"
+    />
+  </Container>
+</Base>

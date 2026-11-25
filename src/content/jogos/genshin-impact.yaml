@@ -1,0 +1,7 @@
+nome: 'Genshin Impact'
+capa: ./genshin-impact.jpg
+categorias:
+  - RPG de Ação
+  - Aventura
+  - Fantasia
+popular: false

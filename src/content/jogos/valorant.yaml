@@ -1,0 +1,7 @@
+nome: 'Valorant'
+capa: ./valorant.jpg
+categorias:
+  - FPS
+  - Tiro
+  - Competitivo
+popular: true
