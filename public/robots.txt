@@ -1,4 +1,0 @@
-# Preview da branch dev: fora dos buscadores até a virada (#25).
-# Na virada, trocar por "Allow: /" + Sitemap.
-User-agent: *
-Disallow: /

@@ -39,6 +39,8 @@ const site = defineCollection({
       uf: z.string().length(2),
       cep: z.string().optional(),
       mapa: z.url(),
+      /** Coordenadas do pino no mapa, para os dados estruturados (Google). */
+      geo: z.object({ latitude: z.number(), longitude: z.number() }).optional(),
     }),
     redes: z.object({
       instagram: z.url(),

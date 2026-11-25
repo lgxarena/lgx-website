@@ -7,6 +7,7 @@ import Pergunta from '@/components/ui/Pergunta.astro'
 import SectionHeading from '@/components/ui/SectionHeading.astro'
 import Base from '@/layouts/Base.astro'
 import { getFaq } from '@/lib/conteudo'
+import { paginaDePerguntas } from '@/lib/dadosEstruturados'
 
 const temas = await Promise.all(
   (await getFaq()).map(async (tema) => ({
@@ -19,9 +20,11 @@ const temas = await Promise.all(
     ),
   }))
 )
+const dadosEstruturados = [paginaDePerguntas(temas.flatMap((tema) => tema.perguntas))]
 ---
 
 <Base
+  jsonLd={dadosEstruturados}
   title="Perguntas frequentes"
   description="Reservas, preços, idade, comida, estacionamento e jogos: as dúvidas mais comuns sobre a LGX Arena."
 >

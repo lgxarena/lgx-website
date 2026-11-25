@@ -8,6 +8,7 @@ import Placeholder from '@/components/ui/Placeholder.astro'
 import Base from '@/layouts/Base.astro'
 import { getCampeonatos, getSite } from '@/lib/conteudo'
 import { formatarPreco } from '@/lib/formatar'
+import { evento } from '@/lib/dadosEstruturados'
 
 const [site, { proximos, anteriores }] = await Promise.all([getSite(), getCampeonatos()])
 
@@ -18,9 +19,11 @@ const mes = (data: Date) =>
 const ano = (data: Date) => data.toLocaleDateString('pt-BR', { year: 'numeric', timeZone: fuso })
 
 const titulo2 = 'text-[28px] font-extrabold'
+const dadosEstruturados = proximos.map(evento)
 ---
 
 <Base
+  jsonLd={dadosEstruturados}
   title="Campeonatos"
   description="LGX CUP e Liga SP: próximos campeonatos, inscrições, ranking e campeões anteriores da LGX Arena."
 >

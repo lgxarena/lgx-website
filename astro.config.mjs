@@ -1,4 +1,5 @@
 // @ts-check
+import sitemap from '@astrojs/sitemap'
 import tailwindcss from '@tailwindcss/vite'
 import { defineConfig, fontProviders } from 'astro/config'
 
@@ -10,6 +11,10 @@ export default defineConfig({
   build: {
     format: 'file',
   },
+  integrations: [
+    // Fora do sitemap: o guia de componentes e a página 404.
+    sitemap({ filter: (pagina) => !/\/(componentes|404)$/.test(new URL(pagina).pathname) }),
+  ],
   fonts: [
     {
       provider: fontProviders.fontsource(),

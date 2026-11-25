@@ -11,6 +11,7 @@ import Section from '@/components/ui/Section.astro'
 import SectionHeading from '@/components/ui/SectionHeading.astro'
 import Base from '@/layouts/Base.astro'
 import { getJogos, getSalas, getSite } from '@/lib/conteudo'
+import { negocio, organizacao } from '@/lib/dadosEstruturados'
 
 const [site, salas, jogos] = await Promise.all([getSite(), getSalas(), getJogos()])
 const maisJogados = jogos.filter((jogo) => jogo.data.popular).slice(0, 5)
@@ -37,9 +38,11 @@ const eventos = [
     acao: 'Pedir orçamento',
   },
 ]
+const dadosEstruturados = await Promise.all([negocio(), organizacao()])
 ---
 
 <Base
+  jsonLd={dadosEstruturados}
   title={`${site.nome}: centro de games e e-sports em São Paulo`}
   description="Salas Pro e VIP, com PCs de alta performance, internet de 2 Gbps e Corujão de madrugada. Na Av. Cupecê, Jardim Prudência, São Paulo."
 >

@@ -10,7 +10,11 @@ endereco:
   bairro: Jardim Prudência
   cidade: São Paulo
   uf: SP
+  cep: '04366-001'
   mapa: https://maps.app.goo.gl/LJ4SzpHvXiL5AQ2ZA
+  geo:
+    latitude: -23.684011
+    longitude: -46.6342673
 redes:
   instagram: https://instagram.com/lgxarena
   tiktok: https://tiktok.com/@lgxlan
