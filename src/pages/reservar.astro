@@ -1,0 +1,23 @@
+---
+/**
+ * /reservar abre o WhatsApp com a mensagem de reserva. Existe para o atalho "Reservar" do
+ * app instalado (manifest) e para links antigos; o site em si usa o botão direto.
+ */
+import BotaoReservar from '@/components/ui/BotaoReservar.astro'
+import Container from '@/components/ui/Container.astro'
+import Base from '@/layouts/Base.astro'
+import { getSite } from '@/lib/conteudo'
+import { linkWhatsApp } from '@/lib/formatar'
+
+const site = await getSite()
+const destino = linkWhatsApp(site.whatsapp, 'Olá! Quero reservar PCs na LGX Arena.')
+---
+
+<Base title="Reservar" description="Reserve seu PC na LGX Arena pelo WhatsApp." noindex>
+  <meta slot="head" http-equiv="refresh" content={`0; url=${destino}`} />
+  <Container class="flex flex-col items-start gap-4 py-20 md:py-28">
+    <h1 class="text-3xl font-extrabold">Abrindo o WhatsApp…</h1>
+    <p class="text-fg-muted">Se não abrir sozinho, toque no botão.</p>
+    <BotaoReservar size="lg">Reservar pelo WhatsApp</BotaoReservar>
+  </Container>
+</Base>

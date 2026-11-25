@@ -1,0 +1,56 @@
+---
+import Container from '@/components/ui/Container.astro'
+import Base from '@/layouts/Base.astro'
+import { getHorarios, getSite } from '@/lib/conteudo'
+import { formatarTelefone } from '@/lib/formatar'
+
+const [site, horarios] = await Promise.all([getSite(), getHorarios()])
+const { endereco } = site
+---
+
+<!-- Página mostrada pelo service worker quando não há internet e a página pedida não foi guardada. -->
+<Base title="Sem conexão" description="Você está sem internet." noindex>
+  <Container class="flex max-w-2xl flex-col gap-8 py-20 md:py-28">
+    <div class="flex flex-col gap-3">
+      <h1 class="text-4xl font-extrabold tracking-tight md:text-[56px] md:leading-tight">
+        Sem conexão
+      </h1>
+      <p class="text-lg leading-relaxed text-fg-muted">
+        Parece que a internet caiu. Assim que voltar, a página carrega. Enquanto isso, o essencial
+        da LGX:
+      </p>
+    </div>
+
+    <dl class="flex flex-col gap-5 rounded-lg bg-surface p-6">
+      <div class="flex flex-col gap-1">
+        <dt class="text-[15px] text-fg-muted">Telefone e WhatsApp</dt>
+        <dd>
+          <a href={`tel:${site.telefone}`} class="text-xl font-bold">
+            {formatarTelefone(site.telefone)}
+          </a>
+        </dd>
+      </div>
+      <div class="flex flex-col gap-1">
+        <dt class="text-[15px] text-fg-muted">Endereço</dt>
+        <dd class="font-semibold">
+          {endereco.logradouro}, {endereco.bairro}, {endereco.cidade} – {endereco.uf}
+        </dd>
+      </div>
+      <div class="flex flex-col gap-2">
+        <dt class="text-[15px] text-fg-muted">Horários</dt>
+        <dd>
+          <ul class="flex flex-col">
+            {horarios.map((horario) => (
+              <li class="flex justify-between gap-4 border-t border-line py-2 first:border-t-0">
+                <span class="text-fg-soft">{horario.data.rotulo}</span>
+                <span class="font-semibold tabular-nums">
+                  {horario.data.abre} – {horario.data.fecha}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </dd>
+      </div>
+    </dl>
+  </Container>
+</Base>
