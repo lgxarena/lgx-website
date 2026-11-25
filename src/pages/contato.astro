@@ -7,6 +7,7 @@ import SectionHeading from '@/components/ui/SectionHeading.astro'
 import Base from '@/layouts/Base.astro'
 import { getSite } from '@/lib/conteudo'
 import { formatarTelefone } from '@/lib/formatar'
+import { negocio } from '@/lib/dadosEstruturados'
 
 const site = await getSite()
 const { endereco } = site
@@ -31,9 +32,11 @@ const vagas = [
 ]
 
 const titulo2 = 'text-[28px] font-extrabold'
+const dadosEstruturados = [await negocio()]
 ---
 
 <Base
+  jsonLd={dadosEstruturados}
   title="Como chegar"
   description={`LGX Arena: ${enderecoCompleto}. Mapa, horários, contato e estacionamento no condomínio.`}
 >
