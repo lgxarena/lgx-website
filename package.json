@@ -15,7 +15,8 @@
     "lint": "eslint . --max-warnings 0",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
-    "prepare": "husky"
+    "prepare": "husky",
+    "icones": "node scripts/gerar-icones.mjs"
   },
   "lint-staged": {
     "*.{astro,ts,tsx,js,mjs}": [
