@@ -1,7 +1,6 @@
 ---
 import { render } from 'astro:content'
 
-import Button from '@/components/ui/Button.astro'
 import Container from '@/components/ui/Container.astro'
 import SectionHeading from '@/components/ui/SectionHeading.astro'
 import Base from '@/layouts/Base.astro'
@@ -21,16 +20,11 @@ const regras = await Promise.all(
   description="Regras da LGX Arena: cadastro, reservas, equipamentos pessoais, o que não é permitido e as regras do condomínio."
 >
   <Container class="flex flex-col gap-12 pt-14 pb-24 md:pt-18 md:pb-28">
-    <div class="flex flex-wrap items-end justify-between gap-6">
-      <SectionHeading
-        as="h1"
-        title="Regras da casa"
-        description="Descumprir as regras pode levar à suspensão do cadastro e à proibição de entrada."
-      />
-      <Button href="/regras.pdf" variant="secondary" download>
-        Baixar em PDF
-      </Button>
-    </div>
+    <SectionHeading
+      as="h1"
+      title="Regras da casa"
+      description="Descumprir as regras pode levar à suspensão do cadastro e à proibição de entrada."
+    />
 
     <div class="grid gap-10 lg:grid-cols-[14rem_1fr] lg:gap-16">
       <nav aria-label="Seções das regras" class="lg:sticky lg:top-28 lg:self-start">
