@@ -78,9 +78,14 @@ const linkColuna = 'flex min-h-11 items-center text-fg-muted no-underline hover:
   </div>
 
   <div class="container-page mt-12">
-    <p class="border-t border-line pt-6 text-[13px] text-fg-subtle">
-      © {new Date().getFullYear()} {site.razaoSocial} · CNPJ {site.cnpj}. Todos os direitos
-      reservados.
-    </p>
+    <div class="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-t border-line pt-6 text-[13px] text-fg-subtle">
+      <p>
+        © {new Date().getFullYear()} {site.razaoSocial} · CNPJ {site.cnpj}. Todos os direitos
+        reservados.
+      </p>
+      <a href="/privacidade" class="inline-flex min-h-11 items-center text-fg-muted hover:text-fg">
+        Privacidade
+      </a>
+    </div>
   </div>
 </footer>
