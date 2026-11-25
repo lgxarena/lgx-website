@@ -19,53 +19,15 @@ const atalhos = [
   noindex
 >
   <div class="container-page flex flex-col gap-16 py-20 md:py-28">
-    <div class="flex flex-col items-center gap-5 text-center">
-      <!-- Controle desenhado: os botões piscam como se alguém apertasse, sem "reduzir movimento". -->
-      <svg viewBox="-6 10 252 142" aria-hidden="true" class="controle mb-2 w-56 md:w-72">
-        <path
-          d="M60 20H180C210 20 228 40 234 75L240 112C243 132 230 146 212 144C198 143 190 134 182 120L170 100H70L58 120C50 134 42 143 28 144C10 146-3 132 0 112L6 75C12 40 30 20 60 20Z"
-          class="fill-surface-3 stroke-line-strong"
-          stroke-width="2"
-        ></path>
-        <g class="fill-fg-muted">
-          <rect x="54" y="48" width="14" height="40" rx="3"></rect>
-          <rect x="41" y="61" width="40" height="14" rx="3"></rect>
-        </g>
-        <circle cx="178" cy="50" r="8" class="botao fill-accent"></circle>
-        <circle cx="196" cy="68" r="8" class="botao fill-accent"></circle>
-        <circle cx="178" cy="86" r="8" class="botao fill-accent"></circle>
-        <circle cx="160" cy="68" r="8" class="botao fill-accent"></circle>
-        <rect x="104" y="52" width="14" height="6" rx="3" class="fill-fg-muted"></rect>
-        <rect x="124" y="52" width="14" height="6" rx="3" class="fill-fg-muted"></rect>
-        <circle
-          cx="94"
-          cy="100"
-          r="13"
-          class="fill-bg stroke-line-strong"
-          stroke-width="2"
-        ></circle>
-        <circle
-          cx="146"
-          cy="100"
-          r="13"
-          class="fill-bg stroke-line-strong"
-          stroke-width="2"
-        ></circle>
-      </svg>
-
-      <p class="text-sm font-bold tracking-[0.12em] text-link uppercase">
-        Erro 404 · Fase não encontrada
-      </p>
-      <h1 class="text-4xl font-extrabold tracking-tight md:text-[56px] md:leading-tight">
-        Game Over!
-      </h1>
-      <p class="max-w-xl text-lg leading-relaxed text-fg-muted">
-        Você saiu do mapa e caiu fora da zona. Essa fase não existe, mas relaxa: sem perder XP.
-        Aperte start e volte para o lobby.
+    <div class="flex flex-col items-center gap-4 text-center">
+      <Icon name="gamepad" size={48} class="text-fg" />
+      <h1 class="text-3xl font-extrabold tracking-tight md:text-4xl">Game Over!</h1>
+      <p class="max-w-md text-[17px] leading-relaxed text-fg-muted">
+        Essa área está fora de alcance. Parece que você foi para um mapa secreto… e ele não existe!
       </p>
       <div class="mt-3 grid w-full gap-3 sm:flex sm:w-auto sm:justify-center">
         <Button href="/" size="lg">
-          Voltar para o lobby
+          Voltar para o início
         </Button>
         <BotaoReservar size="lg" variant="secondary">
           Reservar um PC
@@ -100,50 +62,3 @@ const atalhos = [
     </nav>
   </div>
 </Base>
-
-<style>
-  .controle {
-    animation: flutua 3.2s ease-in-out infinite;
-  }
-
-  .botao {
-    animation: aperta 2.4s ease-in-out infinite;
-  }
-
-  .botao:nth-of-type(2) {
-    animation-delay: 0.6s;
-  }
-
-  .botao:nth-of-type(3) {
-    animation-delay: 1.2s;
-  }
-
-  .botao:nth-of-type(4) {
-    animation-delay: 1.8s;
-  }
-
-  @keyframes flutua {
-    50% {
-      translate: 0 -8px;
-    }
-  }
-
-  @keyframes aperta {
-    0%,
-    70%,
-    100% {
-      opacity: 1;
-    }
-
-    80% {
-      opacity: 0.35;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .controle,
-    .botao {
-      animation: none;
-    }
-  }
-</style>
