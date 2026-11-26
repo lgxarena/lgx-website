@@ -1,6 +1,7 @@
 import { defineMiddleware } from 'astro:middleware'
 
 import { MODO_PAINEL_GITHUB } from '@/lib/painel'
+import coresDoPainelComentadas from '@/styles/painel.css?raw'
 
 /**
  * Painel de edição (/keystatic): única parte do site que roda no Worker. A interface do Keystatic
@@ -44,12 +45,24 @@ const precisaEntrar = (caminho: string, cookies: { has: (nome: string) => boolea
   !cookies.has('keystatic-gh-access-token') &&
   !cookies.has('keystatic-gh-refresh-token')
 
+const coresDoPainel = coresDoPainelComentadas.replace(/\/\*[\s\S]*?\*\//g, '').trim()
+
+/** Coloca as cores da LGX (src/styles/painel.css) no HTML das telas do painel. */
+const comCoresDaLgx = async (resposta: Response) => {
+  if (!resposta.headers.get('content-type')?.includes('text/html')) return resposta
+  const html = await resposta.text()
+  return new Response(
+    html.replace(/<!doctype html>/i, `$&<style>${coresDoPainel}</style>`),
+    resposta
+  )
+}
+
 export const onRequest = defineMiddleware(async (contexto, proximo) => {
   if (contexto.isPrerendered || !ehDoPainel(contexto.url.pathname)) return proximo()
 
   const resposta = precisaEntrar(contexto.url.pathname, contexto.cookies)
     ? contexto.redirect('/painel', 302)
-    : await proximo()
+    : await comCoresDaLgx(await proximo())
 
   // Cópia da resposta: redirecionamentos (Response.redirect) têm cabeçalhos imutáveis.
   const respostaDoPainel = new Response(resposta.body, resposta)

@@ -68,6 +68,8 @@ export default config({
   singletons: {
     site: singleton({
       label: 'Dados do site',
+      // previewUrl: botão do painel que abre a página do site onde esse conteúdo aparece.
+      previewUrl: '/contato',
       path: 'src/content/site/geral',
       format: { data: 'yaml' },
       schema: {
@@ -114,6 +116,7 @@ export default config({
   collections: {
     avisos: collection({
       label: 'Avisos no topo',
+      previewUrl: '/',
       path: 'src/content/avisos/*',
       slugField: 'texto',
       format: { data: 'yaml' },
@@ -146,6 +149,7 @@ export default config({
 
     horarios: collection({
       label: 'Horários',
+      previewUrl: '/',
       path: 'src/content/horarios/*',
       slugField: 'rotulo',
       format: { data: 'yaml' },
@@ -176,6 +180,7 @@ export default config({
 
     planos: collection({
       label: 'Preços e pacotes',
+      previewUrl: '/precos',
       path: 'src/content/planos/*',
       slugField: 'nome',
       format: { data: 'yaml' },
@@ -208,6 +213,7 @@ export default config({
 
     jogos: collection({
       label: 'Jogos',
+      previewUrl: '/jogos',
       path: 'src/content/jogos/*',
       slugField: 'nome',
       format: { data: 'yaml' },
@@ -231,6 +237,7 @@ export default config({
 
     cardapio: collection({
       label: 'Cardápio',
+      previewUrl: '/cardapio',
       path: 'src/content/cardapio/*',
       slugField: 'nome',
       format: { data: 'yaml' },
@@ -255,6 +262,7 @@ export default config({
 
     campeonatos: collection({
       label: 'Campeonatos',
+      previewUrl: '/campeonatos',
       path: 'src/content/campeonatos/*',
       slugField: 'nome',
       format: { data: 'yaml' },
@@ -273,6 +281,7 @@ export default config({
 
     avaliacoes: collection({
       label: 'Avaliações do Google',
+      previewUrl: '/',
       path: 'src/content/avaliacoes/*',
       slugField: 'autor',
       format: { data: 'yaml' },
@@ -294,6 +303,9 @@ export default config({
 
     faq: collection({
       label: 'Perguntas frequentes',
+      previewUrl: '/faq',
+      // Texto ocupa a tela; os outros campos vão para a lateral.
+      entryLayout: 'content',
       path: 'src/content/faq/*',
       slugField: 'pergunta',
       format: { contentField: 'resposta' },
@@ -318,6 +330,9 @@ export default config({
 
     regras: collection({
       label: 'Regras da casa',
+      previewUrl: '/regras',
+      // Texto ocupa a tela; os outros campos vão para a lateral.
+      entryLayout: 'content',
       path: 'src/content/regras/*',
       slugField: 'titulo',
       format: { contentField: 'texto' },
@@ -331,6 +346,7 @@ export default config({
 
     salas: collection({
       label: 'Salas',
+      previewUrl: '/espaco',
       path: 'src/content/salas/*',
       slugField: 'nome',
       format: { data: 'yaml' },
