@@ -46,14 +46,9 @@ const titulo2 = 'text-[28px] font-extrabold'
       titulo="Aniversário na LGX"
       descricao="Junte a galera para jogar com PCs reservados e buffet completo. O valor muda conforme o tempo de permanência e o número de pessoas."
     >
-      <Fragment slot="acoes">
-        <BotaoReservar size="lg" mensagem={MENSAGEM}>
-          Pedir orçamento
-        </BotaoReservar>
-        <p class="text-[15px] text-fg-muted">
-          a partir de <b class="text-fg">[R$ —]</b> por pessoa
-        </p>
-      </Fragment>
+      <BotaoReservar slot="acoes" size="lg" mensagem={MENSAGEM}>
+        Pedir orçamento
+      </BotaoReservar>
     </CabecalhoEventos>
 
     <Placeholder label="Foto de uma festa na LGX" class="h-56 md:h-96" />
