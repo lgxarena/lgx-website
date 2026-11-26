@@ -7,10 +7,10 @@
  * "Salvar" vira um commit no repositório (só quem tem permissão de escrita consegue salvar).
  */
 import { collection, config, fields, singleton } from '@keystatic/core'
+import { createElement } from 'react'
 
 import { categoriasDeJogo } from './src/content/categorias'
-
-const modoGitHub = import.meta.env.PROD || import.meta.env.PUBLIC_PAINEL_GITHUB === 'sim'
+import { MODO_PAINEL_GITHUB } from './src/lib/painel'
 
 const ordem = fields.integer({
   label: 'Ordem',
@@ -48,10 +48,16 @@ const itemSetup = fields.object({
 })
 
 export default config({
-  storage: modoGitHub ? { kind: 'github', repo: 'lgxarena/lgx-website' } : { kind: 'local' },
+  storage: MODO_PAINEL_GITHUB
+    ? { kind: 'github', repo: 'lgxarena/lgx-website' }
+    : { kind: 'local' },
   locale: 'pt-BR',
   ui: {
-    brand: { name: 'LGX Arena' },
+    brand: {
+      name: 'LGX Arena',
+      // Símbolo do X da LGX (o mesmo do favicon) no topo do menu.
+      mark: () => createElement('img', { src: '/favicon.svg', width: 24, height: 24, alt: '' }),
+    },
     navigation: {
       Funcionamento: ['avisos', 'horarios', 'planos'],
       Conteúdo: ['jogos', 'cardapio', 'campeonatos', 'avaliacoes', 'faq', 'regras'],

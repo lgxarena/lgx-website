@@ -1,0 +1,80 @@
+---
+/**
+ * Entrada do painel de edição (#26). Quem abre /keystatic sem estar logado cai aqui
+ * (src/middleware.ts); o botão leva ao login do GitHub e volta direto para o painel.
+ * Página só para a equipe: fora do Google e do sitemap, sem cabeçalho e rodapé do site.
+ */
+import { Font } from 'astro:assets'
+
+import Brand from '@/components/layout/Brand.astro'
+import Icon from '@/components/ui/Icon.astro'
+import { MODO_PAINEL_GITHUB } from '@/lib/painel'
+
+import '@/styles/global.css'
+
+const entrar = MODO_PAINEL_GITHUB ? '/api/keystatic/github/login' : '/keystatic'
+const oQueDaParaEditar = [
+  'Preços e pacotes',
+  'Horários e avisos',
+  'Jogos e cardápio',
+  'FAQ e regras',
+]
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Painel · LGX Arena</title>
+    <meta name="description" content="Área da equipe para editar o site da LGX Arena." />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#0e0e0e" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <Font cssVariable="--font-inter" preload />
+  </head>
+  <body class="flex min-h-dvh flex-col items-center justify-center px-4 py-12">
+    <main class="flex w-full max-w-md flex-col gap-8">
+      <a href="/" class="self-center" aria-label="Ir para o site da LGX Arena">
+        <Brand width={144} />
+      </a>
+
+      <div class="flex flex-col gap-6 rounded-lg border border-line bg-surface p-6 sm:p-8">
+        <div class="flex flex-col gap-2">
+          <h1 class="text-2xl font-extrabold tracking-tight">Painel do site</h1>
+          <p class="leading-relaxed text-fg-muted">
+            Área da equipe para atualizar o site. Cada alteração salva entra no ar em cerca de 1
+            minuto.
+          </p>
+        </div>
+
+        <ul class="grid grid-cols-2 gap-2 text-[15px]">
+          {oQueDaParaEditar.map((item) => (
+            <li class="flex items-center gap-2 text-fg-soft">
+              <Icon name="check" size={16} class="shrink-0 text-accent" />
+              {item}
+            </li>
+          ))}
+        </ul>
+
+        <a
+          href={entrar}
+          class="inline-flex min-h-12 items-center justify-center gap-3 rounded-md bg-fg px-5 font-semibold text-bg no-underline transition-colors hover:bg-white hover:text-bg"
+        >
+          <Icon name="github" size={20} />
+          Entrar com GitHub
+        </a>
+
+        <p class="text-sm leading-relaxed text-fg-muted">
+          Só contas com acesso liberado pela LGX conseguem entrar. Se der erro, peça ao
+          administrador para adicionar a sua conta do GitHub.
+        </p>
+      </div>
+
+      <a href="/" class="self-center text-sm text-fg-muted">
+        Voltar para o site
+      </a>
+    </main>
+  </body>
+</html>
