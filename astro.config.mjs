@@ -1,14 +1,21 @@
 // @ts-check
+import cloudflare from '@astrojs/cloudflare'
 import react from '@astrojs/react'
 import sitemap from '@astrojs/sitemap'
 import keystatic from '@keystatic/astro'
 import AstroPWA from '@vite-pwa/astro'
 import tailwindcss from '@tailwindcss/vite'
 import { defineConfig, fontProviders } from 'astro/config'
+import { fileURLToPath } from 'node:url'
 
-// Painel de edição (Keystatic, #26): por enquanto só no `pnpm dev`, em /keystatic. O site
-// publicado continua 100% estático até o painel ganhar o modo GitHub.
-const comPainel = process.argv.includes('dev')
+// Painel de edição (Keystatic, #26) em /keystatic. Todas as páginas do site continuam estáticas;
+// só o painel e a API dele (/api/keystatic) rodam no Worker, com login pelo GitHub.
+// No `pnpm dev` o adaptador fica de fora: assim o painel no modo local grava direto nos arquivos.
+const emDesenvolvimento = process.argv.includes('dev')
+// Nome público do GitHub App do painel (não é segredo); as chaves ficam nos segredos do Worker.
+process.env.PUBLIC_KEYSTATIC_GITHUB_APP_SLUG ??= 'lgxarena-keystatic'
+// Com o adaptador, os arquivos públicos vão para dist/client; o service worker tem de ir junto.
+const pastaPublica = fileURLToPath(new URL('./dist/client', import.meta.url))
 
 // https://astro.build/config
 export default defineConfig({
@@ -18,6 +25,11 @@ export default defineConfig({
   build: {
     format: 'file',
   },
+  adapter: emDesenvolvimento
+    ? undefined
+    : cloudflare({ imageService: 'compile', prerenderEnvironment: 'node' }),
+  // O painel não usa sessões do Astro; sem isso o adaptador criaria um KV à toa.
+  session: false,
   // Política de segurança de conteúdo (CSP): o Astro gera os hashes dos scripts e estilos da
   // página; só o que está aqui pode carregar. Os outros cabeçalhos ficam em public/_headers.
   security: {
@@ -42,7 +54,8 @@ export default defineConfig({
     },
   },
   integrations: [
-    ...(comPainel ? [react(), keystatic()] : []),
+    react(),
+    keystatic(),
     // Fora do sitemap: 404, página offline e o atalho /reservar (vai para o WhatsApp).
     sitemap({
       filter: (pagina) => !/\/(404|offline|reservar)$/.test(new URL(pagina).pathname),
@@ -54,6 +67,7 @@ export default defineConfig({
       filename: 'sw.ts',
       registerType: 'autoUpdate',
       injectRegister: false,
+      outDir: pastaPublica,
       manifest: {
         name: 'LGX Arena',
         short_name: 'LGX Arena',
@@ -93,8 +107,15 @@ export default defineConfig({
         ],
       },
       injectManifest: {
+        globDirectory: pastaPublica,
         globPatterns: ['**/*.{css,js,woff2,svg,ico}', 'offline.html', 'icones/*.png'],
-        globIgnores: ['sw.js'],
+        // O código do painel (React + Keystatic) fica fora do cache offline dos visitantes.
+        globIgnores: [
+          'sw.js',
+          '_astro/keystatic-page.*.js',
+          '_astro/client.*.js',
+          '_astro/react-dom.*.js',
+        ],
       },
     }),
   ],

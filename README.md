@@ -31,7 +31,19 @@ arquivos de `src/content/` (preços, horários, jogos, cardápio, avisos, campeo
 FAQ, regras, salas e dados do site) e grava direto neles; depois é só commitar. A configuração
 das telas está em `keystatic.config.ts`, e as regras de validação em `src/content.config.ts`.
 
-Por enquanto o painel existe só no computador: o site publicado continua 100% estático.
+**Online** (`https://lgxarena.com.br/keystatic`): login com a conta do GitHub. Só quem tem
+permissão de escrita no repositório consegue salvar; cada "Salvar" vira um commit na `main` e a
+Cloudflare publica o site em cerca de 1 minuto. As páginas continuam estáticas: só o painel e
+`/api/keystatic` rodam no Worker (adaptador `@astrojs/cloudflare`, CSP própria em
+`src/middleware.ts`). O login usa o GitHub App `lgxarena-keystatic`; as chaves ficam nos segredos
+do Worker (`KEYSTATIC_GITHUB_CLIENT_ID`, `KEYSTATIC_GITHUB_CLIENT_SECRET`, `KEYSTATIC_SECRET`).
+Para dar acesso a alguém: Settings → Collaborators do repositório, permissão **Write**.
+
+**No computador**, o `pnpm dev` usa o modo local e grava direto nos arquivos. Para testar o modo
+GitHub localmente, rode com `PUBLIC_PAINEL_GITHUB=sim` e as chaves do app no `.env`.
+
+Como o painel grava na `main`, traga essas mudanças para a `dev` antes de abrir o próximo PR de
+publicação (`git merge origin/main`).
 
 ## Fluxo de trabalho
 

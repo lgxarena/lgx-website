@@ -21,7 +21,8 @@ module.exports = {
   ci: {
     collect: {
       startServerCommand: 'pnpm astro preview --port 4401',
-      startServerReadyPattern: 'localhost:4401',
+      // Com o adaptador da Cloudflare o preview anuncia 127.0.0.1 em vez de localhost.
+      startServerReadyPattern: ':4401',
       url: paginas.map((pagina) => `http://localhost:4401${pagina}`),
       // Três medições por página; as regras valem para a mediana (menos ruído no CI).
       numberOfRuns: 3,

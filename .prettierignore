@@ -4,3 +4,8 @@ node_modules/
 public/
 .design-canvas/
 pnpm-lock.yaml
+# Conteúdo gravado pelo painel (Keystatic), que usa a própria formatação
+src/content/**/*.md
+src/content/**/*.yaml
+src/content/**/*.yml
+src/content/**/*.json
