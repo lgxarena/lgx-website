@@ -24,6 +24,15 @@ a branch `main` publica o site oficial e cada outra branch ou PR ganha um previe
 | `pnpm icones`     | Gera favicon e ícones a partir do X       |
 | `pnpm lighthouse` | Mede Performance, Acessibilidade e SEO    |
 
+## Painel de edição
+
+Com `pnpm dev` rodando, o painel fica em `http://localhost:4321/keystatic`. Ele edita os mesmos
+arquivos de `src/content/` (preços, horários, jogos, cardápio, avisos, campeonatos, avaliações,
+FAQ, regras, salas e dados do site) e grava direto neles; depois é só commitar. A configuração
+das telas está em `keystatic.config.ts`, e as regras de validação em `src/content.config.ts`.
+
+Por enquanto o painel existe só no computador: o site publicado continua 100% estático.
+
 ## Fluxo de trabalho
 
 1. Crie uma branch a partir da `dev`: `feat/<número-da-issue>-<assunto>`.

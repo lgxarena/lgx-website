@@ -1,8 +1,14 @@
 // @ts-check
+import react from '@astrojs/react'
 import sitemap from '@astrojs/sitemap'
+import keystatic from '@keystatic/astro'
 import AstroPWA from '@vite-pwa/astro'
 import tailwindcss from '@tailwindcss/vite'
 import { defineConfig, fontProviders } from 'astro/config'
+
+// Painel de edição (Keystatic, #26): por enquanto só no `pnpm dev`, em /keystatic. O site
+// publicado continua 100% estático até o painel ganhar o modo GitHub.
+const comPainel = process.argv.includes('dev')
 
 // https://astro.build/config
 export default defineConfig({
@@ -36,6 +42,7 @@ export default defineConfig({
     },
   },
   integrations: [
+    ...(comPainel ? [react(), keystatic()] : []),
     // Fora do sitemap: 404, página offline e o atalho /reservar (vai para o WhatsApp).
     sitemap({
       filter: (pagina) => !/\/(404|offline|reservar)$/.test(new URL(pagina).pathname),
