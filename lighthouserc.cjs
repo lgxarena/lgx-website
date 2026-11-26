@@ -20,10 +20,12 @@ const paginas = [
 module.exports = {
   ci: {
     collect: {
-      startServerCommand: 'pnpm astro preview --port 4401',
-      // Com o adaptador da Cloudflare o preview anuncia 127.0.0.1 em vez de localhost.
-      startServerReadyPattern: ':4401',
-      url: paginas.map((pagina) => `http://localhost:4401${pagina}`),
+      // Arquivos de dist/client servidos com compressão, como a Cloudflare entrega em produção
+      // (o `astro preview` com o adaptador roda no workerd e não comprime o HTML).
+      staticDistDir: './dist/client',
+      url: paginas.map((pagina) =>
+        pagina === '/' ? 'http://localhost/' : `http://localhost${pagina}.html`
+      ),
       // Três medições por página; as regras valem para a mediana (menos ruído no CI).
       numberOfRuns: 3,
       settings: {
