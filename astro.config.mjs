@@ -56,9 +56,9 @@ export default defineConfig({
   integrations: [
     react(),
     keystatic(),
-    // Fora do sitemap: 404, página offline e o atalho /reservar (vai para o WhatsApp).
+    // Fora do sitemap: 404, página offline, o atalho /reservar (vai para o WhatsApp) e o painel.
     sitemap({
-      filter: (pagina) => !/\/(404|offline|reservar)$/.test(new URL(pagina).pathname),
+      filter: (pagina) => !/\/(404|offline|reservar|painel)$/.test(new URL(pagina).pathname),
     }),
     // App instalável e página offline (issue #21). O service worker fica em src/sw.ts.
     AstroPWA({

@@ -1,5 +1,7 @@
 import { defineMiddleware } from 'astro:middleware'
 
+import { MODO_PAINEL_GITHUB } from '@/lib/painel'
+
 /**
  * Painel de edição (/keystatic): única parte do site que roda no Worker. A interface do Keystatic
  * injeta estilos em tempo de execução, usa a fonte do Google e conversa direto com a API do
@@ -34,9 +36,20 @@ const ehDoPainel = (caminho: string) =>
   caminho.startsWith('/keystatic/') ||
   caminho.startsWith('/api/keystatic/')
 
+/** Telas do painel (não a API) abertas sem login vão para a entrada da LGX em /painel. */
+const precisaEntrar = (caminho: string, cookies: { has: (nome: string) => boolean }) =>
+  MODO_PAINEL_GITHUB &&
+  (caminho === '/keystatic' || caminho.startsWith('/keystatic/')) &&
+  caminho !== '/keystatic/setup' &&
+  !cookies.has('keystatic-gh-access-token') &&
+  !cookies.has('keystatic-gh-refresh-token')
+
 export const onRequest = defineMiddleware(async (contexto, proximo) => {
-  const resposta = await proximo()
-  if (contexto.isPrerendered || !ehDoPainel(contexto.url.pathname)) return resposta
+  if (contexto.isPrerendered || !ehDoPainel(contexto.url.pathname)) return proximo()
+
+  const resposta = precisaEntrar(contexto.url.pathname, contexto.cookies)
+    ? contexto.redirect('/painel', 302)
+    : await proximo()
 
   // Cópia da resposta: redirecionamentos (Response.redirect) têm cabeçalhos imutáveis.
   const respostaDoPainel = new Response(resposta.body, resposta)
