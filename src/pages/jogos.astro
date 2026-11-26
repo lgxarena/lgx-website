@@ -61,7 +61,7 @@ const linkPedido = linkWhatsApp(site.whatsapp, MENSAGEM_PEDIDO)
       data-filtros
       role="search"
       aria-label="Buscar jogos"
-      class="invisible sticky top-20 z-30 -mx-4 flex flex-col gap-3 border-b border-line bg-bg/95 px-4 py-4 backdrop-blur-sm sm:mx-0 sm:px-0"
+      class="invisible sticky top-20 z-30 -mx-4 flex flex-col gap-3 border-b border-line bg-bg/95 px-4 py-4 backdrop-blur-sm [view-transition-name:filtros-jogos] sm:mx-0 sm:px-0"
     >
       <div class="flex gap-3">
         <label class="relative flex-1">
@@ -360,6 +360,32 @@ const linkPedido = linkWhatsApp(site.whatsapp, MENSAGEM_PEDIDO)
   ::view-transition-old(root),
   ::view-transition-new(root) {
     animation: none;
+  }
+
+  /*
+   * Header, barra de filtros e aviso de cookies ficam fixos na tela: na transição eles têm
+   * camada própria, sem animação e acima dos jogos, senão os cards passam por cima deles.
+   */
+  ::view-transition-group(cabecalho),
+  ::view-transition-group(filtros-jogos),
+  ::view-transition-group(aviso-cookies) {
+    z-index: 10;
+    animation: none;
+  }
+
+  ::view-transition-old(cabecalho),
+  ::view-transition-new(cabecalho),
+  ::view-transition-old(filtros-jogos),
+  ::view-transition-new(filtros-jogos),
+  ::view-transition-old(aviso-cookies),
+  ::view-transition-new(aviso-cookies) {
+    animation: none;
+  }
+
+  ::view-transition-old(cabecalho),
+  ::view-transition-old(filtros-jogos),
+  ::view-transition-old(aviso-cookies) {
+    display: none;
   }
 
   ::view-transition-group(*.jogo) {
