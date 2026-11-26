@@ -30,3 +30,5 @@ package-lock.json
 .lighthouseci/
 
 .wrangler/
+
+.dev.vars*
