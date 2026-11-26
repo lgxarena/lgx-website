@@ -2,12 +2,15 @@
  * Painel de edição (Keystatic, issues #26 e #27). Cada tela edita os mesmos arquivos de
  * `src/content/` que o site lê; as regras de validação continuam em src/content.config.ts.
  *
- * Hoje o painel roda só no computador (`pnpm dev` → http://localhost:4321/keystatic) e grava
- * direto nos arquivos. Para a equipe usar online, troca-se `storage` para o modo GitHub.
+ * No `pnpm dev` o painel grava direto nos arquivos do computador (modo local). Com
+ * `PUBLIC_PAINEL_GITHUB=sim` no .env ele usa o modo GitHub: login pela conta do GitHub e cada
+ * "Salvar" vira um commit no repositório (só quem tem permissão de escrita consegue salvar).
  */
 import { collection, config, fields, singleton } from '@keystatic/core'
 
 import { categoriasDeJogo } from './src/content/categorias'
+
+const modoGitHub = import.meta.env.PROD || import.meta.env.PUBLIC_PAINEL_GITHUB === 'sim'
 
 const ordem = fields.integer({
   label: 'Ordem',
@@ -45,7 +48,7 @@ const itemSetup = fields.object({
 })
 
 export default config({
-  storage: { kind: 'local' },
+  storage: modoGitHub ? { kind: 'github', repo: 'lgxarena/lgx-website' } : { kind: 'local' },
   locale: 'pt-BR',
   ui: {
     brand: { name: 'LGX Arena' },
