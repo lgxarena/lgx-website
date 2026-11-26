@@ -27,7 +27,10 @@ const passos = [
     titulo: 'Mande data, horário e número de convidados',
     texto: 'Pelo WhatsApp, com antecedência.',
   },
-  { titulo: 'Receba o orçamento', texto: 'Com o buffet e o tempo de festa.' },
+  {
+    titulo: 'Receba o orçamento',
+    texto: 'Com o buffet, o tempo de permanência e o número de pessoas.',
+  },
   { titulo: 'Confirme pagando antes', texto: 'Se cancelar, cobramos 50% do valor.' },
 ]
 
@@ -41,7 +44,7 @@ const titulo2 = 'text-[28px] font-extrabold'
   <Container class="flex flex-col gap-16 pt-10 pb-24 md:pt-14 md:pb-28">
     <CabecalhoEventos
       titulo="Aniversário na LGX"
-      descricao="Junte a galera para jogar com PCs reservados e buffet completo. O valor muda conforme o tempo de festa."
+      descricao="Junte a galera para jogar com PCs reservados e buffet completo. O valor muda conforme o tempo de permanência e o número de pessoas."
     >
       <Fragment slot="acoes">
         <BotaoReservar size="lg" mensagem={MENSAGEM}>

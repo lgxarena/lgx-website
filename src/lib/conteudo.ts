@@ -26,12 +26,6 @@ export async function getPlanos(tipo?: Plano['data']['tipo']) {
   return tipo ? planos.filter((plano) => plano.data.tipo === tipo) : planos
 }
 
-/** Menor preço por hora entre as horas avulsas de uma sala (o "a partir de"). */
-export async function getMenorPrecoPorHora(sala: SalaId) {
-  const avulsos = await getPlanos('avulso')
-  return Math.min(...avulsos.map((avulso) => avulso.data.precos[sala] / avulso.data.horas))
-}
-
 export async function getHorarios() {
   return (await getCollection('horarios')).sort(porOrdem)
 }

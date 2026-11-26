@@ -5,8 +5,8 @@
  */
 import BotaoReservar from '@/components/ui/BotaoReservar.astro'
 import Placeholder from '@/components/ui/Placeholder.astro'
-import { getMenorPrecoPorHora, getPlanos, type Sala, type SalaId } from '@/lib/conteudo'
-import { formatarHora, formatarPreco } from '@/lib/formatar'
+import { getPlanos, type Sala, type SalaId } from '@/lib/conteudo'
+import { formatarPreco } from '@/lib/formatar'
 import { Image } from 'astro:assets'
 
 interface Props {
@@ -21,11 +21,7 @@ const { sala, as: Titulo = 'h3', principal = false } = Astro.props
 const id = sala.id as SalaId
 const SubTitulo = Titulo === 'h2' ? 'h3' : 'h4'
 
-const [avulsos, pacotes, menorPreco] = await Promise.all([
-  getPlanos('avulso'),
-  getPlanos('pacote'),
-  getMenorPrecoPorHora(id),
-])
+const [avulsos, pacotes] = await Promise.all([getPlanos('avulso'), getPlanos('pacote')])
 
 // Ficha resumida na ordem em que o jogador compara: monitor, placa, processador, memória.
 const ordemDaFicha = ['Monitor', 'Placa de vídeo', 'Processador', 'Memória']
@@ -60,9 +56,6 @@ const subtitulo = 'mb-2 text-xs font-bold tracking-[0.12em] text-link uppercase'
         <Titulo class="text-3xl font-extrabold tracking-tight md:text-[34px]">
           {sala.data.nome}
         </Titulo>
-        <p class="text-[15px] text-fg-muted">
-          a partir de <strong class="text-fg">{formatarPreco(menorPreco)}/h</strong>
-        </p>
       </div>
       <p class="text-[15px] leading-relaxed text-fg-muted">{ficha}</p>
     </div>
@@ -86,14 +79,7 @@ const subtitulo = 'mb-2 text-xs font-bold tracking-[0.12em] text-link uppercase'
       <dl>
         {pacotes.map((pacote) => (
           <div class={linha}>
-            <dt>
-              {pacote.data.nome.replace(/^Pacote /, '')}
-              {pacote.data.janela && (
-                <span class="text-sm text-fg-muted">
-                  {` · ${pacote.data.horas}h, ${formatarHora(pacote.data.janela.inicio)}–${formatarHora(pacote.data.janela.fim)}`}
-                </span>
-              )}
-            </dt>
+            <dt>{pacote.data.nome.replace(/^Pacote /, '')}</dt>
             <dd class:list={['font-bold tabular-nums', pacote.data.destaque && 'text-accent']}>
               {formatarPreco(pacote.data.precos[id], { inteiro: true })}
             </dd>
