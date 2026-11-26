@@ -9,11 +9,26 @@ import { defineCollection } from 'astro:content'
 import { glob } from 'astro/loaders'
 import { z } from 'astro/zod'
 
+import { categoriasDeJogo } from './content/categorias'
+
 const hora = z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/, 'Use o formato HH:MM, por exemplo 22:00')
 
 const dinheiro = z.number().positive('O valor precisa ser maior que zero')
 
 const ordem = z.number().int().nonnegative().default(0)
+
+/** O painel grava campo opcional em branco como '' ou null: para o site, é "não preenchido". */
+const semValor = (valor: unknown) => (valor === '' || valor === null ? undefined : valor)
+const opcional = <T extends z.ZodType>(schema: T) => z.preprocess(semValor, schema.optional())
+/** Objeto opcional (ex.: link, janela): vale só se todos os campos estiverem preenchidos. */
+const objetoOpcional = <T extends z.ZodRawShape>(forma: T) =>
+  z.preprocess((valor) => {
+    if (!valor || typeof valor !== 'object') return undefined
+    const campos = valor as Record<string, unknown>
+    return Object.keys(forma).every((chave) => semValor(campos[chave]) !== undefined)
+      ? valor
+      : undefined
+  }, z.object(forma).optional())
 
 const dados = (pasta: string) =>
   glob({ pattern: '**/*.{yaml,yml,json}', base: `./src/content/${pasta}` })
@@ -37,10 +52,10 @@ const site = defineCollection({
       bairro: z.string(),
       cidade: z.string(),
       uf: z.string().length(2),
-      cep: z.string().optional(),
+      cep: opcional(z.string()),
       mapa: z.url(),
       /** Coordenadas do pino no mapa, para os dados estruturados (Google). */
-      geo: z.object({ latitude: z.number(), longitude: z.number() }).optional(),
+      geo: objetoOpcional({ latitude: z.number(), longitude: z.number() }),
     }),
     redes: z.object({
       instagram: z.url(),
@@ -62,7 +77,7 @@ const salas = defineCollection({
     z.object({
       nome: z.string(),
       resumo: z.string(),
-      foto: image().optional(),
+      foto: opcional(image()),
       hardware: z.array(itemSetup).min(1),
       perifericos: z.array(itemSetup).min(1),
       ordem,
@@ -77,9 +92,9 @@ const planos = defineCollection({
       nome: z.string(),
       tipo: z.enum(['avulso', 'pacote']),
       horas: z.number().int().positive(),
-      janela: z.object({ inicio: hora, fim: hora }).optional(),
-      dias: z.string().optional(),
-      observacao: z.string().optional(),
+      janela: objetoOpcional({ inicio: hora, fim: hora }),
+      dias: opcional(z.string()),
+      observacao: opcional(z.string()),
       precos: z.object({ pro: dinheiro, vip: dinheiro }),
       destaque: z.boolean().default(false),
       ordem,
@@ -109,35 +124,11 @@ const horarios = defineCollection({
     dias: z.array(diaSemana).default([]),
     abre: hora,
     fecha: hora,
-    observacao: z.string().optional(),
+    observacao: opcional(z.string()),
     destaque: z.boolean().default(false),
     ordem,
   }),
 })
-
-export const categoriasDeJogo = [
-  'Ação',
-  'Aventura',
-  'Battle Royale',
-  'Competitivo',
-  'Construção',
-  'Corrida',
-  'Esportes',
-  'Estratégia',
-  'Fantasia',
-  'FPS',
-  'MMO',
-  'MMORPG',
-  'MOBA',
-  'Mundo Aberto',
-  'RPG',
-  'RPG de Ação',
-  'Sandbox',
-  'Sci-Fi',
-  'Simulação',
-  'Sobrevivência',
-  'Tiro',
-] as const
 
 /** Jogos instalados. A capa fica na mesma pasta do arquivo do jogo. */
 const jogos = defineCollection({
@@ -156,11 +147,11 @@ const avaliacoes = defineCollection({
   loader: dados('avaliacoes'),
   schema: z.object({
     autor: z.string(),
-    fotoAutor: z.url().optional(),
+    fotoAutor: opcional(z.url()),
     nota: z.number().int().min(1).max(5),
     texto: z.string().min(1),
     data: z.coerce.date(),
-    link: z.url().optional(),
+    link: opcional(z.url()),
     destaque: z.boolean().default(false),
   }),
 })
@@ -200,11 +191,11 @@ const campeonatos = defineCollection({
     nome: z.string(),
     jogo: z.string(),
     data: z.coerce.date(),
-    formato: z.string().optional(),
-    inscricao: dinheiro.optional(),
-    premio: z.string().optional(),
-    linkInscricao: z.url().optional(),
-    campeao: z.string().optional(),
+    formato: opcional(z.string()),
+    inscricao: opcional(dinheiro),
+    premio: opcional(z.string()),
+    linkInscricao: opcional(z.url()),
+    campeao: opcional(z.string()),
   }),
 })
 
@@ -214,7 +205,7 @@ const avisos = defineCollection({
   schema: z
     .object({
       texto: z.string().max(140, 'Avisos com até 140 caracteres cabem em uma linha no celular'),
-      link: z.object({ href: z.string(), rotulo: z.string() }).optional(),
+      link: objetoOpcional({ href: z.string(), rotulo: z.string() }),
       inicio: z.coerce.date(),
       fim: z.coerce.date(),
       tom: z.enum(['info', 'alerta']).default('info'),
