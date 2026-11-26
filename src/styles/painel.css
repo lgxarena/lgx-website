@@ -1,0 +1,50 @@
+/*
+ * Cores da LGX no painel (Keystatic). A interface dele usa a escala "indigo" como cor de
+ * destaque (botões, seleção, foco); aqui ela vira o vermelho da marca, no tema claro e no escuro.
+ * Não é uma opção oficial do Keystatic: se um dia ele renomear essas variáveis, o painel só volta
+ * ao azul. Injetado pelo src/middleware.ts.
+ */
+html .kui-scheme--light,
+html .kui-scheme--auto {
+  --kui-color-scale-indigo1: #fffcfc;
+  --kui-color-scale-indigo2: #fff8f8;
+  --kui-color-scale-indigo3: #ffefef;
+  --kui-color-scale-indigo4: #ffe5e5;
+  --kui-color-scale-indigo5: #fdd8d8;
+  --kui-color-scale-indigo6: #f9c6c6;
+  --kui-color-scale-indigo7: #f3aeaf;
+  --kui-color-scale-indigo8: #eb9091;
+  --kui-color-scale-indigo9: #e12727;
+  --kui-color-scale-indigo10: #c31212;
+  --kui-color-scale-indigo11: #c31212;
+}
+
+html .kui-scheme--dark {
+  --kui-color-scale-indigo1: #1f1315;
+  --kui-color-scale-indigo2: #291415;
+  --kui-color-scale-indigo3: #3c181a;
+  --kui-color-scale-indigo4: #481a1d;
+  --kui-color-scale-indigo5: #541b1f;
+  --kui-color-scale-indigo6: #671e22;
+  --kui-color-scale-indigo7: #822025;
+  --kui-color-scale-indigo8: #aa2429;
+  --kui-color-scale-indigo9: #e12727;
+  --kui-color-scale-indigo10: #fa3232;
+  --kui-color-scale-indigo11: #ff9f9f;
+}
+
+@media (prefers-color-scheme: dark) {
+  html .kui-scheme--auto {
+    --kui-color-scale-indigo1: #1f1315;
+    --kui-color-scale-indigo2: #291415;
+    --kui-color-scale-indigo3: #3c181a;
+    --kui-color-scale-indigo4: #481a1d;
+    --kui-color-scale-indigo5: #541b1f;
+    --kui-color-scale-indigo6: #671e22;
+    --kui-color-scale-indigo7: #822025;
+    --kui-color-scale-indigo8: #aa2429;
+    --kui-color-scale-indigo9: #e12727;
+    --kui-color-scale-indigo10: #fa3232;
+    --kui-color-scale-indigo11: #ff9f9f;
+  }
+}

@@ -142,6 +142,12 @@ const jogos = defineCollection({
     }),
 })
 
+/** Ordem da página de jogos, arrastada no painel. Um único arquivo (`ordem-jogos/lista.yaml`). */
+const ordemDosJogos = defineCollection({
+  loader: dados('ordem-jogos'),
+  schema: z.object({ jogos: z.array(z.string()).default([]) }),
+})
+
 /** Avaliações do Google escolhidas para o site (issue #29). */
 const avaliacoes = defineCollection({
   loader: dados('avaliacoes'),
@@ -222,6 +228,7 @@ export const collections = {
   planos,
   horarios,
   jogos,
+  ordemDosJogos,
   avaliacoes,
   faq,
   regras,

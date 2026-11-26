@@ -10,7 +10,22 @@ import { collection, config, fields, singleton } from '@keystatic/core'
 import { createElement } from 'react'
 
 import { categoriasDeJogo } from './src/content/categorias'
+import { interruptor } from './src/lib/campoInterruptor'
 import { MODO_PAINEL_GITHUB } from './src/lib/painel'
+
+/** Nome de cada jogo pelo nome do arquivo, para a lista "Ordem dos jogos" mostrar "Counter-Strike 2". */
+const nomesDosJogos: Record<string, string> = Object.fromEntries(
+  Object.entries(
+    import.meta.glob<string>('./src/content/jogos/*.yaml', {
+      query: '?raw',
+      import: 'default',
+      eager: true,
+    })
+  ).map(([caminho, texto]) => [
+    caminho.replace(/^.*\/(.+)\.yaml$/, '$1'),
+    texto.match(/^nome:\s*['"]?(.+?)['"]?\s*$/m)?.[1] ?? '',
+  ])
+)
 
 const ordem = fields.integer({
   label: 'Ordem',
@@ -60,14 +75,46 @@ export default config({
     },
     navigation: {
       Funcionamento: ['avisos', 'horarios', 'planos'],
-      Conteúdo: ['jogos', 'cardapio', 'campeonatos', 'avaliacoes', 'faq', 'regras'],
+      Conteúdo: [
+        'jogos',
+        'ordemDosJogos',
+        'cardapio',
+        'campeonatos',
+        'avaliacoes',
+        'faq',
+        'regras',
+      ],
       Configurações: ['salas', 'site'],
     },
   },
 
   singletons: {
+    ordemDosJogos: singleton({
+      label: 'Ordem dos jogos',
+      previewUrl: '/jogos',
+      path: 'src/content/ordem-jogos/lista',
+      format: { data: 'yaml' },
+      schema: {
+        jogos: fields.array(
+          fields.relationship({
+            label: 'Jogo',
+            collection: 'jogos',
+            validation: { isRequired: true },
+          }),
+          {
+            label: 'Ordem dos jogos',
+            description:
+              'Arraste para mudar a ordem na página de jogos. Jogo novo que não estiver aqui aparece no fim.',
+            itemLabel: (item) =>
+              item.value ? (nomesDosJogos[item.value] ?? item.value) : 'Escolha um jogo',
+          }
+        ),
+      },
+    }),
     site: singleton({
       label: 'Dados do site',
+      // previewUrl: botão do painel que abre a página do site onde esse conteúdo aparece.
+      previewUrl: '/contato',
       path: 'src/content/site/geral',
       format: { data: 'yaml' },
       schema: {
@@ -114,6 +161,7 @@ export default config({
   collections: {
     avisos: collection({
       label: 'Avisos no topo',
+      previewUrl: '/',
       path: 'src/content/avisos/*',
       slugField: 'texto',
       format: { data: 'yaml' },
@@ -146,6 +194,7 @@ export default config({
 
     horarios: collection({
       label: 'Horários',
+      previewUrl: '/',
       path: 'src/content/horarios/*',
       slugField: 'rotulo',
       format: { data: 'yaml' },
@@ -176,6 +225,7 @@ export default config({
 
     planos: collection({
       label: 'Preços e pacotes',
+      previewUrl: '/precos',
       path: 'src/content/planos/*',
       slugField: 'nome',
       format: { data: 'yaml' },
@@ -208,6 +258,7 @@ export default config({
 
     jogos: collection({
       label: 'Jogos',
+      previewUrl: '/jogos',
       path: 'src/content/jogos/*',
       slugField: 'nome',
       format: { data: 'yaml' },
@@ -221,16 +272,20 @@ export default config({
           publicPath: './',
           validation: { isRequired: true },
         }),
+        popular: interruptor({
+          label: 'Popular',
+          description: 'Ganha o selo "Popular" e aparece entre os mais jogados da página inicial.',
+        }),
         categorias: fields.multiselect({
           label: 'Categorias',
           options: categoriasDeJogo.map((categoria) => ({ label: categoria, value: categoria })),
         }),
-        popular: fields.checkbox({ label: 'Popular (aparece primeiro e na página inicial)' }),
       },
     }),
 
     cardapio: collection({
       label: 'Cardápio',
+      previewUrl: '/cardapio',
       path: 'src/content/cardapio/*',
       slugField: 'nome',
       format: { data: 'yaml' },
@@ -255,6 +310,7 @@ export default config({
 
     campeonatos: collection({
       label: 'Campeonatos',
+      previewUrl: '/campeonatos',
       path: 'src/content/campeonatos/*',
       slugField: 'nome',
       format: { data: 'yaml' },
@@ -273,6 +329,7 @@ export default config({
 
     avaliacoes: collection({
       label: 'Avaliações do Google',
+      previewUrl: '/',
       path: 'src/content/avaliacoes/*',
       slugField: 'autor',
       format: { data: 'yaml' },
@@ -294,6 +351,9 @@ export default config({
 
     faq: collection({
       label: 'Perguntas frequentes',
+      previewUrl: '/faq',
+      // Texto ocupa a tela; os outros campos vão para a lateral.
+      entryLayout: 'content',
       path: 'src/content/faq/*',
       slugField: 'pergunta',
       format: { contentField: 'resposta' },
@@ -318,6 +378,9 @@ export default config({
 
     regras: collection({
       label: 'Regras da casa',
+      previewUrl: '/regras',
+      // Texto ocupa a tela; os outros campos vão para a lateral.
+      entryLayout: 'content',
       path: 'src/content/regras/*',
       slugField: 'titulo',
       format: { contentField: 'texto' },
@@ -331,6 +394,7 @@ export default config({
 
     salas: collection({
       label: 'Salas',
+      previewUrl: '/espaco',
       path: 'src/content/salas/*',
       slugField: 'nome',
       format: { data: 'yaml' },
