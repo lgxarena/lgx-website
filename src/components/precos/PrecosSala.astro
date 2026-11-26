@@ -79,7 +79,10 @@ const subtitulo = 'mb-2 text-xs font-bold tracking-[0.12em] text-link uppercase'
       <dl>
         {pacotes.map((pacote) => (
           <div class={linha}>
-            <dt>{pacote.data.nome.replace(/^Pacote /, '')}</dt>
+            <dt>
+              {pacote.data.nome.replace(/^Pacote /, '')}
+              <span class="text-sm text-fg-muted"> · {pacote.data.horas}h</span>
+            </dt>
             <dd class:list={['font-bold tabular-nums', pacote.data.destaque && 'text-accent']}>
               {formatarPreco(pacote.data.precos[id], { inteiro: true })}
             </dd>
