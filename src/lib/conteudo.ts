@@ -30,10 +30,23 @@ export async function getHorarios() {
   return (await getCollection('horarios')).sort(porOrdem)
 }
 
+/**
+ * Jogos na ordem arrastada no painel (`ordem-jogos/lista.yaml`). Os que não estão na lista vão
+ * para o fim: populares primeiro, depois em ordem alfabética.
+ */
 export async function getJogos() {
-  const jogos = await getCollection('jogos')
+  const [jogos, lista] = await Promise.all([
+    getCollection('jogos'),
+    getEntry('ordemDosJogos', 'lista'),
+  ])
+  const ordem = lista?.data.jogos ?? []
+  const posicao = (id: string) => {
+    const indice = ordem.indexOf(id)
+    return indice === -1 ? ordem.length : indice
+  }
   return jogos.sort(
     (primeiro, segundo) =>
+      posicao(primeiro.id) - posicao(segundo.id) ||
       Number(segundo.data.popular) - Number(primeiro.data.popular) ||
       primeiro.data.nome.localeCompare(segundo.data.nome, 'pt-BR')
   )
