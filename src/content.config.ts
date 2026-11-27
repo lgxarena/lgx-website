@@ -148,6 +148,15 @@ const ordemDosJogos = defineCollection({
   schema: z.object({ jogos: z.array(z.string()).default([]) }),
 })
 
+/** Fotos do espaço (lanchonete, fachada…), na ordem arrastada no painel (`fotos-do-espaco/lista.yaml`). */
+const fotosDoEspaco = defineCollection({
+  loader: dados('fotos-do-espaco'),
+  schema: ({ image }) =>
+    z.object({
+      fotos: z.array(z.object({ foto: image(), legenda: z.string().min(1) })).default([]),
+    }),
+})
+
 /** Avaliações do Google escolhidas para o site (issue #29). */
 const avaliacoes = defineCollection({
   loader: dados('avaliacoes'),
@@ -229,6 +238,7 @@ export const collections = {
   horarios,
   jogos,
   ordemDosJogos,
+  fotosDoEspaco,
   avaliacoes,
   faq,
   regras,
