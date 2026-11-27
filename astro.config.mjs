@@ -38,7 +38,8 @@ export default defineConfig({
         "default-src 'self'",
         "img-src 'self' data: https://lh3.googleusercontent.com",
         "font-src 'self'",
-        "connect-src 'self'",
+        // Cloudflare Web Analytics (só no site publicado): envia as visitas para cloudflareinsights.com.
+        "connect-src 'self' https://cloudflareinsights.com",
         "manifest-src 'self'",
         "worker-src 'self'",
         // Mapa do Google em Como chegar, só depois que a pessoa aceita carregar.
@@ -47,6 +48,7 @@ export default defineConfig({
         "base-uri 'self'",
         "form-action 'self'",
       ],
+      scriptDirective: { resources: ["'self'", 'https://static.cloudflareinsights.com'] },
       // Atributos style="" (ex.: nomes de transição dos jogos) seguem permitidos.
       styleDirective: {
         resources: ["'self'", { resource: "'unsafe-inline'", kind: 'attribute' }],

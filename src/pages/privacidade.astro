@@ -7,7 +7,7 @@ import { formatarTelefone } from '@/lib/formatar'
 
 const site = await getSite()
 const { endereco } = site
-const atualizacao = '25 de novembro de 2026'
+const atualizacao = '27 de novembro de 2026'
 
 const secao = 'flex flex-col gap-3 rounded-lg bg-surface p-6 sm:p-8'
 const titulo = 'text-xl font-extrabold'
@@ -57,6 +57,11 @@ const titulo = 'text-xl font-extrabold'
             <li>
               <strong>Hospedagem:</strong> a Cloudflare, que hospeda o site, registra dados técnicos
               de acesso (como endereço IP) para segurança e prevenção de ataques.
+            </li>
+            <li>
+              <strong>Contagem de visitas:</strong> usamos o Cloudflare Web Analytics para saber
+              quantas pessoas visitam cada página e se o site abre rápido. Ele não usa cookies, não
+              identifica quem você é e não acompanha você em outros sites.
             </li>
           </ul>
         </div>
