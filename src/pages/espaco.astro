@@ -7,13 +7,16 @@ import Container from '@/components/ui/Container.astro'
 import Icon from '@/components/ui/Icon.astro'
 import Placeholder from '@/components/ui/Placeholder.astro'
 import Base from '@/layouts/Base.astro'
-import { getSalas, getSite } from '@/lib/conteudo'
+import { getFotosDoEspaco, getSalas, getSite } from '@/lib/conteudo'
 
-const [site, salas] = await Promise.all([getSite(), getSalas()])
+const [site, salas, fotos] = await Promise.all([getSite(), getSalas(), getFotosDoEspaco()])
 const anos = new Date().getFullYear() - site.fundacao
 
-/** Fotos que ainda faltam (issue #4). A primeira é a grande da galeria. */
-const fotos = ['Sala de stream', 'Lanchonete', 'Fachada e entrada']
+/** Enquanto a equipe não envia pelo painel ao menos três fotos, o resto fica reservado (issue #4). */
+const fotosQueFaltam = ['Sala de stream', 'Lanchonete', 'Fachada e entrada'].slice(fotos.length)
+/** No celular, a última foto ocupa a linha inteira quando sobraria sozinha. */
+const totalPequenas = salas.length - 1 + fotos.length + fotosQueFaltam.length
+const ehUltima = (indice: number) => totalPequenas % 2 === 1 && indice === totalPequenas - 1
 
 const numeros = [
   { valor: '40', rotulo: 'PCs entre Pro e VIP' },
@@ -60,7 +63,7 @@ const titulo2 = 'text-[28px] font-extrabold'
       </p>
     </div>
 
-    <!-- Galeria: as salas vêm do conteúdo (foto da sala); o resto ainda é espaço reservado. -->
+    <!-- Galeria: primeiro as fotos das salas, depois as fotos do espaço (as duas vêm do painel). -->
     <section
       aria-label="Fotos do espaço"
       class="grid grid-cols-2 gap-3 md:grid-cols-4 md:grid-rows-2"
@@ -91,9 +94,24 @@ const titulo2 = 'text-[28px] font-extrabold'
         )
       )}
       {fotos.map((foto, indice) => (
+        <Image
+          src={foto.foto}
+          alt={foto.legenda}
+          widths={[400, 640]}
+          sizes="(min-width: 48rem) 25vw, 50vw"
+          class:list={[
+            'aspect-4/3 h-full w-full rounded-lg object-cover',
+            ehUltima(salas.length - 1 + indice) && 'max-md:col-span-2 max-md:aspect-video',
+          ]}
+        />
+      ))}
+      {fotosQueFaltam.map((foto, indice) => (
         <Placeholder
           label={foto}
-          class:list={['h-40 md:h-auto', indice === fotos.length - 1 && 'max-md:col-span-2']}
+          class:list={[
+            'h-40 md:h-auto',
+            ehUltima(salas.length - 1 + fotos.length + indice) && 'max-md:col-span-2',
+          ]}
         />
       ))}
     </section>

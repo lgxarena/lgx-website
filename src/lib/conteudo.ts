@@ -119,3 +119,8 @@ export async function getCardapio() {
     itens: itens.filter((item) => item.data.categoria === id),
   }))
 }
+
+/** Fotos do espaço arrastadas no painel (`fotos-do-espaco/lista.yaml`), sem as das salas. */
+export async function getFotosDoEspaco() {
+  return (await getEntry('fotosDoEspaco', 'lista'))?.data.fotos ?? []
+}
