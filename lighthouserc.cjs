@@ -26,8 +26,10 @@ module.exports = {
       url: paginas.map((pagina) =>
         pagina === '/' ? 'http://localhost/' : `http://localhost${pagina}.html`
       ),
-      // Três medições por página; as regras valem para a mediana (menos ruído no CI).
-      numberOfRuns: 3,
+      // Cinco medições por página; as regras valem para a mediana. Com três, a página inicial
+      // às vezes reprovava por uma máquina lenta do CI (bloqueio de ~500 ms em duas medições
+      // seguidas), sem mudança no site; localmente ela fica entre 0 e 170 ms.
+      numberOfRuns: 5,
       settings: {
         chromeFlags: '--no-sandbox --headless=new',
         // O preview fica fora dos buscadores de propósito (noindex até a virada, #25).
