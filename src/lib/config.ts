@@ -6,4 +6,11 @@
 const branch = process.env.WORKERS_CI_BRANCH
 export const PREVIEW_NOINDEX = branch !== 'main'
 
+/**
+ * Cloudflare Web Analytics (issue #24): conta visitas sem cookie, só no site publicado (`main`).
+ * O código é público por natureza (vai no HTML); o painel fica em Analytics > Web analytics.
+ */
+export const CLOUDFLARE_WEB_ANALYTICS =
+  branch === 'main' ? 'e8f66359a039476dbbaa28ed233419ec' : undefined
+
 export const NOME_DO_SITE = 'LGX Arena'
