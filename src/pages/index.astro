@@ -10,13 +10,29 @@ import Placeholder from '@/components/ui/Placeholder.astro'
 import Section from '@/components/ui/Section.astro'
 import SectionHeading from '@/components/ui/SectionHeading.astro'
 import Base from '@/layouts/Base.astro'
-import { getJogos, getSalas, getSite } from '@/lib/conteudo'
+import { getFotosDoEspaco, getJogos, getSalas, getSite } from '@/lib/conteudo'
 import { negocio, organizacao } from '@/lib/dadosEstruturados'
 
-const [site, salas, jogos] = await Promise.all([getSite(), getSalas(), getJogos()])
+const [site, salas, jogos, fotos] = await Promise.all([
+  getSite(),
+  getSalas(),
+  getJogos(),
+  getFotosDoEspaco(),
+])
 const maisJogados = jogos.filter((jogo) => jogo.data.popular).slice(0, 5)
 
-const fotosDoEspaco = ['Sala Pro', 'Sala VIP', 'Lanchonete', 'Evento na LGX']
+/** Quatro fotos: as das salas e depois as do espaço, completando com espaço reservado (issue #4). */
+const fotosDoEspaco = [
+  ...salas.flatMap((sala) =>
+    sala.data.foto ? [{ foto: sala.data.foto, legenda: `${sala.data.nome} da LGX Arena` }] : []
+  ),
+  ...fotos,
+].slice(0, 4)
+const fotosQueFaltam = [
+  ...salas.filter((sala) => !sala.data.foto).map((sala) => sala.data.nome),
+  'Lanchonete',
+  'Evento na LGX',
+].slice(0, 4 - fotosDoEspaco.length)
 
 const eventos = [
   {
@@ -73,6 +89,15 @@ const dadosEstruturados = await Promise.all([negocio(), organizacao()])
     />
     <div class="grid grid-cols-2 gap-3 lg:grid-cols-4">
       {fotosDoEspaco.map((foto) => (
+        <Image
+          src={foto.foto}
+          alt={foto.legenda}
+          widths={[320, 480, 640]}
+          sizes="(min-width: 64rem) 25vw, 50vw"
+          class="h-40 w-full rounded-lg object-cover md:h-56"
+        />
+      ))}
+      {fotosQueFaltam.map((foto) => (
         <Placeholder label={foto} class="h-40 md:h-56" />
       ))}
     </div>

@@ -78,6 +78,7 @@ export default config({
       Conteúdo: [
         'jogos',
         'ordemDosJogos',
+        'fotosDoEspaco',
         'cardapio',
         'campeonatos',
         'avaliacoes',
@@ -107,6 +108,35 @@ export default config({
               'Arraste para mudar a ordem na página de jogos. Jogo novo que não estiver aqui aparece no fim.',
             itemLabel: (item) =>
               item.value ? (nomesDosJogos[item.value] ?? item.value) : 'Escolha um jogo',
+          }
+        ),
+      },
+    }),
+    fotosDoEspaco: singleton({
+      label: 'Fotos do espaço',
+      previewUrl: '/espaco',
+      path: 'src/content/fotos-do-espaco/lista',
+      format: { data: 'yaml' },
+      schema: {
+        fotos: fields.array(
+          fields.object({
+            foto: fields.image({
+              label: 'Foto',
+              directory: 'src/content/fotos-do-espaco',
+              publicPath: './',
+              validation: { isRequired: true },
+            }),
+            legenda: fields.text({
+              label: 'O que aparece na foto',
+              description: 'Lido em voz alta para quem não enxerga. Ex.: Lanchonete com o balcão',
+              validation: { isRequired: true },
+            }),
+          }),
+          {
+            label: 'Fotos',
+            description:
+              'Aparecem em O Espaço depois das fotos das salas. As primeiras completam a página inicial. Arraste para mudar a ordem.',
+            itemLabel: (item) => item.fields.legenda.value || 'Nova foto',
           }
         ),
       },
